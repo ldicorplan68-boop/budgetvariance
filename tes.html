@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lakpue Drug Inc. | Budget Variance Intelligence</title>
+  <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/15eab0_dda2506ae53442d88b45e70912182494~mv2_d_4961_3508_s_4_2.png/v1/crop/x_0,y_728,w_4961,h_2093/fill/w_474,h_198,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/15eab0_dda2506ae53442d88b45e70912182494~mv2_d_4961_3508_s_4_2.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── All styles unchanged ── */
+    :root { --navy: #0A1929; --emerald: #10b981; --soft-red: #ef4444; --amber: #f59e0b; }
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #f1f5f9; overflow-x: hidden; }
+
+    .sidebar { background: var(--navy); min-height: 100vh; width: 260px; position: fixed; transition: margin-left .3s; z-index: 1030; display: flex; flex-direction: column; }
+    .sidebar.collapsed { margin-left: -260px; }
+    .sidebar .nav-link { color: #b9c7d9; padding: 12px 20px; border-radius: 12px; margin: 4px 12px; cursor: pointer; transition: background .2s; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: #1e2a3e; color: white; }
+    .sidebar .nav-link[data-section="reports"], .sidebar .nav-link[data-section="settings"] { display: none !important; }
+
+    .main-content { margin-left: 260px; transition: margin-left .3s; width: calc(100% - 260px); }
+    .main-content.expanded { margin-left: 0; width: 100%; }
+    .navbar-top { background: white; padding: 12px 24px; border-bottom: 1px solid #e9edf2; transition: background .2s; }
+
+    .stat-card { background: white; border-radius: 24px; transition: transform .2s, background .2s; box-shadow: 0 4px 12px rgba(0,0,0,.02); border: 1px solid #eef2f6; }
+    .table-container { background: white; border-radius: 28px; padding: 1rem; overflow-x: auto; }
+    .filter-card { border-radius: 20px; background: white; }
+
+    body.dark-mode { background: #0f172a; color: #e2e8f0; }
+    .dark-mode .navbar-top  { background: #1e293b; border-color: #334155; }
+    .dark-mode .stat-card   { background: #1e293b; border-color: #334155; }
+    .dark-mode .table-container { background: #1e293b; border-color: #334155; }
+    .dark-mode .filter-card { background: #1e293b; border-color: #334155; }
+    .dark-mode .sticky-col  { background: #1e293b !important; }
+    .dark-mode .monthly-totals-table { background: #1e293b; }
+    .dark-mode .monthly-totals-table th { background: #0f172a; }
+    .dark-mode .total-row   { background: #0f172a; border-top-color: #475569; }
+    .dark-mode .pagination-bar { background: #0f172a; border-color: #334155; }
+    .dark-mode .pagination-bar select, .dark-mode .pagination-bar span { color: #e2e8f0; }
+    .dark-mode .page-btn    { background: #1e293b; border-color: #475569; color: #e2e8f0; }
+    .dark-mode .page-btn:hover { background: #334155; }
+    .dark-mode .page-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .dark-mode .toggle-group { background: #334155; }
+    .dark-mode .toggle-group .toggle-option { color: #e2e8f0; }
+    .dark-mode .toggle-group .toggle-option.active { background: var(--navy); }
+    .dark-mode .control-select { background: #334155; color: #e2e8f0; }
+    .dark-mode .upload-area { border-color: #475569; }
+    .dark-mode .upload-area:hover { background: #1e293b; }
+
+    .btn-navy { background: var(--navy); color: white; }
+    .btn-navy:hover { background: #162a45; color: white; }
+    .sticky-col { position: sticky; left: 0; background: #ffffff !important; z-index: 2; }
+    thead .sticky-col { z-index: 3; }
+    .text-negative { color: #ef4444 !important; font-weight: 600; }
+    .text-positive { color: #10b981 !important; font-weight: 600; }
+    .progress-threshold { height: 4px; border-radius: 4px; background: #e2e8f0; margin-top: 4px; }
+    .progress-fill { height: 100%; border-radius: 4px; background: var(--emerald); }
+
+    .section-content { display: none; }
+    .section-content.active-section { display: block; }
+
+    .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity .3s; }
+    .loading-spinner { width: 60px; height: 60px; border: 4px solid #e2e8f0; border-top: 4px solid var(--navy); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .monthly-totals-table { margin-top: 2rem; background: white; border-radius: 24px; overflow-x: auto; }
+    .monthly-totals-table table { margin-bottom: 0; }
+    .monthly-totals-table th { background: #f8fafc; }
+    .total-row { background: #f8f9fc; font-weight: 700; border-top: 2px solid #dee2e6; }
+
+    #loginOverlay { position: fixed; inset: 0; background: linear-gradient(135deg, #0A1929 0%, #1e3a5f 100%); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .login-card { background: white; border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 420px; box-shadow: 0 25px 50px rgba(0,0,0,.25); }
+    .login-card .brand { color: var(--navy); font-weight: 700; font-size: 1.35rem; }
+    .login-error { display: none; font-size: .875rem; }
+    .login-logo { height: 32px; width: auto; margin-bottom: 8px; }
+    #appShell { display: none; }
+    #appShell.authenticated { display: block; }
+
+    .matrix-table-host { display: block; width: 100%; min-height: 120px; overflow-x: auto; }
+    #varianceDataTable { width: max-content; min-width: 100%; margin-bottom: 0; }
+    #varianceDataTable th, #varianceDataTable td { white-space: nowrap; vertical-align: middle; }
+
+    .detail-table-scroll { overflow-x: auto; }
+    .detail-data-table { min-width: 100%; }
+    .detail-data-table td { vertical-align: top; }
+    .notes-cell { min-width: 220px; max-width: 320px; }
+    .notes-cell textarea { font-size: .85rem; resize: vertical; }
+    .note-save-status { font-size: .75rem; }
+
+    .toggle-group { background: #f1f5f9; border-radius: 40px; padding: 4px; display: inline-flex; gap: 4px; }
+    .toggle-group .toggle-option { padding: 6px 16px; border-radius: 32px; cursor: pointer; font-size: 1rem; transition: background .2s; border: none; background: transparent; color: #333; }
+    .toggle-group .toggle-option.active { background: var(--navy); color: white; }
+    .toggle-group .toggle-option:disabled { opacity: .5; cursor: not-allowed; }
+    .control-select { background: #f1f5f9; border: none; padding: 6px 16px 6px 12px; border-radius: 32px; font-size: 1rem; cursor: pointer; color: #333; outline: none; }
+
+    .upload-area { border: 2px dashed #cbd5e1; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: background .2s; }
+    .upload-area:hover { background: #f8fafc; }
+
+    .pagination-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 10px 14px; margin-top: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; font-size: .85rem; }
+    .pagination-bar .rows-info { color: #64748b; white-space: nowrap; }
+    .pagination-bar .rows-select { display: flex; align-items: center; gap: 6px; }
+    .pagination-bar select { border: 1px solid #cbd5e1; border-radius: 8px; padding: 3px 6px; font-size: .82rem; background: white; }
+    .pagination-bar .page-controls { display: flex; align-items: center; gap: 4px; }
+    .page-btn { border: 1px solid #cbd5e1; background: white; border-radius: 8px; padding: 4px 10px; font-size: .82rem; cursor: pointer; transition: background .15s, color .15s; min-width: 34px; text-align: center; }
+    .page-btn:hover { background: #e2e8f0; }
+    .page-btn.active { background: var(--navy); color: white; border-color: var(--navy); font-weight: 600; }
+    .page-btn:disabled { opacity: .4; cursor: default; }
+    .page-ellipsis { padding: 4px 6px; color: #94a3b8; font-size: .82rem; }
+
+    .controls-row > * { flex: 1 1 0; min-width: 220px; }
+    #metricSelect, #resetFilters { width: auto; flex: 0 0 auto; }
+    #layoutToggle, #viewToggle { width: 100%; }
+    .user-menu-label { font-size: .8rem; line-height: 1.2; text-align: right; }
+
+    @media (max-width: 768px) {
+      .toggle-group { flex-wrap: wrap; }
+      .toggle-group .toggle-option { font-size: .75rem; padding: 4px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════ CONFIG — EDIT THESE TWO LINES ════════════ -->
+<script>
+  // ⚠ Replace with your own Supabase project values:
+  const SUPABASE_URL  = 'https://mufvqitipaoixzrwoslo.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_7TVs9n2xlyRJrnYvuFOQbA_hSQBuB7Z';
+</script>
+<!-- ════════════════════════════════════════════════════════ -->
+
+<!-- ════════════ LOGIN OVERLAY ════════════ -->
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="text-center mb-4">
+      <img src="https://static.wixstatic.com/media/15eab0_dda2506ae53442d88b45e70912182494~mv2_d_4961_3508_s_4_2.png/v1/crop/x_0,y_728,w_4961,h_2093/fill/w_474,h_198,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/15eab0_dda2506ae53442d88b45e70912182494~mv2_d_4961_3508_s_4_2.png" alt="Lakpue Drug Inc." class="login-logo">
+      <div class="brand">Lakpue Drug Inc.</div>
+      <p class="text-muted small mb-0">Budget Variance Intelligence</p>
+    </div>
+    <form id="loginForm" autocomplete="on">
+      <div class="mb-3">
+        <label for="loginUsername" class="form-label">Username</label>
+        <input type="text" id="loginUsername" class="form-control" required autocomplete="username">
+      </div>
+      <div class="mb-3">
+        <label for="loginPassword" class="form-label">Password</label>
+        <div class="position-relative">
+          <input type="password" id="loginPassword" class="form-control" required autocomplete="current-password">
+          <i class="fas fa-eye position-absolute" id="togglePassword" style="top:50%;right:12px;transform:translateY(-50%);cursor:pointer;color:#6c757d;"></i>
+        </div>
+      </div>
+      <div id="loginError" class="alert alert-danger login-error" role="alert"></div>
+      <button type="submit" id="loginSubmitBtn" class="btn btn-navy w-100 py-2">
+        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════ LOADING OVERLAY ════════════ -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loading-spinner"></div>
+  <h5 class="text-muted fw-normal" id="loadingText">Connecting to Supabase...</h5>
+  <p class="text-muted small mt-2" id="loadingSubtext">Fetching budget and expense data</p>
+</div>
+
+<!-- ════════════ APP SHELL ════════════ -->
+<div id="appShell">
+
+  <!-- Sidebar -->
+  <div class="sidebar d-flex flex-column" id="sidebar">
+    <div class="sidebar-logo p-3 fw-bold text-white fs-5 text-center">
+      <img src="https://static.wixstatic.com/media/15eab0_dda2506ae53442d88b45e70912182494~mv2_d_4961_3508_s_4_2.png/v1/crop/x_0,y_728,w_4961,h_2093/fill/w_474,h_198,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/15eab0_dda2506ae53442d88b45e70912182494~mv2_d_4961_3508_s_4_2.png" alt="Lakpue Drug Inc." class="login-logo">
+      <span class="d-block mt-2">Lakpue Drug Inc.</span>
+    </div>
+    <nav class="nav flex-column mt-3 flex-grow-1">
+      <a class="nav-link active" data-section="dashboard"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+      <a class="nav-link" data-section="budgetVariance"><i class="fas fa-chart-pie me-2"></i> Budget Variance</a>
+      <a class="nav-link" data-section="exceptions"><i class="fas fa-exclamation-triangle me-2"></i> Explanations</a>
+      <a class="nav-link" data-section="deptSummary"><i class="fas fa-building me-2"></i> Department Summary</a>
+    </nav>
+    <div class="p-3 mt-auto">
+      <button class="btn btn-outline-danger w-100" id="logoutBtn">
+        <i class="fas fa-sign-out-alt me-2"></i> Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" id="mainContent">
+
+    <!-- Top Nav -->
+    <div class="navbar-top d-flex justify-content-between align-items-center flex-wrap">
+      <div>
+        <button class="btn btn-light border-0 me-2" id="toggleSidebarBtn"><i class="fas fa-bars"></i></button>
+        <span class="fw-semibold fs-5" id="pageTitle">Budget Variance Dashboard</span>
+      </div>
+      <div class="d-flex gap-3 align-items-center">
+        <div id="currentDateTime" class="text-muted small"></div>
+        <i class="fas fa-bell text-muted" id="notificationBell" style="cursor:pointer;"></i>
+        <button class="btn btn-outline-secondary rounded-circle p-2" id="darkModeToggle"><i class="fas fa-moon"></i></button>
+        <div class="d-flex align-items-center gap-2">
+          <div class="user-menu-label d-none d-md-block">
+            <div class="fw-semibold" id="navUsername">—</div>
+            <div class="text-muted" id="navUserScope">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid px-4 py-4">
+
+      <!-- ══════ DASHBOARD ══════ -->
+      <div id="dashboardSection" class="section-content active-section">
+        <div class="row g-4 mb-5">
+          <div class="col-md-6 col-lg-4">
+            <div class="stat-card p-4">
+              <div class="text-muted small">Total Budget</div>
+              <h2 class="fw-bold mt-2" id="totalBudget">₱0</h2>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="stat-card p-4">
+              <div class="text-muted small">Total Expense</div>
+              <h2 class="fw-bold mt-2" id="totalExpense">₱0</h2>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="stat-card p-4">
+              <div class="text-muted small">Net Variance</div>
+              <h2 class="fw-bold mt-2" id="totalVariance">₱0</h2>
+              <small id="variancePercentLabel">0% Variance</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-card p-3 mb-4">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label>Company</label>
+              <select id="companyFilter" class="form-select"></select>
+            </div>
+            <div class="col-md-3">
+              <label>Department</label>
+              <select id="deptFilter" class="form-select"></select>
+            </div>
+            <div class="col-md-4">
+              <label>Search Category</label>
+              <input type="text" id="globalSearch" class="form-control" placeholder="e.g., Office Supplies">
+            </div>
+            <div class="col-md-2 d-flex gap-1">
+              <button id="applyFiltersBtn" type="button" class="btn btn-navy flex-grow-1">
+                <i class="fas fa-filter me-1"></i> Apply
+              </button>
+              <button id="reloadSheetsBtn" type="button" class="btn btn-outline-secondary" title="Reload data from Supabase">
+                <i class="fas fa-sync-alt"></i>
+              </button>
+            </div>
+          </div>
+          <p class="small text-muted mb-0 mt-2">
+            Use <strong>All</strong> in Company / Department to combine everything you have access to.
+            Admin users: set <strong>ALL</strong> in the Users table.
+          </p>
+          <div class="row mt-3">
+            <div class="col-12 d-flex flex-wrap gap-3 align-items-stretch controls-row">
+              <select id="metricSelect" class="control-select">
+                <option value="all">📊 All Metrics</option>
+                <option value="expense">💰 Expense Only</option>
+                <option value="budget">📈 Budget Only</option>
+                <option value="variance">⚠️ Variance Only</option>
+              </select>
+              <div class="toggle-group" id="layoutToggle">
+                <button class="toggle-option active" data-layout="month">📆 Monthly</button>
+                <button class="toggle-option" data-layout="expenseBudget">📆 Month-on-Month</button>
+              </div>
+              <div class="toggle-group" id="viewToggle">
+                <button class="toggle-option active" data-view="active">📅 Year-to-Date</button>
+                <button class="toggle-option" data-view="all">📅 Full Year</button>
+              </div>
+              <button id="resetFilters" class="btn btn-outline-danger btn-sm">
+                <i class="fas fa-undo-alt me-1"></i> Reset All
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h5 class="fw-semibold mb-0"><i class="fas fa-chart-simple me-2"></i>Budget vs Actual Matrix</h5>
+              <small class="text-muted" id="matrixLayoutLabel">Layout: Group by Month</small>
+            </div>
+            <button id="exportTableBtn" class="btn btn-outline-secondary btn-sm">
+              <i class="fas fa-file-csv me-1"></i> Export CSV
+            </button>
+          </div>
+          <div id="matrixTableHost" class="matrix-table-host">
+            <table id="varianceDataTable" class="table table-bordered w-100">
+              <thead id="dynamicTableHead"></thead>
+              <tbody id="dynamicTableBody"></tbody>
+            </table>
+          </div>
+          <div id="matrixPagination"></div>
+        </div>
+
+        <div class="monthly-totals-table mt-4">
+          <div class="p-3">
+            <h5 class="fw-semibold mb-3"><i class="fas fa-chart-line me-2"></i>Monthly Totals Summary</h5>
+            <div class="table-responsive">
+              <table class="table table-bordered table-sm" id="monthlyTotalsTable">
+                <thead id="monthlyTotalsHead"></thead>
+                <tbody id="monthlyTotalsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div><!-- /#dashboardSection -->
+
+      <!-- ══════ BUDGET VARIANCE ══════ -->
+      <div id="budgetVarianceSection" class="section-content">
+        <div class="filter-card p-3 mb-4">
+          <h5 class="mb-3"><i class="fas fa-chart-line me-2"></i>Budget Variance by Company, Department &amp; Category</h5>
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label>Company</label>
+              <select id="bvCompanyFilter" class="form-select"><option value="All">All Companies</option></select>
+            </div>
+            <div class="col-md-3">
+              <label>Department</label>
+              <select id="bvDeptFilter" class="form-select"><option value="All">All Departments</option></select>
+            </div>
+            <div class="col-md-2">
+              <label>Month</label>
+              <select id="bvMonthFilter" class="form-select">
+                <option value="All">All Months</option>
+                <option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option>
+                <option>May</option><option>Jun</option><option>Jul</option><option>Aug</option>
+                <option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label>Category Search</label>
+              <input type="text" id="bvCategorySearch" class="form-control" placeholder="e.g., Office Supplies">
+            </div>
+            <div class="col-md-2">
+              <button id="applyBvFiltersBtn" class="btn btn-navy w-100"><i class="fas fa-filter me-1"></i> Apply</button>
+            </div>
+          </div>
+          <div class="row g-3 mt-2 align-items-end">
+            <div class="col-md-3">
+              <label>Allowable Variance Amount (₱)</label>
+              <input type="number" id="allowableAmount" class="form-control" value="5000" step="1000">
+            </div>
+            <div class="col-md-3">
+              <label>Allowable Variance (%)</label>
+              <input type="number" id="allowablePercent" class="form-control" value="10" step="1">
+            </div>
+            <div class="col-md-3">
+              <button id="applyThresholdsBtn" class="btn btn-outline-primary w-100">
+                <i class="fas fa-sliders-h me-1"></i> Apply Thresholds
+              </button>
+            </div>
+            <div class="col-md-3">
+              <button id="resetBvFilters" class="btn btn-outline-secondary w-100">
+                <i class="fas fa-undo-alt me-1"></i> Reset All
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="table-container detail-table-scroll">
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h5 class="fw-semibold mb-0"><i class="fas fa-table-list me-2"></i>Detailed Variance (PHP) - Per Month</h5>
+            <div class="d-flex gap-2">
+              <button id="saveAllBvNotes" class="btn btn-outline-success btn-sm">
+                <i class="fas fa-save me-1"></i> Save All Notes
+              </button>
+              <button id="exportBvTableBtn" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-file-csv me-1"></i> Export CSV
+              </button>
+            </div>
+          </div>
+          <table id="bvDetailTable" class="table table-bordered w-100 detail-data-table">
+            <thead>
+              <tr>
+                <th>Company</th><th>Department</th><th>Category</th><th>Month</th>
+                <th class="text-end">Budget (₱)</th><th class="text-end">Expense (₱)</th>
+                <th class="text-end">Variance (₱)</th><th class="text-end">Variance %</th>
+                <th>Status</th><th>Details</th><th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="bvDetailBody"></tbody>
+          </table>
+          <div id="bvPagination"></div>
+        </div>
+      </div><!-- /#budgetVarianceSection -->
+
+      <!-- ══════ EXCEPTIONS / EXPLANATIONS ══════ -->
+      <div id="exceptionsSection" class="section-content">
+        <div class="filter-card p-3 mb-4">
+          <h5 class="mb-3"><i class="fas fa-exclamation-triangle me-2"></i>Explanation: High Expense &amp; No Budget</h5>
+          <p class="text-muted">Click on any Category to view expense details. Add notes in the last column.</p>
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label>Company</label>
+              <select id="exCompanyFilter" class="form-select"><option value="All">All Companies</option></select>
+            </div>
+            <div class="col-md-3">
+              <label>Department</label>
+              <select id="exDeptFilter" class="form-select"><option value="All">All Departments</option></select>
+            </div>
+            <div class="col-md-2">
+              <label>Month</label>
+              <select id="exMonthFilter" class="form-select">
+                <option value="All">All Months</option>
+                <option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option>
+                <option>May</option><option>Jun</option><option>Jul</option><option>Aug</option>
+                <option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label>Category Search</label>
+              <input type="text" id="exCategorySearch" class="form-control" placeholder="e.g., Office Supplies">
+            </div>
+            <div class="col-md-2">
+              <button id="applyExFiltersBtn" class="btn btn-navy w-100"><i class="fas fa-filter me-1"></i> Apply</button>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-12">
+              <button id="resetExFilters" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-undo-alt me-1"></i> Reset Filters
+              </button>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-top">
+            <h6><i class="fas fa-upload me-2"></i>Bulk Import Notes from CSV</h6>
+            <p class="text-muted small">Upload a CSV with columns: <strong>Company, Department, Category, Month, Notes</strong></p>
+            <div class="row g-3 align-items-end">
+              <div class="col-md-6">
+                <div class="upload-area" id="csvDropArea">
+                  <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
+                  <p class="mb-1">Drag &amp; drop your CSV file here, or click to browse</p>
+                  <input type="file" id="csvFileInput" accept=".csv" style="display:none;">
+                  <div id="csvFileInfo" class="text-muted small mt-2"></div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <button id="uploadCsvBtn" class="btn btn-navy w-100" disabled>
+                  <i class="fas fa-upload me-1"></i> Upload &amp; Save
+                </button>
+              </div>
+              <div class="col-md-3">
+                <div id="csvUploadStatus" class="small text-muted"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-container detail-table-scroll">
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h5 class="fw-semibold mb-0"><i class="fas fa-list me-2"></i>Explanation List (High Expense &amp; No Budget Only)</h5>
+            <div class="d-flex gap-2">
+              <button id="saveAllExNotes" class="btn btn-outline-success btn-sm">
+                <i class="fas fa-save me-1"></i> Save All Notes
+              </button>
+              <button id="exportExTableBtn" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-file-csv me-1"></i> Export CSV
+              </button>
+            </div>
+          </div>
+          <table id="exceptionsTable" class="table table-bordered w-100 detail-data-table">
+            <thead>
+              <tr>
+                <th>Company</th><th>Department</th><th>Category</th><th>Month</th>
+                <th class="text-end">Budget (₱)</th><th class="text-end">Expense (₱)</th>
+                <th class="text-end">Variance (₱)</th><th class="text-end">Variance %</th>
+                <th>Status</th><th>Details</th><th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="exceptionsBody"></tbody>
+          </table>
+          <div id="exPagination"></div>
+        </div>
+      </div>
+
+      <!-- ══════ DEPT SUMMARY ══════ -->
+      <div id="deptSummarySection" class="section-content">
+        <div class="filter-card p-3 mb-4"><h5>Department Performance (PHP)</h5></div>
+        <div class="table-container">
+          <table id="deptSummaryTable" class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Department</th><th class="text-end">Total Budget</th>
+                <th class="text-end">Total Expense</th><th class="text-end">Variance</th>
+                <th class="text-end">Variance %</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="deptSummaryBody"></tbody>
+          </table>
+          <div id="deptPagination"></div>
+        </div>
+      </div>
+
+    </div><!-- /.container-fluid -->
+  </div><!-- /.main-content -->
+</div><!-- /#appShell -->
+
+<!-- Expense Detail Modal -->
+<div class="modal fade" id="expenseDetailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="expenseModalTitle">Expense Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="expenseModalBody">Loading...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// Lakpue Drug Inc. | Budget Variance Intelligence
+// Frontend-only app — Supabase REST API
+// ══════════════════════════════════════════════════════════════════════════════
+(function () {
+  'use strict';
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  CONFIGURATION
+  // ─────────────────────────────────────────────────────────────────────────────
+  const CFG = {
+    MONTHS: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    AUTH_KEY: 'bvAuthSession',
+    PAGE_SIZE_OPTIONS: [10, 25, 50, 100, 'All']
+  };
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  SUPABASE CLIENT (lightweight, no npm)
+  // ─────────────────────────────────────────────────────────────────────────────
+  const SB = {
+    _headers() {
+      return {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      };
+    },
+
+    async _get(table, query = '') {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${query}`, {
+        headers: this._headers()
+      });
+      if (!res.ok) throw new Error(`Supabase GET ${table}: ${res.status} ${await res.text()}`);
+      return res.json();
+    },
+
+    /**
+     * Upsert rows into a table.
+     * @param {string} table           - Table name
+     * @param {Array|Object} body      - Row(s) to upsert
+     * @param {string[]} [conflictCols] - Columns to use for conflict resolution (e.g., ['company','cor_dept'])
+     * @returns {Promise<boolean>}
+     */
+    async _upsert(table, body, conflictCols = null) {
+      let url = `${SUPABASE_URL}/rest/v1/${table}`;
+      if (conflictCols && Array.isArray(conflictCols) && conflictCols.length) {
+        url += `?on_conflict=${conflictCols.join(',')}`;
+      }
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          ...this._headers(),
+          'Prefer': 'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Supabase UPSERT ${table}: ${res.status} ${errText}`);
+      }
+      return true;
+    },
+
+    // Fetch all rows of a table (handles Supabase 1000-row default limit)
+    async getAll(table, query = '') {
+      const PAGE = 1000;
+      let offset = 0, all = [];
+      while (true) {
+        const sep = query ? '&' : '';
+        const chunk = await this._get(table,
+          `${query}${sep}limit=${PAGE}&offset=${offset}`);
+        all = all.concat(chunk);
+        if (chunk.length < PAGE) break;
+        offset += PAGE;
+      }
+      return all;
+    }
+  };
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  UTILITY FUNCTIONS
+  // ─────────────────────────────────────────────────────────────────────────────
+  const fmt = {
+    currency: v => `₱${Number(v).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+    percent:  v => `${Number(v).toFixed(1)}%`,
+    html:     s => String(s).replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m])
+  };
+
+  const toNum   = (v, d = 0) => { const n = parseFloat(v); return isNaN(n) ? d : n; };
+  const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+  const attrEncode = s => encodeURIComponent(String(s));
+  const attrDecode = s => { try { return decodeURIComponent(s); } catch { return s; } };
+  const varClass   = v => v < 0 ? 'text-negative' : 'text-positive';
+
+  const monthFromDate = dateStr => {
+    if (!dateStr) return 'Unknown';
+    const s = String(dateStr);
+    // ISO format: 2026-01-31
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+      const m = parseInt(s.split('-')[1], 10);
+      return (m >= 1 && m <= 12) ? CFG.MONTHS[m - 1] : 'Unknown';
+    }
+    // MM/dd/yyyy
+    const parts = s.split('/');
+    if (parts.length === 3) {
+      const m = parseInt(parts[0], 10);
+      if (m >= 1 && m <= 12) return CFG.MONTHS[m - 1];
+    }
+    const d = new Date(dateStr);
+    return isNaN(d.getTime()) ? 'Unknown' : CFG.MONTHS[d.getMonth()];
+  };
+
+  const noteKey = (co, dept, cat, month) =>
+    [co, dept, cat, month || ''].map(s => String(s).trim().toUpperCase()).join('|');
+
+  const getNote = (co, dept, cat, month) => AppState.notesMap[noteKey(co, dept, cat, month)] || '';
+
+  const fixStickyBg = () => {
+    const bg = document.body.classList.contains('dark-mode') ? '#1e293b' : '#ffffff';
+    document.querySelectorAll('.sticky-col').forEach(el => el.style.backgroundColor = bg);
+  };
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  APPLICATION STATE
+  // ─────────────────────────────────────────────────────────────────────────────
+  const AppState = {
+    budgets: [], expenses: [], mergedRecords: [], notesMap: {},
+    authUser: null, ytdMonthCutoff: null, hasError: false,
+    dashboard: {
+      company: 'All', department: 'All', threshold: 0,
+      searchTerm: '', layout: 'month', metric: 'all', viewMode: 'active'
+    },
+    budgetVariance: {
+      company: 'All', department: 'All', month: 'All',
+      categorySearch: '', allowableAmount: 5000, allowablePercent: 10
+    },
+    exceptions: { company: 'All', department: 'All', month: 'All', categorySearch: '' },
+    tableData: { matrix: [], bv: [], exceptions: [], dept: [] }
+  };
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  AUTHENTICATION
+  // ─────────────────────────────────────────────────────────────────────────────
+  const Auth = {
+    getSession() { try { return JSON.parse(sessionStorage.getItem(CFG.AUTH_KEY)); } catch { return null; } },
+    saveSession(user) { sessionStorage.setItem(CFG.AUTH_KEY, JSON.stringify({ user })); },
+    clearSession() { sessionStorage.removeItem(CFG.AUTH_KEY); },
+
+    async login(username, password) {
+      if (!username || !password) throw new Error('Username and password are required.');
+      const rows = await SB.getAll('users',
+        `select=username,password,company,department,user&username=eq.${encodeURIComponent(username.trim())}`);
+      if (!rows.length) throw new Error('Invalid username or password.');
+      const u = rows[0];
+      if (u.password !== password.trim()) throw new Error('Invalid username or password.');
+      const user = {
+        username: u.username,
+        company: u.company,
+        department: u.department,
+        displayName: u.user || u.username
+      };
+      this.saveSession(user);
+      return user;
+    },
+
+    logout() { this.clearSession(); }
+  };
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  DATA FETCHING & PROCESSING
+  // ─────────────────────────────────────────────────────────────────────────────
+  async function fetchData({ silent = false, forceRefresh = false } = {}) {
+    const reloadBtn = document.getElementById('reloadSheetsBtn');
+    let savedHtml = null;
+    try {
+      const session = Auth.getSession();
+      if (!session?.user) { showLoginScreen(); return; }
+      showAppShell();
+
+      const overlay  = document.getElementById('loadingOverlay');
+      const loadText = document.getElementById('loadingText');
+      const loadSub  = document.getElementById('loadingSubtext');
+
+      if (silent && reloadBtn) {
+        savedHtml = reloadBtn.innerHTML;
+        reloadBtn.disabled = true;
+        reloadBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Refreshing...';
+      } else {
+        overlay.style.display = 'flex'; overlay.style.opacity = '1';
+      }
+      if (loadText) loadText.textContent = 'Connecting to Supabase...';
+      if (loadSub)  loadSub.textContent  = 'Fetching budget and expense data...';
+
+      // Parallel fetch all tables
+      const [budgetRows, expenseRows, notesRows, closeRows] = await Promise.all([
+        SB.getAll('budget'),
+        SB.getAll('expenses'),
+        SB.getAll('notes'),
+        SB.getAll('close', 'limit=1&order=id.desc')
+      ]);
+
+      // YTD cutoff
+      AppState.ytdMonthCutoff = null;
+      if (closeRows.length && closeRows[0].date) {
+        const d = new Date(closeRows[0].date);
+        if (!isNaN(d.getTime())) {
+          const m = d.getMonth(); // 0‑based
+          AppState.ytdMonthCutoff = m - 1; // previous month
+          if (AppState.ytdMonthCutoff < 0) AppState.ytdMonthCutoff = -1;
+        }
+      }
+
+      // Normalise budget rows
+      AppState.budgets = budgetRows.map(r => ({
+        COMPANY:   String(r.company || ''),
+        COR_DEPT:  String(r.cor_dept || ''),
+        DATE:      String(r.date || ''),
+        CODE_DESC: String(r.code_desc || ''),
+        TOTAL:     toNum(r.total)
+      }));
+
+      // Normalise expense rows
+      AppState.expenses = expenseRows.map(r => ({
+        COMPANY:   String(r.company || ''),
+        COR_DEPT:  String(r.cor_dept || ''),
+        DATE:      String(r.date || ''),
+        CODE_DESC: String(r.code_desc || ''),
+        TOTAL:     toNum(r.total),
+        REMARKS:   String(r.remarks || '')
+      }));
+
+      // Normalise notes map
+      AppState.notesMap = {};
+      for (const n of notesRows) {
+        if (!n.company || !n.cor_dept || !n.code_desc) continue;
+        const k = noteKey(n.company, n.cor_dept, n.code_desc, n.month || '');
+        AppState.notesMap[k] = String(n.notes || '');
+      }
+
+      AppState.authUser = session.user;
+      AppState.hasError = false;
+      AppState.mergedRecords = mergeData(AppState.budgets, AppState.expenses);
+
+      updateNavUserInfo();
+
+      if (!silent && overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.style.display = 'none', 300);
+      }
+
+      initUI();
+
+    } catch (err) {
+      console.error('fetchData error:', err);
+      AppState.hasError = true;
+      const overlay = document.getElementById('loadingOverlay');
+      if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.display = 'flex';
+          overlay.innerHTML = `<div class="text-center px-3">
+            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+            <h5 class="text-danger">Connection Failed</h5>
+            <p class="text-muted">${fmt.html(err.message)}</p>
+            <p class="small text-muted">Check your SUPABASE_URL and SUPABASE_ANON_KEY in index.html, then make sure RLS policies are set.</p>
+            <button class="btn btn-outline-primary" onclick="location.reload()">Retry</button>
+          </div>`;
+          overlay.style.opacity = '1';
+        }, 300);
+      }
+      showEmptyState();
+    } finally {
+      if (reloadBtn && savedHtml !== null) {
+        reloadBtn.disabled = false;
+        reloadBtn.innerHTML = savedHtml;
+      }
+    }
+  }
+
+  // Merge budgets and expenses into one record per (company, dept, category, month)
+  function mergeData(budgets, expenses) {
+    const expMap = new Map();
+    for (const e of expenses) {
+      const key = `${e.COMPANY}|${e.COR_DEPT}|${e.CODE_DESC}|${monthFromDate(e.DATE)}`;
+      const entry = expMap.get(key) || { expense: 0, remarks: [] };
+      entry.expense += toNum(e.TOTAL);
+      if (e.REMARKS && !entry.remarks.includes(e.REMARKS)) entry.remarks.push(e.REMARKS);
+      expMap.set(key, entry);
+    }
+    const merged = [];
+    for (const b of budgets) {
+      const month = monthFromDate(b.DATE);
+      const key = `${b.COMPANY}|${b.COR_DEPT}|${b.CODE_DESC}|${month}`;
+      const exp = expMap.get(key) || { expense: 0, remarks: [] };
+      merged.push({
+        company: b.COMPANY, department: b.COR_DEPT, category: b.CODE_DESC, month,
+        budget: toNum(b.TOTAL), expense: exp.expense, remarks: exp.remarks.join(' | ')
+      });
+      expMap.delete(key);
+    }
+    for (const [key, v] of expMap) {
+      const [company, department, category, month] = key.split('|');
+      merged.push({ company, department, category, month, budget: 0, expense: v.expense, remarks: v.remarks.join(' | ') });
+    }
+    return merged;
+  }
+
+  function aggregateByKey(records) {
+    const map = new Map();
+    for (const r of records) {
+      const k = `${r.company}|${r.department}|${r.month}|${r.category}`;
+      if (!map.has(k)) map.set(k, { company: r.company, department: r.department, month: r.month, category: r.category, budget: 0, expense: 0 });
+      const e = map.get(k);
+      e.budget += r.budget;
+      e.expense += r.expense;
+    }
+    return [...map.values()].sort((a, b) =>
+      a.company.localeCompare(b.company) || a.department.localeCompare(b.department) ||
+      a.month.localeCompare(b.month) || a.category.localeCompare(b.category)
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  ACCESS CONTROL (mirrors original logic)
+  // ─────────────────────────────────────────────────────────────────────────────
+  function isAllToken(v) {
+    const s = String(v || '').trim().toUpperCase();
+    return s === 'ALL' || s === '*' || s.startsWith('ALL ');
+  }
+
+  function splitPipe(v) {
+    return String(v || '').split('|').map(s => s.trim()).filter(Boolean);
+  }
+
+  function resolveAccess(user) {
+    const all = AppState.mergedRecords;
+    const coList = splitPipe(user.company);
+    const deptList = splitPipe(user.department);
+    const viewAllCo = coList.some(isAllToken);
+    const viewAllDept = deptList.some(isAllToken);
+    const companies = viewAllCo ? [...new Set(all.map(r => r.company))] : coList.filter(c => !isAllToken(c));
+    const departments = viewAllDept ? [...new Set(all.map(r => r.department))] : deptList.filter(d => !isAllToken(d));
+    const coSet = Object.fromEntries(companies.map(c => [c.toUpperCase(), true]));
+    const deptSet = Object.fromEntries(departments.map(d => [d.toUpperCase(), true]));
+    return { companies, departments, viewAllCo, viewAllDept, coSet, deptSet };
+  }
+
+  function hasAccess(company, department, access) {
+    return !!(
+      (access.viewAllCo || access.coSet[String(company || '').toUpperCase()]) &&
+      (access.viewAllDept || access.deptSet[String(department || '').toUpperCase()])
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  PAGINATOR CLASS
+  // ─────────────────────────────────────────────────────────────────────────────
+  class Paginator {
+    constructor(id, fn) {
+      this.el = document.getElementById(id);
+      this.fn = fn;
+      this.p = 1;
+      this.ps = 25;
+      this.total = 0;
+      this._m = {};
+    }
+    reset() { this.p = 1; }
+    get tp() { return (this.ps === 'All' || !this.total) ? 1 : Math.ceil(this.total / this.ps); }
+    getSlice(rows) {
+      this.total = rows.length;
+      if (this.ps === 'All') return rows;
+      const s = (this.p - 1) * this.ps;
+      return rows.slice(s, s + this.ps);
+    }
+    goTo(p) {
+      this.p = Math.max(1, Math.min(p, this.tp));
+      this.render();
+      this.fn();
+    }
+    setPs(s) {
+      this.ps = s === 'All' ? 'All' : +s;
+      this.p = 1;
+      this.render();
+      this.fn();
+    }
+    render() {
+      if (!this.el || !this.total) { if (this.el) this.el.innerHTML = ''; return; }
+      const tp = this.tp, cp = this.p, ps = this.ps;
+      const s = ps === 'All' ? 1 : (cp - 1) * ps + 1;
+      const e = ps === 'All' ? this.total : Math.min(cp * ps, this.total);
+      const opts = CFG.PAGE_SIZE_OPTIONS.map(o =>
+        `<option value="${o}" ${String(ps) === String(o) ? 'selected' : ''}>${o === 'All' ? 'All' : o}</option>`
+      ).join('');
+      const btn = (p, l, a) => `<button class="page-btn${a ? ' active' : ''}" data-page="${p}">${l}</button>`;
+      const ell = `<span class="page-ellipsis">…</span>`;
+      let pg = '';
+      if (tp <= 7) {
+        for (let i = 1; i <= tp; i++) pg += btn(i, i, i === cp);
+      } else {
+        pg += btn(1, 1, cp === 1);
+        if (cp > 3) pg += ell;
+        const lo = Math.max(2, cp - 1), hi = Math.min(tp - 1, cp + 1);
+        for (let i = lo; i <= hi; i++) pg += btn(i, i, i === cp);
+        if (cp < tp - 2) pg += ell;
+        pg += btn(tp, tp, cp === tp);
+      }
+      this.el.innerHTML = `<div class="pagination-bar">
+        <span class="rows-info">Showing <strong>${s}–${e}</strong> of <strong>${this.total}</strong> rows</span>
+        <div class="rows-select"><span>Rows per page:</span><select class="page-size-select">${opts}</select></div>
+        <div class="page-controls">
+          <button class="page-btn" data-page="${cp - 1}" ${cp <= 1 ? 'disabled' : ''}>‹</button>
+          ${pg}
+          <button class="page-btn" data-page="${cp + 1}" ${cp >= tp ? 'disabled' : ''}>›</button>
+        </div></div>`;
+      this.el.querySelectorAll('.page-btn[data-page]').forEach(b =>
+        b.addEventListener('click', () => { if (!b.disabled) this.goTo(+b.dataset.page); })
+      );
+      const sel = this.el.querySelector('.page-size-select');
+      if (sel) sel.addEventListener('change', () => this.setPs(sel.value));
+    }
+  }
+
+  const Paginators = {
+    matrix: new Paginator('matrixPagination', () => renderMatrixPage()),
+    bv:     new Paginator('bvPagination',     () => renderBvPage()),
+    ex:     new Paginator('exPagination',     () => renderExPage()),
+    dept:   new Paginator('deptPagination',   () => renderDeptPage())
+  };
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  DASHBOARD HELPERS
+  // ─────────────────────────────────────────────────────────────────────────────
+  function accessFiltered() {
+    if (!AppState.authUser) return [];
+    const access = resolveAccess(AppState.authUser);
+    return AppState.mergedRecords.filter(r => hasAccess(r.company, r.department, access));
+  }
+
+  function getDashboardFiltered() {
+    let data = accessFiltered().filter(r =>
+      (AppState.dashboard.company === 'All' || r.company === AppState.dashboard.company) &&
+      (AppState.dashboard.department === 'All' || r.department === AppState.dashboard.department)
+    );
+    if (AppState.dashboard.viewMode === 'active' && AppState.ytdMonthCutoff !== null && AppState.ytdMonthCutoff >= 0) {
+      const cut = AppState.ytdMonthCutoff;
+      data = data.filter(r => { const i = CFG.MONTHS.indexOf(r.month); return i !== -1 && i <= cut; });
+    }
+    return data;
+  }
+
+  function getDisplayMonths(filtered) {
+    if (AppState.dashboard.viewMode === 'all') return [...CFG.MONTHS];
+    if (AppState.ytdMonthCutoff !== null && AppState.ytdMonthCutoff >= 0)
+      return CFG.MONTHS.slice(0, AppState.ytdMonthCutoff + 1);
+    return CFG.MONTHS.filter(m => filtered.some(d => d.expense > 0 && d.month === m));
+  }
+
+  function shouldShow(type) { return AppState.dashboard.metric === 'all' || AppState.dashboard.metric === type; }
+  function resolvedMetrics() {
+    return { expense: shouldShow('expense'), budget: shouldShow('budget'), variance: shouldShow('variance') };
+  }
+  function isExpBudLayout() { return AppState.dashboard.layout.toLowerCase() === 'expensebudget'; }
+
+  function aggregateCategoryData(filtered, months) {
+    const map = new Map();
+    for (const cat of [...new Set(filtered.map(d => d.category))]) {
+      const mData = {};
+      for (const m of CFG.MONTHS) {
+        const recs = filtered.filter(d => d.category === cat && d.month === m);
+        const expense = recs.reduce((s, r) => s + r.expense, 0);
+        const budget = recs.reduce((s, r) => s + r.budget, 0);
+        mData[m] = {
+          expense, budget,
+          variance: budget - expense,
+          variancePercent: budget ? ((budget - expense) / budget) * 100 : 0,
+          utilizationPct: budget ? (expense / budget) * 100 : 0
+        };
+      }
+      map.set(cat, mData);
+    }
+    return map;
+  }
+
+  function computeMonthTotals(categoryMap, months) {
+    const mt = Object.fromEntries(months.map(m => [m, { expense: 0, budget: 0, variance: 0 }]));
+    let gExp = 0, gBud = 0;
+    for (const mData of categoryMap.values()) {
+      for (const m of months) {
+        const d = mData[m]; if (!d) continue;
+        mt[m].expense += d.expense;
+        mt[m].budget += d.budget;
+        mt[m].variance += d.variance;
+        gExp += d.expense;
+        gBud += d.budget;
+      }
+    }
+    for (const m of months) {
+      const b = mt[m].budget;
+      mt[m].variancePct = b ? (mt[m].variance / b) * 100 : 0;
+    }
+    const gVar = gBud - gExp, gVarPct = gBud ? (gVar / gBud) * 100 : 0;
+    return { monthTotals: mt, grandExp: gExp, grandBud: gBud, grandVar: gVar, grandVarPct: gVarPct };
+  }
+
+  function statusBadge(variance, variancePct, budget) {
+    if (budget === 0) return '<span class="badge bg-secondary">No Budget</span>';
+    const excess = (Math.abs(variance) > AppState.budgetVariance.allowableAmount) &&
+                   (Math.abs(variancePct) > AppState.budgetVariance.allowablePercent);
+    if (variance < 0) return excess ? '<span class="badge bg-danger">High Expense</span>' : '<span class="badge bg-success">Tolerable</span>';
+    if (variance > 0) return excess ? '<span class="badge bg-primary">High Budget</span>' : '<span class="badge bg-success">Tolerable</span>';
+    return '<span class="badge bg-success">Tolerable</span>';
+  }
+
+  const isException = html => html.includes('No Budget') || html.includes('High Expense');
+
+  function notesCell(co, dept, cat, month) {
+    const note = getNote(co, dept, cat, month);
+    const encCo = attrEncode(co), encDept = attrEncode(dept), encCat = attrEncode(cat), encMonth = attrEncode(month || '');
+    return `<div class="notes-cell">
+      <textarea class="form-control form-control-sm variance-note-input" rows="2"
+        data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}"
+        placeholder="Notes...">${fmt.html(note)}</textarea>
+      <button type="button" class="btn btn-sm btn-outline-success mt-1 save-note-btn"
+        data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">Save note</button>
+      <span class="note-save-status text-muted ms-1"></span>
+    </div>`;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  MATRIX TABLE
+  // ─────────────────────────────────────────────────────────────────────────────
+  function buildMatrixRows() {
+    const filtered = getDashboardFiltered();
+    let months = getDisplayMonths(filtered);
+    if (!months.length) months = ['No Data'];
+    const catMap = aggregateCategoryData(filtered, months);
+    const thr = toNum(AppState.dashboard.threshold);
+    const { expense: sE, budget: sB, variance: sV } = resolvedMetrics();
+    const rows = [...catMap.entries()].filter(([cat, mData]) => {
+      if (AppState.dashboard.searchTerm && !cat.toLowerCase().includes(AppState.dashboard.searchTerm.toLowerCase())) return false;
+      return months.some(m => {
+        if (m === 'No Data') return false;
+        const d = mData[m]; if (!d) return false;
+        if (thr === 0 && !AppState.dashboard.searchTerm) return d.budget > 0 || d.expense > 0;
+        return d.budget > 0 && Math.abs(d.variancePercent) >= thr;
+      });
+    });
+    return { rows, months, showExp: sE, showBud: sB, showVar: sV };
+  }
+
+  function renderMatrixTable() {
+    const { rows, months, showExp, showBud, showVar } = buildMatrixRows();
+    AppState.tableData.matrix = rows;
+    Paginators.matrix.reset();
+    const cols = (showExp ? 1 : 0) + (showBud ? 1 : 0) + (showVar ? 2 : 0);
+    let thead = '';
+    if (!isExpBudLayout()) {
+      thead = `<tr><th class="sticky-col" rowspan="2">Category</th>`;
+      for (const m of months) thead += `<th colspan="${cols}" class="text-center bg-light">${m}</th>`;
+      thead += `<th colspan="4" class="text-center bg-secondary text-white">TOTALS</th></tr><tr>`;
+      for (const m of months) {
+        if (showExp) thead += `<th>Expense (₱)</th>`;
+        if (showBud) thead += `<th>Budget (₱)</th>`;
+        if (showVar) thead += `<th>Variance (₱)</th><th>Var %</th>`;
+      }
+      thead += `<th class="bg-light">Total Exp</th><th class="bg-light">Total Bud</th><th class="bg-light">Total Var</th><th class="bg-light">Total Var %</th></tr>`;
+    } else {
+      const groups = [];
+      if (showExp) groups.push({ name: 'EXPENSE (₱)', type: 'expense' });
+      if (showBud) groups.push({ name: 'BUDGET (₱)', type: 'budget' });
+      if (showVar) groups.push({ name: 'VARIANCE (₱)', type: 'variance' });
+      if (!groups.length) groups.push({ name: 'DATA', type: 'expense' });
+      thead = `<tr><th class="sticky-col" rowspan="2">Category</th>`;
+      for (const g of groups) {
+        const span = g.type === 'variance' ? months.length * 2 : months.length;
+        thead += `<th colspan="${span}" class="text-center bg-light">${g.name}</th>`;
+      }
+      thead += `<th colspan="4" class="text-center bg-secondary text-white">TOTALS</th></tr><tr>`;
+      for (const g of groups) {
+        if (g.type === 'variance') {
+          for (const m of months) thead += `<th>${m}<br>(₱)</th>`;
+          for (const m of months) thead += `<th>${m}<br>(%)</th>`;
+        } else {
+          for (const m of months) thead += `<th>${m}</th>`;
+        }
+      }
+      thead += `<th class="bg-light">Total Exp</th><th class="bg-light">Total Bud</th><th class="bg-light">Total Var</th><th class="bg-light">Total Var %</th></tr>`;
+    }
+    document.getElementById('dynamicTableHead').innerHTML = thead;
+    Paginators.matrix._m = { months, showExp, showBud, showVar };
+    Paginators.matrix.total = rows.length;
+    Paginators.matrix.render();
+    renderMatrixPage();
+    renderMonthlyTotals();
+    fixStickyBg();
+    const lbl = document.getElementById('matrixLayoutLabel');
+    if (lbl) lbl.textContent = isExpBudLayout() ? 'Layout: Month-on-Month' : 'Layout: Group by Monthly';
+  }
+
+  function renderMatrixPage() {
+    const { months, showExp, showBud, showVar } = Paginators.matrix._m || { months: [], showExp: true, showBud: false, showVar: false };
+    const pageRows = Paginators.matrix.getSlice(AppState.tableData.matrix);
+    const tbody = document.getElementById('dynamicTableBody');
+    if (!tbody) return;
+    if (!pageRows.length) { tbody.innerHTML = `<tr><td colspan="30" class="text-center p-4">No data</td></tr>`; return; }
+    let html = '';
+    if (!isExpBudLayout()) {
+      for (const [cat, mData] of pageRows) {
+        let row = `<tr><td class="sticky-col fw-semibold">${fmt.html(cat)}</td>`;
+        let rE = 0, rB = 0;
+        for (const m of months) {
+          const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0, utilizationPct: 0 };
+          rE += d.expense; rB += d.budget;
+          if (showExp) row += `<td class="text-end">${fmt.currency(d.expense)}</td>`;
+          if (showBud) row += `<td class="text-end">${fmt.currency(d.budget)}</td>`;
+          if (showVar) {
+            const vc = varClass(d.variance);
+            const fl = Math.min(100, d.utilizationPct);
+            const bar = d.utilizationPct > 100 ? '#ef4444' : '#10b981';
+            row += `<td class="text-end ${vc} fw-semibold">${fmt.currency(d.variance)}</td>`;
+            row += `<td class="text-end"><span class="${vc} fw-bold">${fmt.percent(d.variancePercent)}</span><div class="progress-threshold"><div class="progress-fill" style="width:${fl}%;background:${bar}"></div></div></td>`;
+          }
+        }
+        const tv = rB - rE, tvp = rB ? (tv / rB) * 100 : 0, tvc = varClass(tv);
+        row += `<td class="text-end fw-bold bg-light">${fmt.currency(rE)}</td><td class="text-end fw-bold bg-light">${fmt.currency(rB)}</td><td class="text-end fw-bold ${tvc} bg-light">${fmt.currency(tv)}</td><td class="text-end fw-bold ${tvc} bg-light">${fmt.percent(tvp)}</td></tr>`;
+        html += row;
+      }
+    } else {
+      const groups = [];
+      if (showExp) groups.push({ type: 'expense' });
+      if (showBud) groups.push({ type: 'budget' });
+      if (showVar) groups.push({ type: 'variance' });
+      if (!groups.length) groups.push({ type: 'expense' });
+      for (const [cat, mData] of pageRows) {
+        let row = `<tr><td class="sticky-col fw-semibold">${fmt.html(cat)}</td>`;
+        let rE = 0, rB = 0;
+        const eV = [], bV = [], vV = [], vpV = [];
+        for (const m of months) {
+          const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0 };
+          eV.push(d.expense); bV.push(d.budget); vV.push(d.variance); vpV.push(d.variancePercent);
+          rE += d.expense; rB += d.budget;
+        }
+        for (const g of groups) {
+          if (g.type === 'expense') { for (const v of eV) row += `<td class="text-end">${fmt.currency(v)}</td>`; }
+          else if (g.type === 'budget') { for (const v of bV) row += `<td class="text-end">${fmt.currency(v)}</td>`; }
+          else {
+            for (const v of vV) row += `<td class="text-end ${varClass(v)} fw-semibold">${fmt.currency(v)}</td>`;
+            for (const p of vpV) row += `<td class="text-end"><span class="${varClass(p)} fw-bold">${fmt.percent(p)}</span></td>`;
+          }
+        }
+        const tv = rB - rE, tvp = rB ? (tv / rB) * 100 : 0, tvc = varClass(tv);
+        row += `<td class="text-end fw-bold bg-light">${fmt.currency(rE)}</td><td class="text-end fw-bold bg-light">${fmt.currency(rB)}</td><td class="text-end fw-bold ${tvc} bg-light">${fmt.currency(tv)}</td><td class="text-end fw-bold ${tvc} bg-light">${fmt.percent(tvp)}</td></tr>`;
+        html += row;
+      }
+    }
+    tbody.innerHTML = html;
+    fixStickyBg();
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  MONTHLY TOTALS
+  // ─────────────────────────────────────────────────────────────────────────────
+  function renderMonthlyTotals() {
+    const filtered = getDashboardFiltered();
+    const months = getDisplayMonths(filtered);
+    const head = document.getElementById('monthlyTotalsHead');
+    const body = document.getElementById('monthlyTotalsBody');
+    if (!months.length || AppState.hasError) { if (head) head.innerHTML = ''; if (body) body.innerHTML = ''; return; }
+    const catMap = aggregateCategoryData(filtered, months);
+    const totals = computeMonthTotals(catMap, months);
+    const { expense: sE, budget: sB, variance: sV } = resolvedMetrics();
+    let th = `<tr><th>Month</th>`;
+    if (sB) th += `<th class="text-end">Total Budget (₱)</th>`;
+    if (sE) th += `<th class="text-end">Total Expense (₱)</th>`;
+    if (sV) th += `<th class="text-end">Total Variance (₱)</th><th class="text-end">Variance %</th>`;
+    th += `</tr>`;
+    if (head) head.innerHTML = th;
+    let tb = '';
+    for (const m of months) {
+      const mt = totals.monthTotals[m];
+      let row = `<tr><td><strong>${m}</strong></td>`;
+      if (sB) row += `<td class="text-end">${fmt.currency(mt.budget)}</td>`;
+      if (sE) row += `<td class="text-end">${fmt.currency(mt.expense)}</td>`;
+      if (sV) {
+        const vc = varClass(mt.variance);
+        row += `<td class="text-end ${vc} fw-semibold">${fmt.currency(mt.variance)}</td><td class="text-end ${vc} fw-semibold">${fmt.percent(mt.variancePct)}</td>`;
+      }
+      tb += row + '</tr>';
+    }
+    const gvc = varClass(totals.grandVar);
+    let gRow = `<tr class="total-row"><td><strong>TOTAL</strong></td>`;
+    if (sB) gRow += `<td class="text-end fw-bold">${fmt.currency(totals.grandBud)}</td>`;
+    if (sE) gRow += `<td class="text-end fw-bold">${fmt.currency(totals.grandExp)}</td>`;
+    if (sV) gRow += `<td class="text-end fw-bold ${gvc}">${fmt.currency(totals.grandVar)}</td><td class="text-end fw-bold ${gvc}">${fmt.percent(totals.grandVarPct)}</td>`;
+    gRow += '</tr>';
+    if (body) body.innerHTML = tb + gRow;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  KPIs
+  // ─────────────────────────────────────────────────────────────────────────────
+  function renderKPIs() {
+    const filtered = getDashboardFiltered();
+    const budget = filtered.reduce((s, r) => s + r.budget, 0);
+    const expense = filtered.reduce((s, r) => s + r.expense, 0);
+    const variance = budget - expense;
+    const pct = budget ? (variance / budget) * 100 : 0;
+    document.getElementById('totalBudget').textContent = fmt.currency(budget);
+    document.getElementById('totalExpense').textContent = fmt.currency(expense);
+    document.getElementById('totalVariance').textContent = fmt.currency(variance);
+    document.getElementById('variancePercentLabel').textContent = `${pct.toFixed(1)}% Variance`;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  BUDGET VARIANCE TABLE
+  // ─────────────────────────────────────────────────────────────────────────────
+  function buildBvRows() {
+    if (AppState.hasError || !AppState.mergedRecords.length) return [];
+    const access = resolveAccess(AppState.authUser);
+    const { company, department, month, categorySearch } = AppState.budgetVariance;
+    const records = AppState.mergedRecords.filter(r =>
+      hasAccess(r.company, r.department, access) &&
+      (company === 'All' || r.company === company) &&
+      (department === 'All' || r.department === department) &&
+      (month === 'All' || r.month === month) &&
+      (!categorySearch || r.category.toLowerCase().includes(categorySearch.toLowerCase()))
+    );
+    return aggregateByKey(records).map(item => {
+      const v = item.budget - item.expense, vp = item.budget ? (v / item.budget) * 100 : 0;
+      const vpDisp = (item.budget === 0 && item.expense > 0) ? 'N/A' : fmt.percent(vp);
+      const vc = varClass(v), pc = varClass(vp);
+      const sb = statusBadge(v, vp, item.budget);
+      const encCo = attrEncode(item.company), encDept = attrEncode(item.department),
+            encCat = attrEncode(item.category), encMonth = attrEncode(item.month);
+      return [
+        fmt.html(item.company), fmt.html(item.department), fmt.html(item.category), fmt.html(item.month),
+        fmt.currency(item.budget), fmt.currency(item.expense),
+        `<span class="${vc} fw-semibold">${fmt.currency(v)}</span>`,
+        vpDisp !== 'N/A' ? `<span class="${pc} fw-semibold">${vpDisp}</span>` : vpDisp,
+        sb,
+        `<button class="btn btn-sm btn-outline-info view-details-btn" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">View Details</button>`,
+        notesCell(item.company, item.department, item.category, item.month)
+      ];
+    });
+  }
+
+  function renderBvPage() {
+    mountTableBody('bvDetailBody', Paginators.bv.getSlice(AppState.tableData.bv), 'No records match filters');
+    Paginators.bv.render();
+  }
+
+  function renderBudgetVariance() {
+    AppState.tableData.bv = buildBvRows();
+    Paginators.bv.reset();
+    renderBvPage();
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  EXCEPTIONS TABLE
+  // ─────────────────────────────────────────────────────────────────────────────
+  function buildExRows() {
+    if (AppState.hasError || !AppState.mergedRecords.length) return [];
+    const access = resolveAccess(AppState.authUser);
+    const { company, department, month, categorySearch } = AppState.exceptions;
+    const records = AppState.mergedRecords.filter(r =>
+      hasAccess(r.company, r.department, access) &&
+      (company === 'All' || r.company === company) &&
+      (department === 'All' || r.department === department) &&
+      (month === 'All' || r.month === month) &&
+      (!categorySearch || r.category.toLowerCase().includes(categorySearch.toLowerCase()))
+    );
+    const exRows = [];
+    for (const r of records) {
+      const variance = r.budget - r.expense, variancePct = r.budget ? (variance / r.budget) * 100 : 0;
+      const sb = statusBadge(variance, variancePct, r.budget);
+      if (isException(sb)) {
+        const vpDisp = (r.budget === 0 && r.expense > 0) ? 'N/A' : fmt.percent(variancePct);
+        const vc = varClass(variance), pc = varClass(variancePct);
+        const encCo = attrEncode(r.company), encDept = attrEncode(r.department),
+              encCat = attrEncode(r.category), encMonth = attrEncode(r.month);
+        exRows.push([
+          fmt.html(r.company), fmt.html(r.department), fmt.html(r.category), fmt.html(r.month),
+          fmt.currency(r.budget), fmt.currency(r.expense),
+          `<span class="${vc} fw-semibold">${fmt.currency(variance)}</span>`,
+          vpDisp !== 'N/A' ? `<span class="${pc} fw-semibold">${vpDisp}</span>` : vpDisp,
+          sb,
+          `<button class="btn btn-sm btn-outline-info view-exception-details" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">View Details</button>`,
+          notesCell(r.company, r.department, r.category, r.month)
+        ]);
+      }
+    }
+    return exRows;
+  }
+
+  function renderExPage() {
+    mountTableBody('exceptionsBody', Paginators.ex.getSlice(AppState.tableData.exceptions), 'No exceptions found');
+    Paginators.ex.render();
+  }
+
+  function renderExceptions() {
+    AppState.tableData.exceptions = buildExRows();
+    Paginators.ex.reset();
+    renderExPage();
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  DEPARTMENT SUMMARY
+  // ─────────────────────────────────────────────────────────────────────────────
+  function buildDeptRows() {
+    if (AppState.hasError || !AppState.mergedRecords.length) return [];
+    const filtered = getDashboardFiltered();
+    const map = new Map();
+    for (const r of filtered) {
+      const e = map.get(r.department) || { budget: 0, expense: 0 };
+      e.budget += r.budget; e.expense += r.expense;
+      map.set(r.department, e);
+    }
+    return [...map.entries()].map(([dept, v]) => {
+      const variance = v.budget - v.expense, vp = v.budget ? (variance / v.budget) * 100 : 0;
+      const vc = varClass(variance);
+      const badge = vp >= 0 ? '<span class="badge bg-success">Within Budget</span>' : '<span class="badge bg-danger">Over Budget</span>';
+      return [fmt.html(dept), fmt.currency(v.budget), fmt.currency(v.expense),
+              `<span class="${vc} fw-semibold">${fmt.currency(variance)}</span>`,
+              fmt.percent(vp), badge];
+    });
+  }
+
+  function renderDeptPage() {
+    const page = Paginators.dept.getSlice(AppState.tableData.dept);
+    const body = document.getElementById('deptSummaryBody');
+    if (!body) return;
+    body.innerHTML = page.length ?
+      page.map(cols => `<tr>${cols.map(c => `<td>${c}</td>`).join('')}</tr>`).join('') :
+      `<tr><td colspan="6" class="text-center">No data</td></tr>`;
+    Paginators.dept.render();
+  }
+
+  function renderDeptSummary() {
+    AppState.tableData.dept = buildDeptRows();
+    Paginators.dept.reset();
+    renderDeptPage();
+  }
+
+  function mountTableBody(bodyId, rows, emptyMsg) {
+    const body = document.getElementById(bodyId);
+    if (!body) return;
+    body.innerHTML = rows && rows.length ?
+      rows.map(cells => `<tr>${cells.map(c => `<td>${c}</td>`).join('')}</tr>`).join('') :
+      `<tr><td colspan="11" class="text-center p-4 text-muted">${fmt.html(emptyMsg)}</td></tr>`;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  EXPENSE DETAIL MODAL
+  // ─────────────────────────────────────────────────────────────────────────────
+  function showExpenseDetails(co, dept, cat, monthFilter) {
+    const exps = AppState.expenses.filter(e =>
+      e.COMPANY === co && e.COR_DEPT === dept && e.CODE_DESC === cat &&
+      (monthFilter === 'All' || monthFromDate(e.DATE) === monthFilter)
+    );
+    const budgetTotal = AppState.mergedRecords.filter(r =>
+      r.company === co && r.department === dept && r.category === cat &&
+      (monthFilter === 'All' || r.month === monthFilter)
+    ).reduce((s, r) => s + r.budget, 0);
+    const expTotal = exps.reduce((s, e) => s + toNum(e.TOTAL), 0);
+    const variance = budgetTotal - expTotal, vp = budgetTotal ? (variance / budgetTotal) * 100 : 0, vc = varClass(variance);
+    let html = `<p><strong>Budget Total:</strong> ${fmt.currency(budgetTotal)}</p>
+                <p><strong>Expense Total:</strong> ${fmt.currency(expTotal)}</p>
+                <p><strong>Variance:</strong> <span class="${vc} fw-semibold">${fmt.currency(variance)} (${fmt.percent(vp)})</span></p>
+                <p><em>Showing data for ${monthFilter !== 'All' ? 'month: '+monthFilter : 'all months'}</em></p>`;
+    html += exps.length ?
+      `<hr><ul class="list-unstyled">${exps.map(e => `<li class="mb-2"><strong>${e.DATE || 'Unknown'}</strong> - ${fmt.currency(toNum(e.TOTAL))}<br><small class="text-muted">Remarks: ${fmt.html(e.REMARKS || 'No remarks')}</small></li>`).join('')}</ul>` :
+      `<hr><p>No expense transactions found.</p>`;
+    document.getElementById('expenseModalBody').innerHTML = html;
+    document.getElementById('expenseModalTitle').textContent = `Expenses: ${co} | ${dept} | ${cat}${monthFilter !== 'All' ? ` (${monthFilter})` : ''}`;
+    new bootstrap.Modal(document.getElementById('expenseDetailModal')).show();
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  SUPABASE NOTES SAVE (FIXED UPSERT)
+  // ─────────────────────────────────────────────────────────────────────────────
+  async function saveNoteToSupabase(co, dept, cat, month, noteText, updatedBy) {
+    // Specify the conflict columns to resolve the unique constraint
+    await SB._upsert('notes', {
+      company: co.trim(),
+      cor_dept: dept.trim(),
+      code_desc: cat.trim(),
+      month: (month || '').trim(),
+      notes: noteText,
+      updated_by: updatedBy || 'user',
+      updated_at: new Date().toISOString()
+    }, ['company', 'cor_dept', 'code_desc', 'month']);
+    // Update local cache
+    AppState.notesMap[noteKey(co, dept, cat, month)] = noteText;
+  }
+
+  async function saveNote(co, dept, cat, month, notes, statusEl) {
+    const session = Auth.getSession();
+    if (!session?.user) throw new Error('Please sign in to save notes.');
+    await saveNoteToSupabase(co, dept, cat, month, notes, session.user.username);
+    if (statusEl) {
+      statusEl.textContent = 'Saved';
+      statusEl.className = 'note-save-status text-success ms-1';
+      setTimeout(() => statusEl.textContent = '', 2000);
+    }
+  }
+
+  async function saveAllNotes(containerSelector) {
+    const container = document.querySelector(containerSelector);
+    if (!container) return;
+    const cells = container.querySelectorAll('.notes-cell');
+    if (!cells.length) { alert('No notes to save.'); return; }
+    const session = Auth.getSession();
+    if (!session?.user) { alert('Please sign in.'); return; }
+    const allStatuses = container.querySelectorAll('.note-save-status');
+    const allBtns = container.querySelectorAll('.save-note-btn');
+    allBtns.forEach(b => b.disabled = true);
+    allStatuses.forEach(el => { el.textContent = 'Saving...'; el.className = 'note-save-status text-muted ms-1'; });
+    try {
+      const promises = [];
+      cells.forEach(cell => {
+        const ta = cell.querySelector('.variance-note-input');
+        if (!ta) return;
+        const co = attrDecode(ta.dataset.company), dept = attrDecode(ta.dataset.dept),
+              cat = attrDecode(ta.dataset.cat), month = attrDecode(ta.dataset.month || ''), notes = ta.value;
+        promises.push(saveNoteToSupabase(co, dept, cat, month, notes, session.user.username));
+      });
+      await Promise.all(promises);
+      allStatuses.forEach(el => { el.textContent = 'Saved all'; el.className = 'note-save-status text-success ms-1'; setTimeout(() => el.textContent = '', 3000); });
+    } catch (err) {
+      allStatuses.forEach(el => { el.textContent = err.message || 'Failed'; el.className = 'note-save-status text-danger ms-1'; });
+    } finally { allBtns.forEach(b => b.disabled = false); }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  CSV IMPORT
+  // ─────────────────────────────────────────────────────────────────────────────
+  function parseCSV(csvText) {
+    const lines = csvText.split(/\r?\n/).filter(l => l.trim());
+    if (lines.length < 2) throw new Error('CSV must have a header row and at least one data row.');
+    const parseRow = row => {
+      const r = []; let cur = '', inQ = false;
+      for (let i = 0; i < row.length; i++) {
+        const ch = row[i];
+        if (inQ) {
+          if (ch === '"' && i + 1 < row.length && row[i + 1] === '"') { cur += '"'; i++; }
+          else if (ch === '"') { inQ = false; }
+          else cur += ch;
+        } else {
+          if (ch === '"') inQ = true;
+          else if (ch === ',') { r.push(cur); cur = ''; }
+          else cur += ch;
+        }
+      }
+      r.push(cur);
+      return r;
+    };
+    const headers = parseRow(lines[0]).map(h => h.trim());
+    const norm = s => s.trim().toUpperCase().replace(/\s+/g, '');
+    const find = (...keys) => {
+      for (const k of keys) {
+        const idx = headers.findIndex(h => keys.map(norm).includes(norm(h)));
+        if (idx > -1) return headers[idx];
+      }
+      return null;
+    };
+    const companyCol = find('COMPANY');
+    const deptCol = find('DEPARTMENT', 'COR_DEPT');
+    const catCol = find('CATEGORY', 'CODE_DESC');
+    const notesCol = find('NOTES', 'NOTE');
+    const monthCol = find('MONTH');
+    if (!companyCol || !deptCol || !catCol || !notesCol)
+      throw new Error('CSV missing required columns: Company, Department, Category, Notes');
+    return lines.slice(1).map(line => {
+      const row = parseRow(line);
+      const obj = {};
+      headers.forEach((h, i) => obj[h] = (row[i] || '').trim());
+      const co = obj[companyCol], dept = obj[deptCol], cat = obj[catCol], notes = obj[notesCol], month = monthCol ? obj[monthCol] : '';
+      if (!co || !dept || !cat) return null;
+      return { company: co, department: dept, category: cat, month, notes };
+    }).filter(Boolean);
+  }
+
+  async function importCSVNotes(file) {
+    const statusEl = document.getElementById('csvUploadStatus');
+    const uploadBtn = document.getElementById('uploadCsvBtn');
+    uploadBtn.disabled = true; statusEl.textContent = 'Reading file...'; statusEl.className = 'small text-muted';
+    try {
+      const text = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result);
+        r.onerror = () => rej(new Error('Failed to read file'));
+        r.readAsText(file);
+      });
+      statusEl.textContent = 'Parsing CSV...';
+      const notesList = parseCSV(text);
+      statusEl.textContent = `Saving ${notesList.length} notes...`;
+      const session = Auth.getSession();
+      if (!session?.user) throw new Error('Please sign in.');
+      await Promise.all(notesList.map(n =>
+        saveNoteToSupabase(n.company, n.department, n.category, n.month, n.notes, session.user.username)
+      ));
+      renderExceptions();
+      statusEl.textContent = `✅ Imported ${notesList.length} notes successfully.`;
+      statusEl.className = 'small text-success';
+      document.getElementById('csvFileInput').value = '';
+      document.getElementById('csvFileInfo').textContent = '';
+      document.querySelector('#csvDropArea .mb-1').textContent = 'Drag & drop your CSV file here, or click to browse';
+    } catch (err) {
+      statusEl.textContent = '❌ ' + (err.message || 'Import failed');
+      statusEl.className = 'small text-danger';
+    } finally {
+      uploadBtn.disabled = true;
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  EXPORT
+  // ─────────────────────────────────────────────────────────────────────────────
+  const csvEscape = t => String(t).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/[🔴🟢⚠️✅❌]/g, '').trim();
+
+  function downloadCSV(headers, rows, filename) {
+    const csv = [headers.map(h => `"${h}"`).join(','), ...rows.map(r => r.map(c => `"${csvEscape(c)}"`).join(','))].join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' }));
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function exportMatrixCSV() {
+    const filtered = getDashboardFiltered();
+    let months = getDisplayMonths(filtered);
+    if (!months.length || months[0] === 'No Data') { alert('No data to export'); return; }
+    const catMap = aggregateCategoryData(filtered, months);
+    const { expense: sE, budget: sB, variance: sV } = resolvedMetrics();
+    const headers = ['Category'];
+    const rows = [];
+    if (!isExpBudLayout()) {
+      for (const m of months) {
+        if (sE) headers.push(`${m} Expense (₱)`);
+        if (sB) headers.push(`${m} Budget (₱)`);
+        if (sV) { headers.push(`${m} Variance (₱)`); headers.push(`${m} Var %`); }
+      }
+      headers.push('Total Exp (₱)', 'Total Bud (₱)', 'Total Var (₱)', 'Total Var %');
+      for (const [cat, mData] of catMap) {
+        let row = [cat]; let rE = 0, rB = 0;
+        for (const m of months) {
+          const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0 };
+          rE += d.expense; rB += d.budget;
+          if (sE) row.push(fmt.currency(d.expense));
+          if (sB) row.push(fmt.currency(d.budget));
+          if (sV) { row.push(fmt.currency(d.variance)); row.push(fmt.percent(d.variancePercent)); }
+        }
+        const tv = rB - rE, tvp = rB ? (tv / rB) * 100 : 0;
+        row.push(fmt.currency(rE), fmt.currency(rB), fmt.currency(tv), fmt.percent(tvp));
+        rows.push(row);
+      }
+    } else {
+      if (sE) { for (const m of months) headers.push(`${m} EXPENSE (₱)`); }
+      if (sB) { for (const m of months) headers.push(`${m} BUDGET (₱)`); }
+      if (sV) {
+        for (const m of months) headers.push(`${m} VARIANCE (₱)`);
+        for (const m of months) headers.push(`${m} VARIANCE (%)`);
+      }
+      headers.push('Total Exp (₱)', 'Total Bud (₱)', 'Total Var (₱)', 'Total Var %');
+      for (const [cat, mData] of catMap) {
+        let row = [cat]; let rE = 0, rB = 0;
+        const eV = [], bV = [], vV = [], vpV = [];
+        for (const m of months) {
+          const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0 };
+          eV.push(d.expense); bV.push(d.budget); vV.push(d.variance); vpV.push(d.variancePercent);
+          rE += d.expense; rB += d.budget;
+        }
+        if (sE) { for (const v of eV) row.push(fmt.currency(v)); }
+        if (sB) { for (const v of bV) row.push(fmt.currency(v)); }
+        if (sV) {
+          for (const v of vV) row.push(fmt.currency(v));
+          for (const p of vpV) row.push(fmt.percent(p));
+        }
+        const tv = rB - rE, tvp = rB ? (tv / rB) * 100 : 0;
+        row.push(fmt.currency(rE), fmt.currency(rB), fmt.currency(tv), fmt.percent(tvp));
+        rows.push(row);
+      }
+    }
+    downloadCSV(headers, rows, 'budget_variance_matrix.csv');
+  }
+
+  function exportDetailTableCSV(allRows, filename) {
+    if (!allRows || !allRows.length) { alert('No data to export'); return; }
+    const headers = ['Company','Department','Category','Month','Budget (₱)','Expense (₱)','Variance (₱)','Variance %','Status','Notes'];
+    const rows = allRows.map(cells => cells.filter((_, i) => i !== 9).map((c, i) => {
+      if (i === 9) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = c;
+        const ta = tmp.querySelector('textarea');
+        return ta ? ta.value : tmp.textContent.trim();
+      }
+      const tmp = document.createElement('div');
+      tmp.innerHTML = c;
+      return tmp.textContent.replace(/[🔴🟢⚠️✅❌]/g, '').trim();
+    }));
+    downloadCSV(headers, rows, filename);
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  UI HELPERS
+  // ─────────────────────────────────────────────────────────────────────────────
+  function showLoginScreen() {
+    document.getElementById('loginOverlay').style.display = 'flex';
+    document.getElementById('appShell').classList.remove('authenticated');
+    document.getElementById('loadingOverlay').style.display = 'none';
+  }
+
+  function showAppShell() {
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('appShell').classList.add('authenticated');
+  }
+
+  function showEmptyState() {
+    ['totalBudget','totalExpense','totalVariance'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '₱0';
+    });
+    const vl = document.getElementById('variancePercentLabel');
+    if (vl) vl.textContent = '0% Variance';
+    document.getElementById('dynamicTableHead').innerHTML = '';
+    document.getElementById('dynamicTableBody').innerHTML = `<tr><td colspan="20" class="text-center p-4 text-danger">Data unavailable</td></tr>`;
+    document.getElementById('monthlyTotalsHead').innerHTML = '';
+    document.getElementById('monthlyTotalsBody').innerHTML = '';
+    mountTableBody('bvDetailBody', [], 'Data unavailable');
+    mountTableBody('exceptionsBody', [], 'Data unavailable');
+    document.getElementById('deptSummaryBody').innerHTML = '';
+  }
+
+  function updateNavUserInfo() {
+    const session = Auth.getSession();
+    if (!session?.user) return;
+    const u = session.user;
+    document.getElementById('navUsername').textContent = u.displayName || u.username;
+    const parts = [];
+    const co = String(u.company || '');
+    const dept = String(u.department || '');
+    if (co.toUpperCase() === 'ALL' || co === '*') parts.push('All companies');
+    else if (co) parts.push(co.split('|').length + ' companies');
+    if (dept.toUpperCase() === 'ALL' || dept === '*') parts.push('All departments');
+    else if (dept) parts.push(dept.split('|').length + ' departments');
+    document.getElementById('navUserScope').textContent = parts.join(' · ') || '—';
+  }
+
+  function populateFilters() {
+    if (AppState.hasError || !AppState.authUser) return;
+    const access = resolveAccess(AppState.authUser);
+    const coOpts = ['All', ...access.companies].map(c => `<option value="${c}">${c}</option>`).join('');
+    const deptOpts = ['All', ...access.departments].map(d => `<option value="${d}">${d}</option>`).join('');
+    ['#companyFilter','#bvCompanyFilter','#exCompanyFilter'].forEach(s => document.querySelector(s).innerHTML = coOpts);
+    ['#deptFilter','#bvDeptFilter','#exDeptFilter'].forEach(s => document.querySelector(s).innerHTML = deptOpts);
+    document.querySelector('#companyFilter').value = AppState.dashboard.company;
+    document.querySelector('#deptFilter').value = AppState.dashboard.department;
+    document.querySelector('#bvCompanyFilter').value = AppState.budgetVariance.company;
+    document.querySelector('#bvDeptFilter').value = AppState.budgetVariance.department;
+    document.querySelector('#exCompanyFilter').value = AppState.exceptions.company;
+    document.querySelector('#exDeptFilter').value = AppState.exceptions.department;
+    document.querySelector('#metricSelect').value = AppState.dashboard.metric;
+    document.querySelectorAll('#layoutToggle .toggle-option').forEach(el =>
+      el.classList.toggle('active', el.dataset.layout === AppState.dashboard.layout)
+    );
+    document.querySelectorAll('#viewToggle .toggle-option').forEach(el =>
+      el.classList.toggle('active', el.dataset.view === AppState.dashboard.viewMode)
+    );
+  }
+
+  function updateLayoutToggleState() {
+    const metric = document.getElementById('metricSelect').value;
+    const isAll = metric === 'all';
+    const btns = document.querySelectorAll('#layoutToggle .toggle-option');
+    btns.forEach(b => { b.disabled = !isAll; b.classList.toggle('disabled', !isAll); });
+    if (!isAll) {
+      AppState.dashboard.layout = 'month';
+      btns.forEach(b => b.classList.toggle('active', b.dataset.layout === 'month'));
+    }
+    refreshDashboard();
+  }
+
+  function refreshDashboard() { renderKPIs(); renderMatrixTable(); renderDeptSummary(); }
+
+  function initUI() { populateFilters(); refreshDashboard(); renderBudgetVariance(); renderExceptions(); fixStickyBg(); updateLayoutToggleState(); }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  EVENT BINDING
+  // ─────────────────────────────────────────────────────────────────────────────
+  function bindEvents() {
+    // Login
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const errorEl = document.getElementById('loginError');
+      const btn = document.getElementById('loginSubmitBtn');
+      errorEl.style.display = 'none'; btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
+      try {
+        await Auth.login(username, password);
+        showAppShell();
+        await fetchData();
+      } catch (err) {
+        errorEl.textContent = err.message || 'Login failed';
+        errorEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Sign In';
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      Auth.logout();
+      Object.assign(AppState, { budgets: [], expenses: [], mergedRecords: [], authUser: null, hasError: false, notesMap: {} });
+      document.getElementById('loginPassword').value = '';
+      showLoginScreen();
+    });
+
+    // Sidebar & theme
+    document.getElementById('toggleSidebarBtn').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+      document.getElementById('mainContent').classList.toggle('expanded');
+    });
+    document.getElementById('darkModeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      document.getElementById('darkModeToggle').querySelector('i').className = `fas ${isDark ? 'fa-sun' : 'fa-moon'}`;
+      fixStickyBg();
+      renderMonthlyTotals();
+    });
+    document.getElementById('notificationBell').addEventListener('click', () => alert('🔔 No new notifications.'));
+    setInterval(() => {
+      document.getElementById('currentDateTime').textContent = new Date().toLocaleString();
+    }, 1000);
+
+    // Dashboard filters
+    const applyDashFilters = () => {
+      AppState.dashboard.company = document.getElementById('companyFilter').value;
+      AppState.dashboard.department = document.getElementById('deptFilter').value;
+      AppState.dashboard.searchTerm = document.getElementById('globalSearch').value;
+      refreshDashboard();
+    };
+    document.getElementById('applyFiltersBtn').addEventListener('click', applyDashFilters);
+    document.getElementById('companyFilter').addEventListener('change', applyDashFilters);
+    document.getElementById('deptFilter').addEventListener('change', applyDashFilters);
+    document.getElementById('globalSearch').addEventListener('input', debounce(applyDashFilters, 350));
+    document.getElementById('reloadSheetsBtn').addEventListener('click', () => fetchData({ silent: true, forceRefresh: true }));
+
+    document.getElementById('resetFilters').addEventListener('click', () => {
+      document.getElementById('companyFilter').value = 'All';
+      document.getElementById('deptFilter').value = 'All';
+      document.getElementById('globalSearch').value = '';
+      Object.assign(AppState.dashboard, { company: 'All', department: 'All', threshold: 0, searchTerm: '', layout: 'month', metric: 'all', viewMode: 'active' });
+      document.getElementById('metricSelect').value = 'all';
+      document.querySelectorAll('#layoutToggle .toggle-option').forEach(el => el.classList.toggle('active', el.dataset.layout === 'month'));
+      document.querySelectorAll('#viewToggle .toggle-option').forEach(el => el.classList.toggle('active', el.dataset.view === 'active'));
+      applyDashFilters();
+    });
+
+    document.querySelectorAll('#layoutToggle .toggle-option').forEach(btn => btn.addEventListener('click', function () {
+      this.parentNode.querySelectorAll('.toggle-option').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      AppState.dashboard.layout = this.dataset.layout;
+      refreshDashboard();
+    }));
+    document.querySelectorAll('#viewToggle .toggle-option').forEach(btn => btn.addEventListener('click', function () {
+      this.parentNode.querySelectorAll('.toggle-option').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      AppState.dashboard.viewMode = this.dataset.view;
+      refreshDashboard();
+    }));
+    document.getElementById('metricSelect').addEventListener('change', function () {
+      AppState.dashboard.metric = this.value;
+      updateLayoutToggleState();
+    });
+
+    // BV filters
+    const applyBvFilters = () => {
+      AppState.budgetVariance.company = document.getElementById('bvCompanyFilter').value;
+      AppState.budgetVariance.department = document.getElementById('bvDeptFilter').value;
+      AppState.budgetVariance.month = document.getElementById('bvMonthFilter').value;
+      AppState.budgetVariance.categorySearch = document.getElementById('bvCategorySearch').value;
+      renderBudgetVariance();
+    };
+    document.getElementById('applyBvFiltersBtn').addEventListener('click', applyBvFilters);
+    document.getElementById('resetBvFilters').addEventListener('click', () => {
+      document.getElementById('bvCompanyFilter').value = 'All';
+      document.getElementById('bvDeptFilter').value = 'All';
+      document.getElementById('bvMonthFilter').value = 'All';
+      document.getElementById('bvCategorySearch').value = '';
+      Object.assign(AppState.budgetVariance, { company: 'All', department: 'All', month: 'All', categorySearch: '' });
+      renderBudgetVariance();
+    });
+    document.getElementById('applyThresholdsBtn').addEventListener('click', () => {
+      AppState.budgetVariance.allowableAmount = toNum(document.getElementById('allowableAmount').value);
+      AppState.budgetVariance.allowablePercent = toNum(document.getElementById('allowablePercent').value);
+      renderBudgetVariance();
+      renderExceptions();
+    });
+
+    // Exceptions filters
+    const applyExFilters = () => {
+      AppState.exceptions.company = document.getElementById('exCompanyFilter').value;
+      AppState.exceptions.department = document.getElementById('exDeptFilter').value;
+      AppState.exceptions.month = document.getElementById('exMonthFilter').value;
+      AppState.exceptions.categorySearch = document.getElementById('exCategorySearch').value;
+      renderExceptions();
+    };
+    document.getElementById('applyExFiltersBtn').addEventListener('click', applyExFilters);
+    document.getElementById('resetExFilters').addEventListener('click', () => {
+      document.getElementById('exCompanyFilter').value = 'All';
+      document.getElementById('exDeptFilter').value = 'All';
+      document.getElementById('exMonthFilter').value = 'All';
+      document.getElementById('exCategorySearch').value = '';
+      Object.assign(AppState.exceptions, { company: 'All', department: 'All', month: 'All', categorySearch: '' });
+      renderExceptions();
+    });
+
+    // Export
+    document.getElementById('exportTableBtn').addEventListener('click', exportMatrixCSV);
+    document.getElementById('exportBvTableBtn').addEventListener('click', () =>
+      exportDetailTableCSV(AppState.tableData.bv, 'budget_variance_by_company.csv')
+    );
+    document.getElementById('exportExTableBtn').addEventListener('click', () =>
+      exportDetailTableCSV(AppState.tableData.exceptions, 'explanation_list.csv')
+    );
+
+    // Save notes
+    document.getElementById('saveAllBvNotes').addEventListener('click', () => saveAllNotes('#budgetVarianceSection .table-container'));
+    document.getElementById('saveAllExNotes').addEventListener('click', () => saveAllNotes('#exceptionsSection .table-container'));
+
+    // Nav
+    const TITLES = { dashboard: 'Budget Variance Dashboard', budgetVariance: 'Budget Variance', exceptions: 'Explanations (Over/No Expense)', deptSummary: 'Department Summary' };
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click', function () {
+      document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+      const section = this.dataset.section;
+      document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active-section'));
+      const target = document.getElementById(section + 'Section');
+      if (target) target.classList.add('active-section');
+      document.getElementById('pageTitle').textContent = TITLES[section] || section;
+      if (section === 'budgetVariance') renderBudgetVariance();
+      if (section === 'exceptions') renderExceptions();
+    }));
+
+    // Individual note save
+    document.addEventListener('click', async e => {
+      const btn = e.target.closest('.save-note-btn');
+      if (!btn) return;
+      const co = attrDecode(btn.dataset.company), dept = attrDecode(btn.dataset.dept),
+            cat = attrDecode(btn.dataset.cat), month = attrDecode(btn.dataset.month || '');
+      const cell = btn.closest('.notes-cell');
+      const notes = cell.querySelector('.variance-note-input').value;
+      const statusEl = cell.querySelector('.note-save-status');
+      btn.disabled = true;
+      statusEl.textContent = 'Saving...';
+      statusEl.className = 'note-save-status text-muted ms-1';
+      try {
+        await saveNote(co, dept, cat, month, notes, statusEl);
+      } catch (err) {
+        statusEl.textContent = err.message || 'Failed';
+        statusEl.className = 'note-save-status text-danger ms-1';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // Detail buttons
+    document.addEventListener('click', e => {
+      const el = e.target.closest('.view-details-btn, .view-exception-details');
+      if (!el) return;
+      showExpenseDetails(attrDecode(el.dataset.company), attrDecode(el.dataset.dept), attrDecode(el.dataset.cat), attrDecode(el.dataset.month || 'All'));
+    });
+
+    // Password toggle
+    const togglePwd = document.getElementById('togglePassword');
+    const pwdInput = document.getElementById('loginPassword');
+    if (togglePwd && pwdInput) {
+      togglePwd.addEventListener('click', function () {
+        const t = pwdInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        pwdInput.setAttribute('type', t);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+      });
+    }
+
+    // CSV upload
+    const fileInput = document.getElementById('csvFileInput');
+    const dropArea = document.getElementById('csvDropArea');
+    const uploadBtn = document.getElementById('uploadCsvBtn');
+    dropArea.addEventListener('click', () => fileInput.click());
+    dropArea.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropArea.style.borderColor = '#0A1929';
+      dropArea.style.background = '#f0f4ff';
+    });
+    dropArea.addEventListener('dragleave', () => {
+      dropArea.style.borderColor = '#cbd5e1';
+      dropArea.style.background = '';
+    });
+    dropArea.addEventListener('drop', e => {
+      e.preventDefault();
+      dropArea.style.borderColor = '#cbd5e1';
+      dropArea.style.background = '';
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        fileInput.dispatchEvent(new Event('change'));
+      }
+    });
+    fileInput.addEventListener('change', function () {
+      const file = this.files[0];
+      const info = document.getElementById('csvFileInfo');
+      const dropText = document.querySelector('#csvDropArea .mb-1');
+      if (file) {
+        info.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        dropText.textContent = 'Click or drop another file to replace';
+        uploadBtn.disabled = false;
+      } else {
+        info.textContent = '';
+        dropText.textContent = 'Drag & drop your CSV file here, or click to browse';
+        uploadBtn.disabled = true;
+      }
+    });
+    uploadBtn.addEventListener('click', function () {
+      const file = fileInput.files[0];
+      if (!file) { alert('Please select a CSV file first.'); return; }
+      importCSVNotes(file);
+    });
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  //  BOOT
+  // ─────────────────────────────────────────────────────────────────────────────
+  function boot() {
+    if (SUPABASE_URL.includes('YOUR_PROJECT_ID') || SUPABASE_ANON_KEY.includes('YOUR_ANON_KEY')) {
+      document.getElementById('loadingOverlay').innerHTML = `<div class="text-center px-3">
+        <i class="fas fa-cog fa-3x text-warning mb-3"></i>
+        <h5 class="text-warning">Setup Required</h5>
+        <p class="text-muted">Open <strong>index.html</strong> and replace<br>
+          <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code><br>with your Supabase project values.</p>
+        <p class="small text-muted">Find them in: Supabase Dashboard → Project Settings → API</p>
+      </div>`;
+      document.getElementById('loadingOverlay').style.display = 'flex';
+      document.getElementById('loginOverlay').style.display = 'none';
+      return;
+    }
+    bindEvents();
+    const session = Auth.getSession();
+    if (session?.user) fetchData(); else showLoginScreen();
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
