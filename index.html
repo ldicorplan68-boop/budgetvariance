@@ -528,6 +528,7 @@
 /**
  * Lakpue Drug Inc. | Budget Variance Intelligence
  * Improved code – faster notes saving with batch upsert.
+ * CSV export now uses saved notes from notesMap.
  */
 (function () {
   'use strict';
@@ -619,6 +620,13 @@
   const attrEncode = s => encodeURIComponent(String(s));
   const attrDecode = s => { try { return decodeURIComponent(s); } catch { return s; } };
   const varClass   = v => v < 0 ? 'text-negative' : 'text-positive';
+
+  // Helper to extract plain text from HTML string
+  function extractPlainText(html) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  }
 
   const monthFromDate = dateStr => {
     if (!dateStr) return 'Unknown';
@@ -1574,7 +1582,7 @@
   }
 
   // ──────────────────────────────────────────────────────────────
-  //  EXPORT
+  //  EXPORT (IMPROVED: uses saved notes from notesMap)
   // ──────────────────────────────────────────────────────────────
   const csvEscape = t => String(t).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/[🔴🟢⚠️✅❌]/g, '').trim();
 
@@ -1645,20 +1653,25 @@
     downloadCSV(headers, rows, 'budget_variance_matrix.csv');
   }
 
+  /**
+   * Export detail table (BV or Exceptions) using saved notes from notesMap.
+   */
   function exportDetailTableCSV(allRows, filename) {
     if (!allRows || !allRows.length) { alert('No data to export'); return; }
     const headers = ['Company','Department','Category','Month','Budget (₱)','Expense (₱)','Variance (₱)','Variance %','Status','Notes'];
-    const rows = allRows.map(cells => cells.filter((_, i) => i !== 9).map((c, i) => {
-      if (i === 9) {
-        const tmp = document.createElement('div');
-        tmp.innerHTML = c;
-        const ta = tmp.querySelector('textarea');
-        return ta ? ta.value : tmp.textContent.trim();
-      }
-      const tmp = document.createElement('div');
-      tmp.innerHTML = c;
-      return tmp.textContent.replace(/[🔴🟢⚠️✅❌]/g, '').trim();
-    }));
+    const rows = allRows.map(cells => {
+      // cells[0..3] are company, department, category, month (HTML formatted)
+      const company = extractPlainText(cells[0]);
+      const department = extractPlainText(cells[1]);
+      const category = extractPlainText(cells[2]);
+      const month = extractPlainText(cells[3]);
+      // Get saved note from notesMap
+      const note = AppState.notesMap[noteKey(company, department, category, month)] || '';
+      // Take first 9 columns (0..8) and append note
+      const rowData = cells.slice(0, 9).map(cell => extractPlainText(cell));
+      rowData.push(note);
+      return rowData;
+    });
     downloadCSV(headers, rows, filename);
   }
 
