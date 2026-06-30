@@ -254,7 +254,7 @@
               <button id="applyFiltersBtn" type="button" class="btn btn-navy flex-grow-1">
                 <i class="fas fa-filter me-1"></i> Apply
               </button>
-              <button id="reloadSheetsBtn" type="button" class="btn btn-outline-secondary" title="Reload data from Supabase">
+              <button id="reloadSheetsBtn" type="button" class="btn btn-outline-secondary" title="Reload data from Database">
                 <i class="fas fa-sync-alt"></i>
               </button>
             </div>
@@ -722,7 +722,7 @@
       } else {
         overlay.style.display = 'flex'; overlay.style.opacity = '1';
       }
-      if (loadText) loadText.textContent = 'Connecting to Supabase...';
+      if (loadText) loadText.textContent = 'Connecting to Database...';
       if (loadSub)  loadSub.textContent  = 'Fetching budget and expense data...';
 
       // Parallel fetch
