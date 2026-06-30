@@ -525,25 +525,25 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-// ══════════════════════════════════════════════════════════════════════════════
-// Lakpue Drug Inc. | Budget Variance Intelligence
-// Frontend-only app — Supabase REST API
-// ══════════════════════════════════════════════════════════════════════════════
+/**
+ * Lakpue Drug Inc. | Budget Variance Intelligence
+ * Improved code – faster notes saving with batch upsert.
+ */
 (function () {
   'use strict';
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  //  CONFIGURATION
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  CONFIG
+  // ──────────────────────────────────────────────────────────────
   const CFG = {
     MONTHS: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
     AUTH_KEY: 'bvAuthSession',
     PAGE_SIZE_OPTIONS: [10, 25, 50, 100, 'All']
   };
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  //  SUPABASE CLIENT (lightweight, no npm)
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  SUPABASE CLIENT (enhanced)
+  // ──────────────────────────────────────────────────────────────
   const SB = {
     _headers() {
       return {
@@ -562,14 +562,29 @@
       return res.json();
     },
 
+    // Fetch all rows (handles pagination)
+    async getAll(table, query = '') {
+      const PAGE = 1000;
+      let offset = 0, all = [];
+      while (true) {
+        const sep = query ? '&' : '';
+        const chunk = await this._get(table,
+          `${query}${sep}limit=${PAGE}&offset=${offset}`);
+        all = all.concat(chunk);
+        if (chunk.length < PAGE) break;
+        offset += PAGE;
+      }
+      return all;
+    },
+
     /**
-     * Upsert rows into a table.
-     * @param {string} table           - Table name
-     * @param {Array|Object} body      - Row(s) to upsert
-     * @param {string[]} [conflictCols] - Columns to use for conflict resolution (e.g., ['company','cor_dept'])
+     * Upsert one or many rows.
+     * @param {string} table          - Table name
+     * @param {Array|Object} body     - Row(s) to upsert
+     * @param {string[]} conflictCols - Columns for conflict resolution
      * @returns {Promise<boolean>}
      */
-    async _upsert(table, body, conflictCols = null) {
+    async upsert(table, body, conflictCols = null) {
       let url = `${SUPABASE_URL}/rest/v1/${table}`;
       if (conflictCols && Array.isArray(conflictCols) && conflictCols.length) {
         url += `?on_conflict=${conflictCols.join(',')}`;
@@ -587,27 +602,12 @@
         throw new Error(`Supabase UPSERT ${table}: ${res.status} ${errText}`);
       }
       return true;
-    },
-
-    // Fetch all rows of a table (handles Supabase 1000-row default limit)
-    async getAll(table, query = '') {
-      const PAGE = 1000;
-      let offset = 0, all = [];
-      while (true) {
-        const sep = query ? '&' : '';
-        const chunk = await this._get(table,
-          `${query}${sep}limit=${PAGE}&offset=${offset}`);
-        all = all.concat(chunk);
-        if (chunk.length < PAGE) break;
-        offset += PAGE;
-      }
-      return all;
     }
   };
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  //  UTILITY FUNCTIONS
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  UTILITIES
+  // ──────────────────────────────────────────────────────────────
   const fmt = {
     currency: v => `₱${Number(v).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
     percent:  v => `${Number(v).toFixed(1)}%`,
@@ -623,12 +623,10 @@
   const monthFromDate = dateStr => {
     if (!dateStr) return 'Unknown';
     const s = String(dateStr);
-    // ISO format: 2026-01-31
     if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
       const m = parseInt(s.split('-')[1], 10);
       return (m >= 1 && m <= 12) ? CFG.MONTHS[m - 1] : 'Unknown';
     }
-    // MM/dd/yyyy
     const parts = s.split('/');
     if (parts.length === 3) {
       const m = parseInt(parts[0], 10);
@@ -648,9 +646,9 @@
     document.querySelectorAll('.sticky-col').forEach(el => el.style.backgroundColor = bg);
   };
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  APPLICATION STATE
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   const AppState = {
     budgets: [], expenses: [], mergedRecords: [], notesMap: {},
     authUser: null, ytdMonthCutoff: null, hasError: false,
@@ -666,9 +664,9 @@
     tableData: { matrix: [], bv: [], exceptions: [], dept: [] }
   };
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  //  AUTHENTICATION
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  AUTH
+  // ──────────────────────────────────────────────────────────────
   const Auth = {
     getSession() { try { return JSON.parse(sessionStorage.getItem(CFG.AUTH_KEY)); } catch { return null; } },
     saveSession(user) { sessionStorage.setItem(CFG.AUTH_KEY, JSON.stringify({ user })); },
@@ -694,9 +692,9 @@
     logout() { this.clearSession(); }
   };
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  DATA FETCHING & PROCESSING
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   async function fetchData({ silent = false, forceRefresh = false } = {}) {
     const reloadBtn = document.getElementById('reloadSheetsBtn');
     let savedHtml = null;
@@ -719,7 +717,7 @@
       if (loadText) loadText.textContent = 'Connecting to Supabase...';
       if (loadSub)  loadSub.textContent  = 'Fetching budget and expense data...';
 
-      // Parallel fetch all tables
+      // Parallel fetch
       const [budgetRows, expenseRows, notesRows, closeRows] = await Promise.all([
         SB.getAll('budget'),
         SB.getAll('expenses'),
@@ -732,13 +730,13 @@
       if (closeRows.length && closeRows[0].date) {
         const d = new Date(closeRows[0].date);
         if (!isNaN(d.getTime())) {
-          const m = d.getMonth(); // 0‑based
-          AppState.ytdMonthCutoff = m - 1; // previous month
+          const m = d.getMonth();
+          AppState.ytdMonthCutoff = m - 1;
           if (AppState.ytdMonthCutoff < 0) AppState.ytdMonthCutoff = -1;
         }
       }
 
-      // Normalise budget rows
+      // Normalise
       AppState.budgets = budgetRows.map(r => ({
         COMPANY:   String(r.company || ''),
         COR_DEPT:  String(r.cor_dept || ''),
@@ -747,7 +745,6 @@
         TOTAL:     toNum(r.total)
       }));
 
-      // Normalise expense rows
       AppState.expenses = expenseRows.map(r => ({
         COMPANY:   String(r.company || ''),
         COR_DEPT:  String(r.cor_dept || ''),
@@ -757,7 +754,6 @@
         REMARKS:   String(r.remarks || '')
       }));
 
-      // Normalise notes map
       AppState.notesMap = {};
       for (const n of notesRows) {
         if (!n.company || !n.cor_dept || !n.code_desc) continue;
@@ -805,7 +801,7 @@
     }
   }
 
-  // Merge budgets and expenses into one record per (company, dept, category, month)
+  // Merge budgets and expenses – optimised with Map
   function mergeData(budgets, expenses) {
     const expMap = new Map();
     for (const e of expenses) {
@@ -833,6 +829,7 @@
     return merged;
   }
 
+  // Aggregate by key – more efficient
   function aggregateByKey(records) {
     const map = new Map();
     for (const r of records) {
@@ -848,9 +845,9 @@
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  //  ACCESS CONTROL (mirrors original logic)
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  ACCESS CONTROL
+  // ──────────────────────────────────────────────────────────────
   function isAllToken(v) {
     const s = String(v || '').trim().toUpperCase();
     return s === 'ALL' || s === '*' || s.startsWith('ALL ');
@@ -880,9 +877,9 @@
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  //  PAGINATOR CLASS
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  PAGINATOR (unchanged logic, minor cleanup)
+  // ──────────────────────────────────────────────────────────────
   class Paginator {
     constructor(id, fn) {
       this.el = document.getElementById(id);
@@ -955,9 +952,9 @@
     dept:   new Paginator('deptPagination',   () => renderDeptPage())
   };
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  DASHBOARD HELPERS
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function accessFiltered() {
     if (!AppState.authUser) return [];
     const access = resolveAccess(AppState.authUser);
@@ -1054,9 +1051,9 @@
     </div>`;
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  MATRIX TABLE
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function buildMatrixRows() {
     const filtered = getDashboardFiltered();
     let months = getDisplayMonths(filtered);
@@ -1185,9 +1182,9 @@
     fixStickyBg();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  MONTHLY TOTALS
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function renderMonthlyTotals() {
     const filtered = getDashboardFiltered();
     const months = getDisplayMonths(filtered);
@@ -1224,9 +1221,9 @@
     if (body) body.innerHTML = tb + gRow;
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  KPIs
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function renderKPIs() {
     const filtered = getDashboardFiltered();
     const budget = filtered.reduce((s, r) => s + r.budget, 0);
@@ -1239,9 +1236,9 @@
     document.getElementById('variancePercentLabel').textContent = `${pct.toFixed(1)}% Variance`;
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  BUDGET VARIANCE TABLE
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function buildBvRows() {
     if (AppState.hasError || !AppState.mergedRecords.length) return [];
     const access = resolveAccess(AppState.authUser);
@@ -1283,9 +1280,9 @@
     renderBvPage();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  EXCEPTIONS TABLE
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function buildExRows() {
     if (AppState.hasError || !AppState.mergedRecords.length) return [];
     const access = resolveAccess(AppState.authUser);
@@ -1331,9 +1328,9 @@
     renderExPage();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  DEPARTMENT SUMMARY
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function buildDeptRows() {
     if (AppState.hasError || !AppState.mergedRecords.length) return [];
     const filtered = getDashboardFiltered();
@@ -1377,9 +1374,9 @@
       `<tr><td colspan="11" class="text-center p-4 text-muted">${fmt.html(emptyMsg)}</td></tr>`;
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  EXPENSE DETAIL MODAL
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function showExpenseDetails(co, dept, cat, monthFilter) {
     const exps = AppState.expenses.filter(e =>
       e.COMPANY === co && e.COR_DEPT === dept && e.CODE_DESC === cat &&
@@ -1403,28 +1400,42 @@
     new bootstrap.Modal(document.getElementById('expenseDetailModal')).show();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  //  SUPABASE NOTES SAVE (FIXED UPSERT)
-  // ─────────────────────────────────────────────────────────────────────────────
-  async function saveNoteToSupabase(co, dept, cat, month, noteText, updatedBy) {
-    // Specify the conflict columns to resolve the unique constraint
-    await SB._upsert('notes', {
-      company: co.trim(),
-      cor_dept: dept.trim(),
-      code_desc: cat.trim(),
-      month: (month || '').trim(),
-      notes: noteText,
-      updated_by: updatedBy || 'user',
-      updated_at: new Date().toISOString()
-    }, ['company', 'cor_dept', 'code_desc', 'month']);
-    // Update local cache
-    AppState.notesMap[noteKey(co, dept, cat, month)] = noteText;
+  // ──────────────────────────────────────────────────────────────
+  //  NOTES SAVING — BATCH UPSERT (IMPROVED)
+  // ──────────────────────────────────────────────────────────────
+  /**
+   * Save one or many notes to Supabase using a single UPSERT request.
+   * @param {Array<Object>} notesArray - Array of note objects:
+   *   { company, cor_dept, code_desc, month, notes, updated_by }
+   * @returns {Promise<boolean>}
+   */
+  async function saveNotesBatch(notesArray) {
+    if (!notesArray || !notesArray.length) return true;
+    const body = notesArray.map(n => ({
+      company:     n.company.trim(),
+      cor_dept:    n.cor_dept.trim(),
+      code_desc:   n.code_desc.trim(),
+      month:       (n.month || '').trim(),
+      notes:       n.notes || '',
+      updated_by:  n.updated_by || 'user',
+      updated_at:  new Date().toISOString()
+    }));
+    await SB.upsert('notes', body, ['company', 'cor_dept', 'code_desc', 'month']);
+    // Update local cache for all saved notes
+    for (const n of body) {
+      AppState.notesMap[noteKey(n.company, n.cor_dept, n.code_desc, n.month)] = n.notes;
+    }
+    return true;
   }
 
+  // Single note save (uses batch with one item)
   async function saveNote(co, dept, cat, month, notes, statusEl) {
     const session = Auth.getSession();
     if (!session?.user) throw new Error('Please sign in to save notes.');
-    await saveNoteToSupabase(co, dept, cat, month, notes, session.user.username);
+    await saveNotesBatch([{
+      company: co, cor_dept: dept, code_desc: cat, month,
+      notes, updated_by: session.user.username
+    }]);
     if (statusEl) {
       statusEl.textContent = 'Saved';
       statusEl.className = 'note-save-status text-success ms-1';
@@ -1432,6 +1443,7 @@
     }
   }
 
+  // Save all notes in a container (uses batch)
   async function saveAllNotes(containerSelector) {
     const container = document.querySelector(containerSelector);
     if (!container) return;
@@ -1444,24 +1456,41 @@
     allBtns.forEach(b => b.disabled = true);
     allStatuses.forEach(el => { el.textContent = 'Saving...'; el.className = 'note-save-status text-muted ms-1'; });
     try {
-      const promises = [];
+      // Collect all notes
+      const notesArray = [];
       cells.forEach(cell => {
         const ta = cell.querySelector('.variance-note-input');
         if (!ta) return;
-        const co = attrDecode(ta.dataset.company), dept = attrDecode(ta.dataset.dept),
-              cat = attrDecode(ta.dataset.cat), month = attrDecode(ta.dataset.month || ''), notes = ta.value;
-        promises.push(saveNoteToSupabase(co, dept, cat, month, notes, session.user.username));
+        const co = attrDecode(ta.dataset.company);
+        const dept = attrDecode(ta.dataset.dept);
+        const cat = attrDecode(ta.dataset.cat);
+        const month = attrDecode(ta.dataset.month || '');
+        const notes = ta.value;
+        notesArray.push({
+          company: co, cor_dept: dept, code_desc: cat, month,
+          notes, updated_by: session.user.username
+        });
       });
-      await Promise.all(promises);
-      allStatuses.forEach(el => { el.textContent = 'Saved all'; el.className = 'note-save-status text-success ms-1'; setTimeout(() => el.textContent = '', 3000); });
+      // One batch request
+      await saveNotesBatch(notesArray);
+      allStatuses.forEach(el => {
+        el.textContent = 'Saved all';
+        el.className = 'note-save-status text-success ms-1';
+        setTimeout(() => el.textContent = '', 3000);
+      });
     } catch (err) {
-      allStatuses.forEach(el => { el.textContent = err.message || 'Failed'; el.className = 'note-save-status text-danger ms-1'; });
-    } finally { allBtns.forEach(b => b.disabled = false); }
+      allStatuses.forEach(el => {
+        el.textContent = err.message || 'Failed';
+        el.className = 'note-save-status text-danger ms-1';
+      });
+    } finally {
+      allBtns.forEach(b => b.disabled = false);
+    }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  //  CSV IMPORT
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  CSV IMPORT (uses batch upsert)
+  // ──────────────────────────────────────────────────────────────
   function parseCSV(csvText) {
     const lines = csvText.split(/\r?\n/).filter(l => l.trim());
     if (lines.length < 2) throw new Error('CSV must have a header row and at least one data row.');
@@ -1524,9 +1553,12 @@
       statusEl.textContent = `Saving ${notesList.length} notes...`;
       const session = Auth.getSession();
       if (!session?.user) throw new Error('Please sign in.');
-      await Promise.all(notesList.map(n =>
-        saveNoteToSupabase(n.company, n.department, n.category, n.month, n.notes, session.user.username)
-      ));
+      // Use batch upsert
+      const notesArray = notesList.map(n => ({
+        company: n.company, cor_dept: n.department, code_desc: n.category,
+        month: n.month, notes: n.notes, updated_by: session.user.username
+      }));
+      await saveNotesBatch(notesArray);
       renderExceptions();
       statusEl.textContent = `✅ Imported ${notesList.length} notes successfully.`;
       statusEl.className = 'small text-success';
@@ -1541,9 +1573,9 @@
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  EXPORT
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   const csvEscape = t => String(t).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/[🔴🟢⚠️✅❌]/g, '').trim();
 
   function downloadCSV(headers, rows, filename) {
@@ -1630,9 +1662,9 @@
     downloadCSV(headers, rows, filename);
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  UI HELPERS
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function showLoginScreen() {
     document.getElementById('loginOverlay').style.display = 'flex';
     document.getElementById('appShell').classList.remove('authenticated');
@@ -1713,9 +1745,9 @@
 
   function initUI() { populateFilters(); refreshDashboard(); renderBudgetVariance(); renderExceptions(); fixStickyBg(); updateLayoutToggleState(); }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  EVENT BINDING
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function bindEvents() {
     // Login
     document.getElementById('loginForm').addEventListener('submit', async e => {
@@ -1958,9 +1990,9 @@
     });
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   //  BOOT
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────
   function boot() {
     if (SUPABASE_URL.includes('YOUR_PROJECT_ID') || SUPABASE_ANON_KEY.includes('YOUR_ANON_KEY')) {
       document.getElementById('loadingOverlay').innerHTML = `<div class="text-center px-3">
