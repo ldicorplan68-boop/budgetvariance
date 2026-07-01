@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>Lakpue Drug Inc. | Budget Variance Intelligence</title>
     <link rel="icon" type="image/png"
     href="https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000" />
@@ -11,222 +11,94 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet" />
 
     <style>
-        /* ── all styles unchanged ── */
+        /* ──────────────────────────────────────────────────────────────
+               ROOT VARIABLES & RESET
+            ────────────────────────────────────────────────────────────── */
         :root {
             --navy: #0A1929;
+            --navy-light: #1a2d47;
             --emerald: #10b981;
+            --emerald-hover: #059669;
             --soft-red: #ef4444;
+            --soft-red-hover: #dc2626;
             --amber: #f59e0b;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --transition: 0.2s ease;
+            --sidebar-width: 260px;
+            --sidebar-collapsed: 0px;
+            --header-height: 64px;
         }
+
         * {
             font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
         }
+
+        html,
         body {
-            background: #f1f5f9;
-            overflow-x: hidden;
-        }
-
-        .sidebar {
-            background: var(--navy);
+            background: var(--gray-100);
             min-height: 100vh;
-            width: 260px;
-            position: fixed;
-            transition: margin-left .3s;
-            z-index: 1030;
-            display: flex;
-            flex-direction: column;
-        }
-        .sidebar.collapsed {
-            margin-left: -260px;
-        }
-        .sidebar .nav-link {
-            color: #b9c7d9;
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin: 4px 12px;
-            cursor: pointer;
-            transition: background .2s;
-        }
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            background: #1e2a3e;
-            color: white;
-        }
-        .sidebar .nav-link[data-section="reports"],
-        .sidebar .nav-link[data-section="settings"] {
-            display: none !important;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .main-content {
-            margin-left: 260px;
-            transition: margin-left .3s;
-            width: calc(100% - 260px);
+        /* ──────────────────────────────────────────────────────────────
+               SCROLLBAR
+            ────────────────────────────────────────────────────────────── */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-        .main-content.expanded {
-            margin-left: 0;
-            width: 100%;
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
-        .navbar-top {
-            background: white;
-            padding: 12px 24px;
-            border-bottom: 1px solid #e9edf2;
-            transition: background .2s;
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 8px;
         }
-
-        .stat-card {
-            background: white;
-            border-radius: 24px;
-            transition: transform .2s, background .2s;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, .02);
-            border: 1px solid #eef2f6;
-        }
-        .table-container {
-            background: white;
-            border-radius: 28px;
-            padding: 1rem;
-            overflow-x: auto;
-        }
-        .filter-card {
-            border-radius: 20px;
-            background: white;
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
         }
 
-        body.dark-mode {
-            background: #0f172a;
-            color: #e2e8f0;
-        }
-        .dark-mode .navbar-top {
-            background: #1e293b;
-            border-color: #334155;
-        }
-        .dark-mode .stat-card {
-            background: #1e293b;
-            border-color: #334155;
-        }
-        .dark-mode .table-container {
-            background: #1e293b;
-            border-color: #334155;
-        }
-        .dark-mode .filter-card {
-            background: #1e293b;
-            border-color: #334155;
-        }
-        .dark-mode .sticky-col {
-            background: #1e293b !important;
-        }
-        .dark-mode .monthly-totals-table {
-            background: #1e293b;
-        }
-        .dark-mode .monthly-totals-table th {
-            background: #0f172a;
-        }
-        .dark-mode .total-row {
-            background: #0f172a;
-            border-top-color: #475569;
-        }
-        .dark-mode .pagination-bar {
-            background: #0f172a;
-            border-color: #334155;
-        }
-        .dark-mode .pagination-bar select,
-        .dark-mode .pagination-bar span {
-            color: #e2e8f0;
-        }
-        .dark-mode .page-btn {
-            background: #1e293b;
-            border-color: #475569;
-            color: #e2e8f0;
-        }
-        .dark-mode .page-btn:hover {
-            background: #334155;
-        }
-        .dark-mode .page-btn.active {
-            background: var(--navy);
-            color: #fff;
-            border-color: var(--navy);
-        }
-        .dark-mode .toggle-group {
-            background: #334155;
-        }
-        .dark-mode .toggle-group .toggle-option {
-            color: #e2e8f0;
-        }
-        .dark-mode .toggle-group .toggle-option.active {
-            background: var(--navy);
-        }
-        .dark-mode .control-select {
-            background: #334155;
-            color: #e2e8f0;
-        }
-        .dark-mode .upload-area {
-            border-color: #475569;
-        }
-        .dark-mode .upload-area:hover {
-            background: #1e293b;
-        }
-
-        .btn-navy {
-            background: var(--navy);
-            color: white;
-        }
-        .btn-navy:hover {
-            background: #162a45;
-            color: white;
-        }
-        .sticky-col {
-            position: sticky;
-            left: 0;
-            background: #ffffff !important;
-            z-index: 2;
-        }
-        thead .sticky-col {
-            z-index: 3;
-        }
-        .text-negative {
-            color: #ef4444 !important;
-            font-weight: 600;
-        }
-        .text-positive {
-            color: #10b981 !important;
-            font-weight: 600;
-        }
-        .progress-threshold {
-            height: 4px;
-            border-radius: 4px;
-            background: #e2e8f0;
-            margin-top: 4px;
-        }
-        .progress-fill {
-            height: 100%;
-            border-radius: 4px;
-            background: var(--emerald);
-        }
-
-        .section-content {
-            display: none;
-        }
-        .section-content.active-section {
-            display: block;
-        }
-
-        .loading-overlay {
+        /* ──────────────────────────────────────────────────────────────
+               LOADING OVERLAY
+            ────────────────────────────────────────────────────────────── */
+        #loadingOverlay {
             position: fixed;
             inset: 0;
-            background: rgba(255, 255, 255, .95);
+            background: rgba(255, 255, 255, .96);
             z-index: 9999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity .3s;
+            transition: opacity .4s ease;
+        }
+        #loadingOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
         .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid #e2e8f0;
-            border-top: 4px solid var(--navy);
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--gray-200);
+            border-top-color: var(--navy);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin .8s linear infinite;
             margin-bottom: 20px;
         }
         @keyframes spin {
@@ -235,164 +107,684 @@
             }
         }
 
-        .monthly-totals-table {
-            margin-top: 2rem;
-            background: white;
-            border-radius: 24px;
-            overflow-x: auto;
-        }
-        .monthly-totals-table table {
-            margin-bottom: 0;
-        }
-        .monthly-totals-table th {
-            background: #f8fafc;
-        }
-        .total-row {
-            background: #f8f9fc;
-            font-weight: 700;
-            border-top: 2px solid #dee2e6;
-        }
-
+        /* ──────────────────────────────────────────────────────────────
+               LOGIN OVERLAY
+            ────────────────────────────────────────────────────────────── */
         #loginOverlay {
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, #0A1929 0%, #1e3a5f 100%);
+            background: linear-gradient(145deg, #0A1929 0%, #1a2d47 100%);
             z-index: 10000;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 1.5rem;
+        }
+        #loginOverlay.hidden {
+            display: none;
         }
         .login-card {
-            background: white;
-            border-radius: 24px;
-            padding: 2.5rem;
+            background: #fff;
+            border-radius: 28px;
+            padding: 2.25rem 2rem;
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, .25);
+            max-width: 400px;
+            box-shadow: 0 32px 64px rgba(0, 0, 0, .35);
+            animation: fadeUp .5s ease;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         .login-card .brand {
             color: var(--navy);
             font-weight: 700;
-            font-size: 1.35rem;
+            font-size: 1.25rem;
+            letter-spacing: -0.3px;
+        }
+        .login-card .brand-sub {
+            color: var(--gray-500);
+            font-size: .85rem;
+        }
+        .login-logo {
+            height: 36px;
+            width: auto;
+            margin-bottom: 6px;
         }
         .login-error {
             display: none;
-            font-size: .875rem;
+            font-size: .85rem;
         }
-        .login-logo {
-            height: 32px;
-            width: auto;
-            margin-bottom: 8px;
+        .login-card .form-control {
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            border-color: var(--gray-200);
+            font-size: .95rem;
         }
+        .login-card .form-control:focus {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(10, 25, 41, .12);
+        }
+        .login-card .btn-navy {
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            font-weight: 600;
+            transition: background .2s;
+        }
+        .login-card .btn-navy:hover {
+            background: var(--navy-light);
+        }
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--gray-400);
+            background: none;
+            border: none;
+            font-size: 1rem;
+            padding: 4px;
+        }
+        .password-toggle:hover {
+            color: var(--gray-600);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               APP SHELL
+            ────────────────────────────────────────────────────────────── */
         #appShell {
             display: none;
+            min-height: 100vh;
         }
         #appShell.authenticated {
-            display: block;
+            display: flex;
         }
 
-        .matrix-table-host {
-            display: block;
-            width: 100%;
-            min-height: 120px;
-            overflow-x: auto;
-        }
-        #varianceDataTable {
-            width: max-content;
-            min-width: 100%;
-            margin-bottom: 0;
-        }
-        #varianceDataTable th,
-        #varianceDataTable td {
-            white-space: nowrap;
-            vertical-align: middle;
-        }
-
-        .detail-table-scroll {
-            overflow-x: auto;
-        }
-        .detail-data-table {
-            min-width: 100%;
-        }
-        .detail-data-table td {
-            vertical-align: top;
-        }
-        .notes-cell {
-            min-width: 220px;
-            max-width: 320px;
-        }
-        .notes-cell textarea {
-            font-size: .85rem;
-            resize: vertical;
-        }
-        .note-save-status {
-            font-size: .75rem;
-        }
-
-        .toggle-group {
-            background: #f1f5f9;
-            border-radius: 40px;
-            padding: 4px;
-            display: inline-flex;
-            gap: 4px;
-        }
-        .toggle-group .toggle-option {
-            padding: 6px 16px;
-            border-radius: 32px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background .2s;
-            border: none;
-            background: transparent;
-            color: #333;
-        }
-        .toggle-group .toggle-option.active {
+        /* ──────────────────────────────────────────────────────────────
+               SIDEBAR — slide-out drawer on mobile
+            ────────────────────────────────────────────────────────────── */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
             background: var(--navy);
-            color: white;
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            transition: transform .3s cubic-bezier(.4, 0, .2, 1), box-shadow .3s;
+            transform: translateX(0);
+            box-shadow: 2px 0 24px rgba(0, 0, 0, .12);
+            overflow-y: auto;
         }
-        .toggle-group .toggle-option:disabled {
-            opacity: .5;
-            cursor: not-allowed;
+        .sidebar.collapsed {
+            transform: translateX(-100%);
         }
-        .control-select {
-            background: #f1f5f9;
-            border: none;
-            padding: 6px 16px 6px 12px;
-            border-radius: 32px;
-            font-size: 1rem;
+        .sidebar-brand {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-brand img {
+            height: 32px;
+            width: auto;
+        }
+        .sidebar-brand span {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.05rem;
+            letter-spacing: -0.3px;
+        }
+        .sidebar .nav {
+            padding: 12px 10px;
+            flex: 1;
+        }
+        .sidebar .nav-link {
+            color: #b9c7d9;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            margin: 2px 0;
             cursor: pointer;
-            color: #333;
-            outline: none;
+            transition: background .2s, color .2s;
+            font-size: .92rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-
-        .upload-area {
-            border: 2px dashed #cbd5e1;
-            border-radius: 16px;
-            padding: 20px;
+        .sidebar .nav-link i {
+            width: 20px;
             text-align: center;
-            cursor: pointer;
-            transition: background .2s;
+            font-size: 1rem;
         }
-        .upload-area:hover {
-            background: #f8fafc;
+        .sidebar .nav-link:hover {
+            background: rgba(255, 255, 255, .07);
+            color: #fff;
+        }
+        .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, .10);
+            color: #fff;
+            font-weight: 500;
+        }
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255, 255, 255, .06);
+        }
+        .sidebar-footer .btn-logout {
+            width: 100%;
+            background: rgba(239, 68, 68, .15);
+            color: #f87171;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            font-weight: 500;
+            transition: background .2s, color .2s;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .sidebar-footer .btn-logout:hover {
+            background: rgba(239, 68, 68, .25);
+            color: #fca5a5;
         }
 
-        .pagination-bar {
+        /* ──────────────────────────────────────────────────────────────
+               MAIN CONTENT
+            ────────────────────────────────────────────────────────────── */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left .3s cubic-bezier(.4, 0, .2, 1);
+        }
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               TOP NAVBAR
+            ────────────────────────────────────────────────────────────── */
+        .navbar-top {
+            background: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--gray-200);
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 8px;
-            padding: 10px 14px;
-            margin-top: 12px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
+            min-height: var(--header-height);
+            position: sticky;
+            top: 0;
+            z-index: 1040;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, .92);
+        }
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .navbar-left .hamburger {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            padding: 6px 8px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .navbar-left .hamburger:hover {
+            background: var(--gray-100);
+        }
+        .navbar-left .page-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--navy);
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+        }
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .navbar-right .datetime {
+            font-size: .8rem;
+            color: var(--gray-500);
+            white-space: nowrap;
+        }
+        .navbar-right .notif-btn {
+            background: none;
+            border: none;
+            color: var(--gray-500);
+            font-size: 1.1rem;
+            padding: 6px 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background .2s;
+            position: relative;
+        }
+        .navbar-right .notif-btn:hover {
+            background: var(--gray-100);
+        }
+        .navbar-right .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px 4px 4px;
+            background: var(--gray-100);
+            border-radius: 40px;
+        }
+        .navbar-right .user-badge .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--navy);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: .8rem;
+        }
+        .navbar-right .user-badge .user-info {
+            display: none;
+        }
+        .navbar-right .user-badge .user-info .name {
+            font-weight: 500;
             font-size: .85rem;
+            line-height: 1.2;
+            color: var(--gray-800);
+        }
+        .navbar-right .user-badge .user-info .scope {
+            font-size: .7rem;
+            color: var(--gray-500);
+        }
+        .navbar-right .dark-toggle {
+            background: none;
+            border: none;
+            color: var(--gray-500);
+            font-size: 1rem;
+            padding: 6px 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .navbar-right .dark-toggle:hover {
+            background: var(--gray-100);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               PAGE CONTENT
+            ────────────────────────────────────────────────────────────── */
+        .page-content {
+            padding: 20px;
+            flex: 1;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               SECTION TOGGLING
+            ────────────────────────────────────────────────────────────── */
+        .section-content {
+            display: none;
+            animation: fadeUp .35s ease;
+        }
+        .section-content.active-section {
+            display: block;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               CARDS
+            ────────────────────────────────────────────────────────────── */
+        .card-lakpue {
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow);
+            transition: box-shadow .2s, transform .2s;
+        }
+        .card-lakpue:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               STAT CARDS
+            ────────────────────────────────────────────────────────────── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow);
+            transition: transform .2s, box-shadow .2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .stat-card .label {
+            font-size: .8rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-top: 2px;
+            letter-spacing: -0.3px;
+        }
+        .stat-card .sub {
+            font-size: .8rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+        .stat-card .sub .positive {
+            color: var(--emerald);
+        }
+        .stat-card .sub .negative {
+            color: var(--soft-red);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               FILTER BAR
+            ────────────────────────────────────────────────────────────── */
+        .filter-bar {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        .filter-bar .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 12px;
+            align-items: end;
+        }
+        .filter-bar .filter-grid .full-width {
+            grid-column: 1 / -1;
+        }
+        .filter-bar label {
+            font-size: .78rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-bottom: 3px;
+            display: block;
+        }
+        .filter-bar .form-control,
+        .filter-bar .form-select {
+            border-radius: var(--radius-sm);
+            border-color: var(--gray-200);
+            font-size: .9rem;
+            padding: 8px 12px;
+            background: #fff;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .filter-bar .form-control:focus,
+        .filter-bar .form-select:focus {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(10, 25, 41, .10);
+            outline: none;
+        }
+        .filter-bar .btn-apply {
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 8px 18px;
+            font-weight: 500;
+            font-size: .9rem;
+            transition: background .2s;
+            white-space: nowrap;
+        }
+        .filter-bar .btn-apply:hover {
+            background: var(--navy-light);
+        }
+        .filter-bar .btn-outline-secondary {
+            border-color: var(--gray-300);
+            color: var(--gray-600);
+            border-radius: var(--radius-sm);
+            padding: 8px 14px;
+            font-size: .9rem;
+            transition: all .2s;
+        }
+        .filter-bar .btn-outline-secondary:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-400);
+        }
+        .filter-bar .btn-outline-danger {
+            border-color: var(--soft-red);
+            color: var(--soft-red);
+            border-radius: var(--radius-sm);
+            padding: 8px 14px;
+            font-size: .9rem;
+            transition: all .2s;
+        }
+        .filter-bar .btn-outline-danger:hover {
+            background: var(--soft-red);
+            color: #fff;
+        }
+        .filter-bar .filter-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               TOGGLE GROUP
+            ────────────────────────────────────────────────────────────── */
+        .toggle-group {
+            background: var(--gray-100);
+            border-radius: 40px;
+            padding: 3px;
+            display: inline-flex;
+            gap: 3px;
+            flex-wrap: wrap;
+        }
+        .toggle-group .toggle-option {
+            padding: 6px 16px;
+            border-radius: 32px;
+            cursor: pointer;
+            font-size: .85rem;
+            font-weight: 500;
+            transition: background .2s, color .2s, box-shadow .2s;
+            border: none;
+            background: transparent;
+            color: var(--gray-600);
+            white-space: nowrap;
+        }
+        .toggle-group .toggle-option.active {
+            background: var(--navy);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(10, 25, 41, .20);
+        }
+        .toggle-group .toggle-option:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+        .toggle-group .toggle-option:not(:disabled):hover {
+            background: rgba(10, 25, 41, .08);
+        }
+        .toggle-group .toggle-option.active:hover {
+            background: var(--navy-light);
+        }
+
+        .control-select {
+            background: var(--gray-100);
+            border: none;
+            padding: 6px 16px 6px 12px;
+            border-radius: 40px;
+            font-size: .85rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--gray-700);
+            outline: none;
+            transition: background .2s;
+        }
+        .control-select:hover {
+            background: var(--gray-200);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               TABLE CONTAINER
+            ────────────────────────────────────────────────────────────── */
+        .table-container {
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow);
+            padding: 16px 16px 8px;
+            overflow: hidden;
+        }
+        .table-container .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .table-container .table-toolbar .title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .table-container .table-toolbar .title i {
+            color: var(--gray-500);
+        }
+        .table-container .table-toolbar .actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .table-container .table-toolbar .actions .btn-sm {
+            font-size: .8rem;
+            padding: 5px 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -4px;
+            padding: 0 4px;
+        }
+        .table-scroll table {
+            width: 100%;
+            min-width: 600px;
+            margin-bottom: 0;
+            font-size: .85rem;
+            border-collapse: collapse;
+        }
+        .table-scroll table th,
+        .table-scroll table td {
+            padding: 8px 10px;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--gray-200);
+            white-space: nowrap;
+        }
+        .table-scroll table th {
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 2px solid var(--gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        .table-scroll table .sticky-col {
+            position: sticky;
+            left: 0;
+            background: #fff;
+            z-index: 3;
+            border-right: 1px solid var(--gray-200);
+        }
+        .table-scroll table thead .sticky-col {
+            z-index: 6;
+            background: var(--gray-50);
+        }
+        .table-scroll table .text-end {
+            text-align: right;
+        }
+        .table-scroll table .text-center {
+            text-align: center;
+        }
+        .table-scroll table .fw-semibold {
+            font-weight: 600;
+        }
+        .table-scroll table .text-negative {
+            color: var(--soft-red);
+        }
+        .table-scroll table .text-positive {
+            color: var(--emerald);
+        }
+
+        /* progress bar in table */
+        .progress-threshold {
+            height: 4px;
+            border-radius: 4px;
+            background: var(--gray-200);
+            margin-top: 4px;
+            overflow: hidden;
+        }
+        .progress-threshold .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width .3s;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               PAGINATION
+            ────────────────────────────────────────────────────────────── */
+        .pagination-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 10px 4px 4px;
+            margin-top: 12px;
+            border-top: 1px solid var(--gray-200);
+            font-size: .82rem;
+            color: var(--gray-600);
         }
         .pagination-bar .rows-info {
-            color: #64748b;
             white-space: nowrap;
         }
         .pagination-bar .rows-select {
@@ -400,35 +792,37 @@
             align-items: center;
             gap: 6px;
         }
-        .pagination-bar select {
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            padding: 3px 6px;
-            font-size: .82rem;
-            background: white;
+        .pagination-bar .rows-select select {
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-size: .8rem;
+            background: #fff;
         }
         .pagination-bar .page-controls {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
+            flex-wrap: wrap;
         }
         .page-btn {
-            border: 1px solid #cbd5e1;
-            background: white;
-            border-radius: 8px;
+            border: 1px solid var(--gray-200);
+            background: #fff;
+            border-radius: 6px;
             padding: 4px 10px;
-            font-size: .82rem;
+            font-size: .8rem;
             cursor: pointer;
-            transition: background .15s, color .15s;
-            min-width: 34px;
+            transition: background .15s, color .15s, border-color .15s;
+            min-width: 32px;
             text-align: center;
+            color: var(--gray-600);
         }
-        .page-btn:hover {
-            background: #e2e8f0;
+        .page-btn:hover:not(:disabled) {
+            background: var(--gray-100);
         }
         .page-btn.active {
             background: var(--navy);
-            color: white;
+            color: #fff;
             border-color: var(--navy);
             font-weight: 600;
         }
@@ -438,233 +832,927 @@
         }
         .page-ellipsis {
             padding: 4px 6px;
-            color: #94a3b8;
-            font-size: .82rem;
-        }
-
-        .controls-row>* {
-            flex: 1 1 0;
-            min-width: 220px;
-        }
-        #metricSelect,
-        #resetFilters {
-            width: auto;
-            flex: 0 0 auto;
-        }
-        #layoutToggle,
-        #viewToggle {
-            width: 100%;
-        }
-        .user-menu-label {
+            color: var(--gray-400);
             font-size: .8rem;
-            line-height: 1.2;
-            text-align: right;
         }
 
+        /* ──────────────────────────────────────────────────────────────
+               NOTES CELL
+            ────────────────────────────────────────────────────────────── */
+        .notes-cell {
+            min-width: 180px;
+            max-width: 280px;
+        }
+        .notes-cell textarea {
+            font-size: .8rem;
+            resize: vertical;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--gray-200);
+            padding: 6px 8px;
+            width: 100%;
+            transition: border-color .2s;
+            font-family: 'Inter', sans-serif;
+            background: #fff;
+        }
+        .notes-cell textarea:focus {
+            border-color: var(--navy);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(10, 25, 41, .08);
+        }
+        .notes-cell .note-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+        .notes-cell .note-actions .btn-sm {
+            font-size: .7rem;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+        .notes-cell .note-status {
+            font-size: .7rem;
+            color: var(--gray-400);
+        }
+        .notes-cell .note-status.success {
+            color: var(--emerald);
+        }
+        .notes-cell .note-status.error {
+            color: var(--soft-red);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               BADGE
+            ────────────────────────────────────────────────────────────── */
+        .badge-lakpue {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 40px;
+            font-size: .75rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        .badge-lakpue.bg-danger {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .badge-lakpue.bg-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .badge-lakpue.bg-primary {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-lakpue.bg-secondary {
+            background: var(--gray-200);
+            color: var(--gray-600);
+        }
+        .badge-lakpue.bg-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               MONTHLY TOTALS
+            ────────────────────────────────────────────────────────────── */
+        .monthly-totals {
+            margin-top: 24px;
+        }
+        .monthly-totals .total-row {
+            background: var(--gray-50);
+            font-weight: 700;
+            border-top: 2px solid var(--gray-300);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               CSV UPLOAD
+            ────────────────────────────────────────────────────────────── */
+        .upload-area {
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius-sm);
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: background .2s, border-color .2s;
+            background: var(--gray-50);
+        }
+        .upload-area:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-400);
+        }
+        .upload-area.dragover {
+            border-color: var(--navy);
+            background: rgba(10, 25, 41, .04);
+        }
+        .upload-area i {
+            color: var(--gray-400);
+        }
+        .upload-area p {
+            margin-bottom: 2px;
+            font-size: .9rem;
+            color: var(--gray-600);
+        }
+        .upload-area .hint {
+            font-size: .78rem;
+            color: var(--gray-400);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               SORT INDICATOR
+            ────────────────────────────────────────────────────────────── */
         .clickable-header {
             cursor: pointer;
             user-select: none;
+            transition: background .15s;
         }
         .clickable-header:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-        .dark-mode .clickable-header:hover {
-            background-color: rgba(255, 255, 255, 0.05);
+            background: rgba(10, 25, 41, .04);
         }
         .sort-indicator {
-            margin-left: 6px;
-            font-size: 0.7rem;
+            margin-left: 4px;
+            font-size: .65rem;
+            color: var(--gray-400);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               MODAL
+            ────────────────────────────────────────────────────────────── */
+        .modal-lakpue .modal-content {
+            border-radius: var(--radius);
+            border: none;
+            box-shadow: 0 32px 64px rgba(0, 0, 0, .20);
+        }
+        .modal-lakpue .modal-header {
+            border-bottom: 1px solid var(--gray-200);
+            padding: 18px 24px;
+        }
+        .modal-lakpue .modal-body {
+            padding: 20px 24px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .modal-lakpue .modal-footer {
+            border-top: 1px solid var(--gray-200);
+            padding: 14px 24px;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               DARK MODE
+            ────────────────────────────────────────────────────────────── */
+        body.dark-mode {
+            background: var(--gray-900);
+            color: #e2e8f0;
+        }
+        body.dark-mode .navbar-top {
+            background: rgba(30, 41, 59, .92);
+            border-color: var(--gray-700);
+        }
+        body.dark-mode .navbar-top .page-title {
+            color: #e2e8f0;
+        }
+        body.dark-mode .navbar-top .datetime {
+            color: var(--gray-400);
+        }
+        body.dark-mode .navbar-top .user-badge {
+            background: var(--gray-700);
+        }
+        body.dark-mode .navbar-top .user-badge .user-info .name {
+            color: #e2e8f0;
+        }
+        body.dark-mode .navbar-top .user-badge .user-info .scope {
+            color: var(--gray-400);
+        }
+        body.dark-mode .navbar-top .hamburger {
+            color: var(--gray-300);
+        }
+        body.dark-mode .navbar-top .hamburger:hover {
+            background: var(--gray-700);
+        }
+        body.dark-mode .navbar-top .notif-btn {
+            color: var(--gray-300);
+        }
+        body.dark-mode .navbar-top .notif-btn:hover {
+            background: var(--gray-700);
+        }
+        body.dark-mode .navbar-top .dark-toggle {
+            color: var(--gray-300);
+        }
+        body.dark-mode .navbar-top .dark-toggle:hover {
+            background: var(--gray-700);
+        }
+
+        body.dark-mode .card-lakpue,
+        body.dark-mode .stat-card,
+        body.dark-mode .filter-bar,
+        body.dark-mode .table-container {
+            background: var(--gray-800);
+            border-color: var(--gray-700);
+        }
+        body.dark-mode .stat-card .value {
+            color: #e2e8f0;
+        }
+        body.dark-mode .stat-card .label {
+            color: var(--gray-400);
+        }
+        body.dark-mode .stat-card .sub {
+            color: var(--gray-400);
+        }
+
+        body.dark-mode .filter-bar label {
+            color: var(--gray-300);
+        }
+        body.dark-mode .filter-bar .form-control,
+        body.dark-mode .filter-bar .form-select {
+            background: var(--gray-700);
+            border-color: var(--gray-600);
+            color: #e2e8f0;
+        }
+        body.dark-mode .filter-bar .form-control:focus,
+        body.dark-mode .filter-bar .form-select:focus {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(10, 25, 41, .30);
+        }
+        body.dark-mode .filter-bar .btn-outline-secondary {
+            border-color: var(--gray-600);
+            color: var(--gray-300);
+        }
+        body.dark-mode .filter-bar .btn-outline-secondary:hover {
+            background: var(--gray-700);
+        }
+        body.dark-mode .filter-bar .btn-outline-danger {
+            border-color: var(--soft-red);
+            color: var(--soft-red);
+        }
+        body.dark-mode .filter-bar .btn-outline-danger:hover {
+            background: var(--soft-red);
+            color: #fff;
+        }
+        body.dark-mode .filter-bar .filter-actions {
+            border-color: var(--gray-700);
+        }
+
+        body.dark-mode .table-scroll table th {
+            background: var(--gray-700);
+            color: #e2e8f0;
+            border-color: var(--gray-600);
+        }
+        body.dark-mode .table-scroll table td {
+            border-color: var(--gray-700);
+            color: #e2e8f0;
+        }
+        body.dark-mode .table-scroll table .sticky-col {
+            background: var(--gray-800);
+        }
+        body.dark-mode .table-scroll table thead .sticky-col {
+            background: var(--gray-700);
+        }
+        body.dark-mode .table-scroll table .bg-light {
+            background: var(--gray-700) !important;
+        }
+        body.dark-mode .table-scroll table .bg-secondary {
+            background: var(--gray-600) !important;
+        }
+        body.dark-mode .table-scroll table .text-white {
+            color: #e2e8f0 !important;
+        }
+
+        body.dark-mode .toggle-group {
+            background: var(--gray-700);
+        }
+        body.dark-mode .toggle-group .toggle-option {
+            color: var(--gray-300);
+        }
+        body.dark-mode .toggle-group .toggle-option.active {
+            background: var(--navy);
+            color: #fff;
+        }
+        body.dark-mode .control-select {
+            background: var(--gray-700);
+            color: #e2e8f0;
+        }
+        body.dark-mode .control-select:hover {
+            background: var(--gray-600);
+        }
+
+        body.dark-mode .pagination-bar {
+            border-color: var(--gray-700);
+            color: var(--gray-300);
+        }
+        body.dark-mode .pagination-bar select {
+            background: var(--gray-700);
+            border-color: var(--gray-600);
+            color: #e2e8f0;
+        }
+        body.dark-mode .page-btn {
+            background: var(--gray-700);
+            border-color: var(--gray-600);
+            color: #e2e8f0;
+        }
+        body.dark-mode .page-btn:hover:not(:disabled) {
+            background: var(--gray-600);
+        }
+        body.dark-mode .page-btn.active {
+            background: var(--navy);
+            border-color: var(--navy);
+        }
+        body.dark-mode .page-ellipsis {
+            color: var(--gray-500);
+        }
+
+        body.dark-mode .notes-cell textarea {
+            background: var(--gray-700);
+            border-color: var(--gray-600);
+            color: #e2e8f0;
+        }
+        body.dark-mode .notes-cell textarea:focus {
+            border-color: var(--navy);
+        }
+
+        body.dark-mode .badge-lakpue.bg-danger {
+            background: #7f1d1d;
+            color: #fca5a5;
+        }
+        body.dark-mode .badge-lakpue.bg-success {
+            background: #065f46;
+            color: #6ee7b7;
+        }
+        body.dark-mode .badge-lakpue.bg-primary {
+            background: #1e3a5f;
+            color: #93c5fd;
+        }
+        body.dark-mode .badge-lakpue.bg-secondary {
+            background: var(--gray-600);
+            color: var(--gray-300);
+        }
+        body.dark-mode .badge-lakpue.bg-warning {
+            background: #78350f;
+            color: #fcd34d;
+        }
+
+        body.dark-mode .monthly-totals .total-row {
+            background: var(--gray-700);
+            border-color: var(--gray-600);
+        }
+
+        body.dark-mode .upload-area {
+            background: var(--gray-700);
+            border-color: var(--gray-600);
+        }
+        body.dark-mode .upload-area:hover {
+            background: var(--gray-600);
+        }
+
+        body.dark-mode .clickable-header:hover {
+            background: rgba(255, 255, 255, .04);
+        }
+
+        body.dark-mode .modal-lakpue .modal-content {
+            background: var(--gray-800);
+            color: #e2e8f0;
+        }
+        body.dark-mode .modal-lakpue .modal-header {
+            border-color: var(--gray-700);
+        }
+        body.dark-mode .modal-lakpue .modal-footer {
+            border-color: var(--gray-700);
+        }
+        body.dark-mode .modal-lakpue .btn-close {
+            filter: invert(1);
+        }
+
+        body.dark-mode .login-card {
+            background: var(--gray-800);
+            color: #e2e8f0;
+        }
+        body.dark-mode .login-card .brand {
+            color: #e2e8f0;
+        }
+        body.dark-mode .login-card .brand-sub {
+            color: var(--gray-400);
+        }
+        body.dark-mode .login-card .form-control {
+            background: var(--gray-700);
+            border-color: var(--gray-600);
+            color: #e2e8f0;
+        }
+        body.dark-mode .login-card .form-control:focus {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(10, 25, 41, .30);
+        }
+        body.dark-mode .login-card .btn-navy {
+            background: var(--navy-light);
+        }
+        body.dark-mode .login-card .btn-navy:hover {
+            background: var(--navy);
+        }
+        body.dark-mode .password-toggle {
+            color: var(--gray-400);
+        }
+
+        body.dark-mode .sidebar {
+            background: var(--gray-900);
+        }
+        body.dark-mode .sidebar .nav-link {
+            color: var(--gray-400);
+        }
+        body.dark-mode .sidebar .nav-link:hover {
+            background: rgba(255, 255, 255, .06);
+            color: #fff;
+        }
+        body.dark-mode .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, .08);
+            color: #fff;
+        }
+        body.dark-mode .sidebar-footer .btn-logout {
+            background: rgba(239, 68, 68, .15);
+            color: #f87171;
+        }
+        body.dark-mode .sidebar-footer .btn-logout:hover {
+            background: rgba(239, 68, 68, .25);
+            color: #fca5a5;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               RESPONSIVE
+            ────────────────────────────────────────────────────────────── */
+        @media (max-width: 992px) {
+            :root {
+                --sidebar-width: 280px;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+                box-shadow: 4px 0 32px rgba(0, 0, 0, .18);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .main-content.expanded {
+                margin-left: 0;
+            }
+            .navbar-right .user-badge .user-info {
+                display: none;
+            }
+            .navbar-right .datetime {
+                display: none;
+            }
         }
 
         @media (max-width: 768px) {
-            .toggle-group {
-                flex-wrap: wrap;
+            .page-content {
+                padding: 12px;
+            }
+            .stat-grid {
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+                gap: 10px;
+            }
+            .stat-card {
+                padding: 14px 16px;
+            }
+            .stat-card .value {
+                font-size: 1.2rem;
+            }
+            .filter-bar .filter-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .filter-bar .filter-grid .full-width {
+                grid-column: 1 / -1;
+            }
+            .filter-bar {
+                padding: 12px 14px;
+            }
+            .filter-bar .filter-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-bar .filter-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .table-container {
+                padding: 12px 10px 6px;
+            }
+            .table-container .table-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .table-container .table-toolbar .actions {
+                justify-content: flex-start;
+            }
+            .table-scroll table {
+                font-size: .78rem;
+                min-width: 500px;
+            }
+            .table-scroll table th,
+            .table-scroll table td {
+                padding: 5px 8px;
             }
             .toggle-group .toggle-option {
                 font-size: .75rem;
-                padding: 4px 10px;
+                padding: 4px 12px;
             }
+            .control-select {
+                font-size: .78rem;
+                padding: 4px 12px 4px 10px;
+            }
+            .pagination-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .pagination-bar .rows-info {
+                text-align: center;
+            }
+            .pagination-bar .rows-select {
+                justify-content: center;
+            }
+            .pagination-bar .page-controls {
+                justify-content: center;
+            }
+            .notes-cell {
+                min-width: 140px;
+                max-width: 200px;
+            }
+            .login-card {
+                padding: 1.75rem 1.5rem;
+            }
+            .navbar-top {
+                padding: 8px 12px;
+                min-height: 56px;
+            }
+            .navbar-left .page-title {
+                font-size: .9rem;
+            }
+            .navbar-right .user-badge .avatar {
+                width: 28px;
+                height: 28px;
+                font-size: .7rem;
+            }
+            .navbar-right .notif-btn {
+                font-size: 1rem;
+                padding: 4px 6px;
+            }
+            .navbar-right .dark-toggle {
+                font-size: .9rem;
+                padding: 4px 6px;
+            }
+            .sidebar {
+                width: 280px;
+            }
+            .sidebar .nav-link {
+                font-size: .85rem;
+                padding: 10px 14px;
+            }
+            .monthly-totals .table-scroll table {
+                min-width: 400px;
+            }
+            .upload-area {
+                padding: 16px 12px;
+            }
+            .upload-area p {
+                font-size: .82rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .filter-bar .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            .filter-bar .filter-grid .full-width {
+                grid-column: 1;
+            }
+            .table-scroll table {
+                font-size: .7rem;
+                min-width: 400px;
+            }
+            .table-scroll table th,
+            .table-scroll table td {
+                padding: 4px 6px;
+            }
+            .login-card {
+                padding: 1.5rem 1.25rem;
+                border-radius: 20px;
+            }
+            .login-card .brand {
+                font-size: 1.1rem;
+            }
+            .sidebar {
+                width: 260px;
+            }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+               UTILITY HELPERS
+            ────────────────────────────────────────────────────────────── */
+        .d-none {
+            display: none !important;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .gap-1 {
+            gap: 4px;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+        .gap-3 {
+            gap: 12px;
+        }
+        .mt-1 {
+            margin-top: 4px;
+        }
+        .mt-2 {
+            margin-top: 8px;
+        }
+        .mt-3 {
+            margin-top: 12px;
+        }
+        .mt-4 {
+            margin-top: 20px;
+        }
+        .mb-1 {
+            margin-bottom: 4px;
+        }
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+        .mb-3 {
+            margin-bottom: 12px;
+        }
+        .mb-4 {
+            margin-bottom: 20px;
+        }
+        .text-muted {
+            color: var(--gray-500);
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-end {
+            text-align: right;
+        }
+        .fw-bold {
+            font-weight: 700;
+        }
+        .fw-semibold {
+            font-weight: 600;
+        }
+        .fw-normal {
+            font-weight: 400;
+        }
+        .small {
+            font-size: .82rem;
+        }
+        .w-100 {
+            width: 100%;
+        }
+        .border-top {
+            border-top: 1px solid var(--gray-200);
+        }
+        .pt-3 {
+            padding-top: 12px;
+        }
+        .pb-3 {
+            padding-bottom: 12px;
+        }
+        .px-3 {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+        .py-2 {
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        .btn-sm {
+            font-size: .8rem;
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+        }
+        .btn-outline-success {
+            color: var(--emerald);
+            border: 1px solid var(--emerald);
+            background: transparent;
+            transition: all .2s;
+        }
+        .btn-outline-success:hover {
+            background: var(--emerald);
+            color: #fff;
+        }
+        .btn-outline-secondary {
+            color: var(--gray-500);
+            border: 1px solid var(--gray-300);
+            background: transparent;
+            transition: all .2s;
+        }
+        .btn-outline-secondary:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-400);
+        }
+        .btn-outline-info {
+            color: #0ea5e9;
+            border: 1px solid #0ea5e9;
+            background: transparent;
+            transition: all .2s;
+        }
+        .btn-outline-info:hover {
+            background: #0ea5e9;
+            color: #fff;
         }
     </style>
 </head>
 <body>
 
-    <!-- ════════════ CONFIG — EDIT THESE TWO LINES ════════════ -->
-    <script>
-        // ⚠ Replace with your own Supabase project values:
-        const SUPABASE_URL = 'https://mufvqitipaoixzrwoslo.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_7TVs9n2xlyRJrnYvuFOQbA_hSQBuB7Z';
-    </script>
-    <!-- ════════════════════════════════════════════════════════ -->
+    <!-- ──────────────────────────────────────────────────────────────
+    LOADING OVERLAY
+    ────────────────────────────────────────────────────────────── -->
+    <div id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <h5 class="fw-normal text-muted" id="loadingText">Connecting to Database…</h5>
+        <p class="small text-muted mt-2" id="loadingSubtext">Fetching budget and expense data</p>
+    </div>
 
-    <!-- ════════════ LOGIN OVERLAY ════════════ -->
+    <!-- ──────────────────────────────────────────────────────────────
+    LOGIN OVERLAY
+    ────────────────────────────────────────────────────────────── -->
     <div id="loginOverlay">
         <div class="login-card">
             <div class="text-center mb-4">
-<img src="https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000"alt="Lakpue Drug Inc." class="login-logo" />
+                <img src="https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000"
+                alt="Lakpue Drug Inc." class="login-logo" />
                 <div class="brand">Lakpue Drug Inc.</div>
-                <p class="text-muted small mb-0">Budget Variance Intelligence</p>
+                <div class="brand-sub">Budget Variance Intelligence</div>
             </div>
             <form id="loginForm" autocomplete="on">
                 <div class="mb-3">
-                    <label for="loginUsername" class="form-label">Username</label>
-                    <input type="text" id="loginUsername" class="form-control" required autocomplete="username" />
+                    <label for="loginUsername" class="form-label fw-semibold small">Username</label>
+                    <input type="text" id="loginUsername" class="form-control" required autocomplete="username" placeholder="Enter your username" />
                 </div>
                 <div class="mb-3">
-                    <label for="loginPassword" class="form-label">Password</label>
+                    <label for="loginPassword" class="form-label fw-semibold small">Password</label>
                     <div class="position-relative">
-                        <input type="password" id="loginPassword" class="form-control" required autocomplete="current-password" />
-                        <i class="fas fa-eye position-absolute" id="togglePassword" style="top:50%;right:12px;transform:translateY(-50%);cursor:pointer;color:#6c757d;"></i>
+                        <input type="password" id="loginPassword" class="form-control" required autocomplete="current-password" placeholder="Enter your password" />
+                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                 </div>
                 <div id="loginError" class="alert alert-danger login-error" role="alert"></div>
-                <button type="submit" id="loginSubmitBtn" class="btn btn-navy w-100 py-2">
+                <button type="submit" id="loginSubmitBtn" class="btn-navy w-100 py-2">
                     <i class="fas fa-sign-in-alt me-2"></i>Sign In
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- ════════════ LOADING OVERLAY ════════════ -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-spinner"></div>
-        <h5 class="text-muted fw-normal" id="loadingText">Connecting to Database...</h5>
-        <p class="text-muted small mt-2" id="loadingSubtext">Fetching budget and expense data</p>
-    </div>
-
-    <!-- ════════════ APP SHELL ════════════ -->
+    <!-- ──────────────────────────────────────────────────────────────
+    APP SHELL
+    ────────────────────────────────────────────────────────────── -->
     <div id="appShell">
 
-        <!-- Sidebar -->
-        <div class="sidebar d-flex flex-column" id="sidebar">
-            <div class="sidebar-logo p-3 fw-bold text-white fs-5 text-center">
-<img src="https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000" 
-alt="Lakpue Drug Inc." class="login-logo" />
-                <span class="d-block mt-2">Lakpue Drug Inc.</span>
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+            <div class="sidebar-brand">
+                <img src="https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000" alt="Lakpue Drug Inc." />
+                <span>Lakpue Drug Inc.</span>
             </div>
-            <nav class="nav flex-column mt-3 flex-grow-1">
-                <a class="nav-link active" data-section="dashboard"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
-                <a class="nav-link" data-section="budgetVariance"><i class="fas fa-chart-pie me-2"></i> Budget Variance</a>
-                <a class="nav-link" data-section="exceptions"><i class="fas fa-exclamation-triangle me-2"></i> Explanations</a>
-                <a class="nav-link" data-section="deptSummary"><i class="fas fa-building me-2"></i> Department Summary</a>
+            <nav class="nav flex-column">
+                <a class="nav-link active" data-section="dashboard" role="button" tabindex="0">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a class="nav-link" data-section="budgetVariance" role="button" tabindex="0">
+                    <i class="fas fa-chart-pie"></i> Budget Variance
+                </a>
+                <a class="nav-link" data-section="exceptions" role="button" tabindex="0">
+                    <i class="fas fa-exclamation-triangle"></i> Explanations
+                </a>
+                <a class="nav-link" data-section="deptSummary" role="button" tabindex="0">
+                    <i class="fas fa-building"></i> Department Summary
+                </a>
             </nav>
-            <div class="p-3 mt-auto">
-                <button class="btn btn-outline-danger w-100" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+            <div class="sidebar-footer">
+                <button class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
             </div>
-        </div>
+        </aside>
 
-        <!-- Main Content -->
+        <!-- MAIN CONTENT -->
         <div class="main-content" id="mainContent">
 
-            <!-- Top Nav -->
-            <div class="navbar-top d-flex justify-content-between align-items-center flex-wrap">
-                <div>
-                    <button class="btn btn-light border-0 me-2" id="toggleSidebarBtn"><i class="fas fa-bars"></i></button>
-                    <span class="fw-semibold fs-5" id="pageTitle">Budget Variance Dashboard</span>
+            <!-- TOP NAVBAR -->
+            <header class="navbar-top" role="banner">
+                <div class="navbar-left">
+                    <button class="hamburger" id="toggleSidebarBtn" aria-label="Toggle sidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <span class="page-title" id="pageTitle">Budget Variance Dashboard</span>
                 </div>
-                <div class="d-flex gap-3 align-items-center">
-                    <div id="currentDateTime" class="text-muted small"></div>
-                    <i class="fas fa-bell text-muted" id="notificationBell" style="cursor:pointer;"></i>
-                    <button class="btn btn-outline-secondary rounded-circle p-2" id="darkModeToggle" hidden><i class="fas fa-moon"></i></button>
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="user-menu-label d-none d-md-block">
-                            <div class="fw-semibold" id="navUsername">—</div>
-                            <div class="text-muted" id="navUserScope">—</div>
+                <div class="navbar-right">
+                    <span class="datetime" id="currentDateTime"></span>
+                    <button class="notif-btn" id="notificationBell" aria-label="Notifications">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="dark-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="user-badge">
+                        <div class="avatar" id="navAvatar">—</div>
+                        <div class="user-info">
+                            <div class="name" id="navUsername">—</div>
+                            <div class="scope" id="navUserScope">—</div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </header>
 
-            <div class="container-fluid px-4 py-4">
+            <!-- PAGE CONTENT -->
+            <main class="page-content" role="main">
 
-                <!-- ══════ DASHBOARD ══════ -->
-                <div id="dashboardSection" class="section-content active-section">
-                    <div class="row g-4 mb-5">
-                        <div class="col-md-6 col-lg-4">
-                            <div class="stat-card p-4">
-                                <div class="text-muted small">Total Budget</div>
-                                <h2 class="fw-bold mt-2" id="totalBudget">₱0</h2>
-                            </div>
+                <!-- ═════════════════════════════════════════════════════
+                DASHBOARD
+                ═════════════════════════════════════════════════════ -->
+                <section id="dashboardSection" class="section-content active-section" aria-label="Dashboard">
+
+                    <!-- KPI Stats -->
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="label">Total Budget</div>
+                            <div class="value" id="totalBudget">₱0</div>
                         </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="stat-card p-4">
-                                <div class="text-muted small">Total Expense</div>
-                                <h2 class="fw-bold mt-2" id="totalExpense">₱0</h2>
-                            </div>
+                        <div class="stat-card">
+                            <div class="label">Total Expense</div>
+                            <div class="value" id="totalExpense">₱0</div>
                         </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="stat-card p-4">
-                                <div class="text-muted small">Net Variance</div>
-                                <h2 class="fw-bold mt-2" id="totalVariance">₱0</h2>
-                                <small id="variancePercentLabel">0% Variance</small>
-                            </div>
+                        <div class="stat-card">
+                            <div class="label">Net Variance</div>
+                            <div class="value" id="totalVariance">₱0</div>
+                            <div class="sub" id="variancePercentLabel">0% Variance</div>
                         </div>
                     </div>
 
-                    <div class="filter-card p-3 mb-4">
-                        <div class="row g-3 align-items-end">
-                            <div class="col-md-3">
-                                <label>Company</label>
+                    <!-- Filters -->
+                    <div class="filter-bar">
+                        <div class="filter-grid">
+                            <div>
+                                <label for="companyFilter">Company</label>
                                 <select id="companyFilter" class="form-select"></select>
                             </div>
-                            <div class="col-md-3">
-                                <label>Department</label>
+                            <div>
+                                <label for="deptFilter">Department</label>
                                 <select id="deptFilter" class="form-select"></select>
                             </div>
-                            <div class="col-md-4">
-                                <label>Search Category</label>
+                            <div>
+                                <label for="globalSearch">Search Category</label>
                                 <input type="text" id="globalSearch" class="form-control" placeholder="e.g., Office Supplies" />
                             </div>
-                            <div class="col-md-2 d-flex gap-1">
-                                <button id="applyFiltersBtn" type="button" class="btn btn-navy flex-grow-1">
-                                    <i class="fas fa-filter me-1"></i> Apply
-                                </button>
-                                <button id="reloadSheetsBtn" type="button" class="btn btn-outline-secondary" title="Reload data from Database">
-                                    <i class="fas fa-sync-alt"></i>
-                                </button>
+                            <div class="full-width filter-actions">
+                                <button id="applyFiltersBtn" class="btn-apply"><i class="fas fa-filter me-1"></i> Apply</button>
+                                <button id="reloadSheetsBtn" class="btn-outline-secondary" title="Reload data"><i class="fas fa-sync-alt"></i> Reload</button>
+                                <button id="resetFilters" class="btn-outline-danger"><i class="fas fa-undo-alt me-1"></i> Reset All</button>
                             </div>
                         </div>
-                        <p class="small text-muted mb-0 mt-2">
+                        <div class="filter-actions" style="border-top:1px solid var(--gray-200);padding-top:10px;margin-top:6px;">
+                            <select id="metricSelect" class="control-select">
+                                <option value="all">📊 All Metrics</option>
+                                <option value="expense">💰 Expense Only</option>
+                                <option value="budget">📈 Budget Only</option>
+                                <option value="variance">⚠️ Variance Only</option>
+                            </select>
+                            <div class="toggle-group" id="layoutToggle">
+                                <button class="toggle-option active" data-layout="month" type="button">📆 Monthly</button>
+                                <button class="toggle-option" data-layout="expenseBudget" type="button">📆 MoM</button>
+                            </div>
+                            <div class="toggle-group" id="viewToggle">
+                                <button class="toggle-option active" data-view="active" type="button">📅 YTD</button>
+                                <button class="toggle-option" data-view="all" type="button">📅 Full Year</button>
+                            </div>
+                        </div>
+                        <p class="small text-muted mt-2 mb-0">
                             Use <strong>All</strong> in Company / Department to combine everything you have access to.
                             Admin users: set <strong>ALL</strong> in the Users table.
                         </p>
-                        <div class="row mt-3">
-                            <div class="col-12 d-flex flex-wrap gap-3 align-items-stretch controls-row">
-                                <select id="metricSelect" class="control-select">
-                                    <option value="all">📊 All Metrics</option>
-                                    <option value="expense">💰 Expense Only</option>
-                                    <option value="budget">📈 Budget Only</option>
-                                    <option value="variance">⚠️ Variance Only</option>
-                                </select>
-                                <div class="toggle-group" id="layoutToggle">
-                                    <button class="toggle-option active" data-layout="month">📆 Monthly</button>
-                                    <button class="toggle-option" data-layout="expenseBudget">📆 Month-on-Month</button>
-                                </div>
-                                <div class="toggle-group" id="viewToggle">
-                                    <button class="toggle-option active" data-view="active">📅 Year-to-Date</button>
-                                    <button class="toggle-option" data-view="all">📅 Full Year</button>
-                                </div>
-                                <button id="resetFilters" class="btn btn-outline-danger btn-sm">
-                                    <i class="fas fa-undo-alt me-1"></i> Reset All
-                                </button>
-                            </div>
-                        </div>
                     </div>
 
+                    <!-- Matrix Table -->
                     <div class="table-container">
-                        <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">
-                            <div>
-                                <h5 class="fw-semibold mb-0"><i class="fas fa-chart-simple me-2"></i>Budget vs Actual Matrix</h5>
-                                <small class="text-muted" id="matrixLayoutLabel">Layout: Group by Month</small>
+                        <div class="table-toolbar">
+                            <div class="title"><i class="fas fa-chart-simple"></i> Budget vs Actual Matrix</div>
+                            <div class="actions">
+                                <span class="small text-muted me-1" id="matrixLayoutLabel">Layout: Group by Month</span>
+                                <button id="exportTableBtn" class="btn-outline-secondary btn-sm"><i class="fas fa-file-csv me-1"></i> Export CSV</button>
                             </div>
-                            <button id="exportTableBtn" class="btn btn-outline-secondary btn-sm">
-                                <i class="fas fa-file-csv me-1"></i> Export CSV
-                            </button>
                         </div>
-                        <div id="matrixTableHost" class="matrix-table-host">
-                            <table id="varianceDataTable" class="table table-bordered w-100">
+                        <div class="table-scroll">
+                            <table id="varianceDataTable" class="table">
                                 <thead id="dynamicTableHead"></thead>
                                 <tbody id="dynamicTableBody"></tbody>
                             </table>
@@ -672,34 +1760,38 @@ alt="Lakpue Drug Inc." class="login-logo" />
                         <div id="matrixPagination"></div>
                     </div>
 
-                    <div class="monthly-totals-table mt-4">
-                        <div class="p-3">
-                            <h5 class="fw-semibold mb-3"><i class="fas fa-chart-line me-2"></i>Monthly Totals Summary</h5>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-sm" id="monthlyTotalsTable">
-                                    <thead id="monthlyTotalsHead"></thead>
-                                    <tbody id="monthlyTotalsBody"></tbody>
-                                </table>
-                            </div>
+                    <!-- Monthly Totals -->
+                    <div class="monthly-totals table-container">
+                        <div class="table-toolbar">
+                            <div class="title"><i class="fas fa-chart-line"></i> Monthly Totals Summary</div>
+                        </div>
+                        <div class="table-scroll">
+                            <table class="table" id="monthlyTotalsTable">
+                                <thead id="monthlyTotalsHead"></thead>
+                                <tbody id="monthlyTotalsBody"></tbody>
+                            </table>
                         </div>
                     </div>
-                </div><!-- /#dashboardSection -->
+                </section>
 
-                <!-- ══════ BUDGET VARIANCE ══════ -->
-                <div id="budgetVarianceSection" class="section-content">
-                    <div class="filter-card p-3 mb-4">
-                        <h5 class="mb-3"><i class="fas fa-chart-line me-2"></i>Budget Variance by Company, Department &amp; Category</h5>
-                        <div class="row g-3 align-items-end">
-                            <div class="col-md-3">
-                                <label>Company</label>
+                <!-- ═════════════════════════════════════════════════════
+                BUDGET VARIANCE
+                ═════════════════════════════════════════════════════ -->
+                <section id="budgetVarianceSection" class="section-content" aria-label="Budget Variance">
+
+                    <div class="filter-bar">
+                        <h5 class="fw-semibold mb-3"><i class="fas fa-chart-line me-2"></i>Budget Variance by Company, Department &amp; Category</h5>
+                        <div class="filter-grid">
+                            <div>
+                                <label for="bvCompanyFilter">Company</label>
                                 <select id="bvCompanyFilter" class="form-select"><option value="All">All Companies</option></select>
                             </div>
-                            <div class="col-md-3">
-                                <label>Department</label>
+                            <div>
+                                <label for="bvDeptFilter">Department</label>
                                 <select id="bvDeptFilter" class="form-select"><option value="All">All Departments</option></select>
                             </div>
-                            <div class="col-md-2">
-                                <label>Month</label>
+                            <div>
+                                <label for="bvMonthFilter">Month</label>
                                 <select id="bvMonthFilter" class="form-select">
                                     <option value="All">All Months</option>
                                     <option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option>
@@ -707,85 +1799,77 @@ alt="Lakpue Drug Inc." class="login-logo" />
                                     <option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <label>Category Search</label>
+                            <div>
+                                <label for="bvCategorySearch">Category Search</label>
                                 <input type="text" id="bvCategorySearch" class="form-control" placeholder="e.g., Office Supplies" />
                             </div>
-                            <div class="col-md-2">
-                                <button id="applyBvFiltersBtn" class="btn btn-navy w-100"><i class="fas fa-filter me-1"></i> Apply</button>
+                            <div class="full-width filter-actions">
+                                <button id="applyBvFiltersBtn" class="btn-apply"><i class="fas fa-filter me-1"></i> Apply</button>
+                                <button id="resetBvFilters" class="btn-outline-secondary"><i class="fas fa-undo-alt me-1"></i> Reset</button>
                             </div>
                         </div>
-                        <div class="row g-3 mt-2 align-items-end" hidden>
-                            <div class="col-md-3">
-                                <label>Allowable Variance Amount (₱)</label>
-                                <input type="number" id="allowableAmount" class="form-control" value="5000" step="1000" />
-                            </div>
-                            <div class="col-md-3">
-                                <label>Allowable Variance (%)</label>
-                                <input type="number" id="allowablePercent" class="form-control" value="10" step="1" />
-                            </div>
-                            <div class="col-md-3">
-                                <button id="applyThresholdsBtn" class="btn btn-outline-primary w-100">
-                                    <i class="fas fa-sliders-h me-1"></i> Apply Thresholds
-                                </button>
-                            </div>
-                            <div class="col-md-3">
-                                <button id="resetBvFilters" class="btn btn-outline-secondary w-100">
-                                    <i class="fas fa-undo-alt me-1"></i> Reset All
-                                </button>
+                        <div class="filter-actions mt-2" style="border-top:1px solid var(--gray-200);padding-top:10px;">
+                            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                                <label class="small fw-semibold mb-0">Allowable Variance (₱):</label>
+                                <input type="number" id="allowableAmount" class="form-control" style="width:110px;padding:4px 8px;font-size:.85rem;" value="5000" step="1000" />
+                                <label class="small fw-semibold mb-0 ms-2">(%) :</label>
+                                <input type="number" id="allowablePercent" class="form-control" style="width:80px;padding:4px 8px;font-size:.85rem;" value="10" step="1" />
+                                <button id="applyThresholdsBtn" class="btn-outline-secondary btn-sm"><i class="fas fa-sliders-h me-1"></i> Apply Thresholds</button>
                             </div>
                         </div>
                     </div>
-                    <div class="table-container detail-table-scroll">
-                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                            <h5 class="fw-semibold mb-0"><i class="fas fa-table-list me-2"></i>Detailed Variance (PHP) - Per Month</h5>
-                            <div class="d-flex gap-2">
-                                <button id="saveAllBvNotes" class="btn btn-outline-success btn-sm">
-                                    <i class="fas fa-save me-1"></i> Save All Notes
-                                </button>
-                                <button id="exportBvTableBtn" class="btn btn-outline-secondary btn-sm">
-                                    <i class="fas fa-file-csv me-1"></i> Export CSV
-                                </button>
+
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <div class="title"><i class="fas fa-table-list"></i> Detailed Variance (PHP) – Per Month</div>
+                            <div class="actions">
+                                <button id="saveAllBvNotes" class="btn-outline-success btn-sm"><i class="fas fa-save me-1"></i> Save All Notes</button>
+                                <button id="exportBvTableBtn" class="btn-outline-secondary btn-sm"><i class="fas fa-file-csv me-1"></i> Export CSV</button>
                             </div>
                         </div>
-                        <table id="bvDetailTable" class="table table-bordered w-100 detail-data-table">
-                            <thead>
-                                <tr>
-                                    <th class="clickable-header" data-sort-table="bv" data-sort-col="0">Company <span class="sort-indicator"></span></th>
-                                    <th class="clickable-header" data-sort-table="bv" data-sort-col="1">Department <span class="sort-indicator"></span></th>
-                                    <th class="clickable-header" data-sort-table="bv" data-sort-col="2">Category <span class="sort-indicator"></span></th>
-                                    <th class="clickable-header" data-sort-table="bv" data-sort-col="3">Month <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="bv" data-sort-col="4">Budget (₱) <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="bv" data-sort-col="5">Expense (₱) <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="bv" data-sort-col="6">Variance (₱) <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="bv" data-sort-col="7">Variance % <span class="sort-indicator"></span></th>
-                                    <th class="clickable-header" data-sort-table="bv" data-sort-col="8">Status <span class="sort-indicator"></span></th>
-                                    <th>Details</th>
-                                    <th>Notes</th>
-                                </tr>
-                            </thead>
-                            <tbody id="bvDetailBody"></tbody>
-                        </table>
+                        <div class="table-scroll">
+                            <table id="bvDetailTable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="clickable-header" data-sort-table="bv" data-sort-col="0">Company <span class="sort-indicator"></span></th>
+                                        <th class="clickable-header" data-sort-table="bv" data-sort-col="1">Department <span class="sort-indicator"></span></th>
+                                        <th class="clickable-header" data-sort-table="bv" data-sort-col="2">Category <span class="sort-indicator"></span></th>
+                                        <th class="clickable-header" data-sort-table="bv" data-sort-col="3">Month <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="bv" data-sort-col="4">Budget (₱) <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="bv" data-sort-col="5">Expense (₱) <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="bv" data-sort-col="6">Variance (₱) <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="bv" data-sort-col="7">Variance % <span class="sort-indicator"></span></th>
+                                        <th class="clickable-header" data-sort-table="bv" data-sort-col="8">Status <span class="sort-indicator"></span></th>
+                                        <th>Details</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bvDetailBody"></tbody>
+                            </table>
+                        </div>
                         <div id="bvPagination"></div>
                     </div>
-                </div><!-- /#budgetVarianceSection -->
+                </section>
 
-                <!-- ══════ EXCEPTIONS / EXPLANATIONS ══════ -->
-                <div id="exceptionsSection" class="section-content">
-                    <div class="filter-card p-3 mb-4">
-                        <h5 class="mb-3"><i class="fas fa-exclamation-triangle me-2"></i>Explanation: High Expense &amp; No Budget</h5>
-                        <p class="text-muted">Click on any Category to view expense details. Add notes in the last column.</p>
-                        <div class="row g-3 align-items-end">
-                            <div class="col-md-3">
-                                <label>Company</label>
+                <!-- ═════════════════════════════════════════════════════
+                EXPLANATIONS
+                ═════════════════════════════════════════════════════ -->
+                <section id="exceptionsSection" class="section-content" aria-label="Explanations">
+
+                    <div class="filter-bar">
+                        <h5 class="fw-semibold mb-3"><i class="fas fa-exclamation-triangle me-2"></i>Explanation: High Expense &amp; No Budget</h5>
+                        <p class="text-muted small">Click on any Category to view expense details. Add notes in the last column.</p>
+                        <div class="filter-grid">
+                            <div>
+                                <label for="exCompanyFilter">Company</label>
                                 <select id="exCompanyFilter" class="form-select"><option value="All">All Companies</option></select>
                             </div>
-                            <div class="col-md-3">
-                                <label>Department</label>
+                            <div>
+                                <label for="exDeptFilter">Department</label>
                                 <select id="exDeptFilter" class="form-select"><option value="All">All Departments</option></select>
                             </div>
-                            <div class="col-md-2">
-                                <label>Month</label>
+                            <div>
+                                <label for="exMonthFilter">Month</label>
                                 <select id="exMonthFilter" class="form-select">
                                     <option value="All">All Months</option>
                                     <option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option>
@@ -793,35 +1877,31 @@ alt="Lakpue Drug Inc." class="login-logo" />
                                     <option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <label>Category Search</label>
+                            <div>
+                                <label for="exCategorySearch">Category Search</label>
                                 <input type="text" id="exCategorySearch" class="form-control" placeholder="e.g., Office Supplies" />
                             </div>
-                            <div class="col-md-2">
-                                <button id="applyExFiltersBtn" class="btn btn-navy w-100"><i class="fas fa-filter me-1"></i> Apply</button>
+                            <div class="full-width filter-actions">
+                                <button id="applyExFiltersBtn" class="btn-apply"><i class="fas fa-filter me-1"></i> Apply</button>
+                                <button id="resetExFilters" class="btn-outline-secondary"><i class="fas fa-undo-alt me-1"></i> Reset</button>
                             </div>
                         </div>
-                        <div class="row mt-2">
-                            <div class="col-12">
-                                <button id="resetExFilters" class="btn btn-outline-secondary btn-sm">
-                                    <i class="fas fa-undo-alt me-1"></i> Reset Filters
-                                </button>
-                            </div>
-                        </div>
+
+                        <!-- CSV Upload -->
                         <div class="mt-4 pt-3 border-top">
-                            <h6><i class="fas fa-upload me-2"></i>Bulk Import Notes from CSV</h6>
+                            <h6 class="fw-semibold"><i class="fas fa-upload me-2"></i>Bulk Import Notes from CSV</h6>
                             <p class="text-muted small">Upload a CSV with columns: <strong>Company, Department, Category, Month, Notes</strong></p>
                             <div class="row g-3 align-items-end">
                                 <div class="col-md-6">
-                                    <div class="upload-area" id="csvDropArea">
+                                    <div class="upload-area" id="csvDropArea" role="button" tabindex="0">
                                         <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
                                         <p class="mb-1">Drag &amp; drop your CSV file here, or click to browse</p>
+                                        <div class="hint" id="csvFileInfo"></div>
                                         <input type="file" id="csvFileInput" accept=".csv" style="display:none;" />
-                                        <div id="csvFileInfo" class="text-muted small mt-2"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <button id="uploadCsvBtn" class="btn btn-navy w-100" disabled>
+                                    <button id="uploadCsvBtn" class="btn-apply w-100" disabled>
                                         <i class="fas fa-upload me-1"></i> Upload &amp; Save
                                     </button>
                                 </div>
@@ -831,74 +1911,83 @@ alt="Lakpue Drug Inc." class="login-logo" />
                             </div>
                         </div>
                     </div>
-                    <div class="table-container detail-table-scroll">
-                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                            <h5 class="fw-semibold mb-0"><i class="fas fa-list me-2"></i>Explanation List (High Expense &amp; No Budget Only)</h5>
-                            <div class="d-flex gap-2">
-                                <button id="saveAllExNotes" class="btn btn-outline-success btn-sm">
-                                    <i class="fas fa-save me-1"></i> Save All Notes
-                                </button>
-                                <button id="exportExTableBtn" class="btn btn-outline-secondary btn-sm">
-                                    <i class="fas fa-file-csv me-1"></i> Export CSV
-                                </button>
+
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <div class="title"><i class="fas fa-list"></i> Explanation List (High Expense &amp; No Budget Only)</div>
+                            <div class="actions">
+                                <button id="saveAllExNotes" class="btn-outline-success btn-sm"><i class="fas fa-save me-1"></i> Save All Notes</button>
+                                <button id="exportExTableBtn" class="btn-outline-secondary btn-sm"><i class="fas fa-file-csv me-1"></i> Export CSV</button>
                             </div>
                         </div>
-                        <table id="exceptionsTable" class="table table-bordered w-100 detail-data-table">
-                            <thead>
-                                <tr>
-                                    <th class="clickable-header" data-sort-table="ex" data-sort-col="0">Company <span class="sort-indicator"></span></th>
-                                    <th class="clickable-header" data-sort-table="ex" data-sort-col="1">Department <span class="sort-indicator"></span></th>
-                                    <th class="clickable-header" data-sort-table="ex" data-sort-col="2">Category <span class="sort-indicator"></span></th>
-                                    <th class="clickable-header" data-sort-table="ex" data-sort-col="3">Month <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="ex" data-sort-col="4">Budget (₱) <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="ex" data-sort-col="5">Expense (₱) <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="ex" data-sort-col="6">Variance (₱) <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="ex" data-sort-col="7">Variance % <span class="sort-indicator"></span></th>
-                                    <th class="clickable-header" data-sort-table="ex" data-sort-col="8">Status <span class="sort-indicator"></span></th>
-                                    <th>Details</th>
-                                    <th>Notes</th>
-                                </tr>
-                            </thead>
-                            <tbody id="exceptionsBody"></tbody>
-                        </table>
+                        <div class="table-scroll">
+                            <table id="exceptionsTable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="clickable-header" data-sort-table="ex" data-sort-col="0">Company <span class="sort-indicator"></span></th>
+                                        <th class="clickable-header" data-sort-table="ex" data-sort-col="1">Department <span class="sort-indicator"></span></th>
+                                        <th class="clickable-header" data-sort-table="ex" data-sort-col="2">Category <span class="sort-indicator"></span></th>
+                                        <th class="clickable-header" data-sort-table="ex" data-sort-col="3">Month <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="ex" data-sort-col="4">Budget (₱) <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="ex" data-sort-col="5">Expense (₱) <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="ex" data-sort-col="6">Variance (₱) <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="ex" data-sort-col="7">Variance % <span class="sort-indicator"></span></th>
+                                        <th class="clickable-header" data-sort-table="ex" data-sort-col="8">Status <span class="sort-indicator"></span></th>
+                                        <th>Details</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="exceptionsBody"></tbody>
+                            </table>
+                        </div>
                         <div id="exPagination"></div>
                     </div>
-                </div>
+                </section>
 
-                <!-- ══════ DEPT SUMMARY ══════ -->
-                <div id="deptSummarySection" class="section-content">
-                    <div class="filter-card p-3 mb-4"><h5>Department Performance (PHP)</h5></div>
+                <!-- ═════════════════════════════════════════════════════
+                DEPARTMENT SUMMARY
+                ═════════════════════════════════════════════════════ -->
+                <section id="deptSummarySection" class="section-content" aria-label="Department Summary">
+
+                    <div class="filter-bar">
+                        <h5 class="fw-semibold mb-0"><i class="fas fa-building me-2"></i>Department Performance (PHP)</h5>
+                    </div>
+
                     <div class="table-container">
-                        <table id="deptSummaryTable" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="clickable-header" data-sort-table="dept" data-sort-col="0">Department <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="dept" data-sort-col="1">Total Budget <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="dept" data-sort-col="2">Total Expense <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="dept" data-sort-col="3">Variance <span class="sort-indicator"></span></th>
-                                    <th class="text-end clickable-header" data-sort-table="dept" data-sort-col="4">Variance % <span class="sort-indicator"></span></th>
-                                    <th class="clickable-header" data-sort-table="dept" data-sort-col="5">Status <span class="sort-indicator"></span></th>
-                                </tr>
-                            </thead>
-                            <tbody id="deptSummaryBody"></tbody>
-                        </table>
+                        <div class="table-scroll">
+                            <table id="deptSummaryTable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="clickable-header" data-sort-table="dept" data-sort-col="0">Department <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="dept" data-sort-col="1">Total Budget <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="dept" data-sort-col="2">Total Expense <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="dept" data-sort-col="3">Variance <span class="sort-indicator"></span></th>
+                                        <th class="text-end clickable-header" data-sort-table="dept" data-sort-col="4">Variance % <span class="sort-indicator"></span></th>
+                                        <th class="clickable-header" data-sort-table="dept" data-sort-col="5">Status <span class="sort-indicator"></span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deptSummaryBody"></tbody>
+                            </table>
+                        </div>
                         <div id="deptPagination"></div>
                     </div>
-                </div>
+                </section>
 
-            </div><!-- /.container-fluid -->
-        </div><!-- /.main-content -->
-    </div><!-- /#appShell -->
+            </main>
+        </div>
+    </div>
 
-    <!-- Expense Detail Modal -->
-    <div class="modal fade" id="expenseDetailModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+    <!-- ──────────────────────────────────────────────────────────────
+    EXPENSE DETAIL MODAL
+    ────────────────────────────────────────────────────────────── -->
+    <div class="modal fade modal-lakpue" id="expenseDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="expenseModalTitle">Expense Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="expenseModalBody">Loading...</div>
+                <div class="modal-body" id="expenseModalBody">Loading…</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
@@ -906,37 +1995,40 @@ alt="Lakpue Drug Inc." class="login-logo" />
         </div>
     </div>
 
+    <!-- ──────────────────────────────────────────────────────────────
+    SCRIPTS
+    ────────────────────────────────────────────────────────────── -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
     </script>
 
     <script>
         /**
-         * Lakpue Drug Inc. | Budget Variance Intelligence
-         *
-         * === IMPROVEMENTS ===
-         * 1. Fixed numeric sorting for currency values (₱, commas, %)
-         *    - Added extractSortValue() that strips ₱, commas, % and parses numbers
-         *    - All numeric columns now sort correctly from highest to lowest
-         * 2. Better code organization with clear module boundaries
-         * 3. Performance optimizations: cached DOM refs, reduced reflows
-         * 4. Improved maintainability with consistent naming and comments
-         * 5. All existing features and output behavior preserved
+         * ──────────────────────────────────────────────────────────────
+         *  LAKPUE DRUG INC. – BUDGET VARIANCE INTELLIGENCE
+         *  Mobile-first, responsive rewrite. All original functionality
+         *  and output behavior preserved.
+         * ──────────────────────────────────────────────────────────────
          */
+
         (function() {
             'use strict';
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  CONFIG
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
+            const SUPABASE_URL = 'https://mufvqitipaoixzrwoslo.supabase.co';
+            const SUPABASE_ANON_KEY = 'sb_publishable_7TVs9n2xlyRJrnYvuFOQbA_hSQBuB7Z';
+
             const CFG = {
                 MONTHS: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 AUTH_KEY: 'bvAuthSession',
-                PAGE_SIZE_OPTIONS: [10, 25, 50, 100, 'All']
+                PAGE_SIZE_OPTIONS: [10, 25, 50, 100, 'All'],
+                DARK_MODE_KEY: 'bvDarkMode'
             };
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  SUPABASE CLIENT
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             const SB = {
                 _headers() {
                     return {
@@ -946,15 +2038,11 @@ alt="Lakpue Drug Inc." class="login-logo" />
                         'Prefer': 'return=representation'
                     };
                 },
-
                 async _get(table, query = '') {
-                    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${query}`, {
-                        headers: this._headers()
-                    });
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${query}`, { headers: this._headers() });
                     if (!res.ok) throw new Error(`Supabase GET ${table}: ${res.status} ${await res.text()}`);
                     return res.json();
                 },
-
                 async getAll(table, query = '') {
                     const PAGE = 1000;
                     let offset = 0,
@@ -968,7 +2056,6 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     }
                     return all;
                 },
-
                 async upsert(table, body, conflictCols = null) {
                     let url = `${SUPABASE_URL}/rest/v1/${table}`;
                     if (conflictCols && Array.isArray(conflictCols) && conflictCols.length) {
@@ -990,9 +2077,9 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 }
             };
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  UTILITIES
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             const fmt = {
                 currency: v => `₱${Number(v).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
                 percent: v => `${Number(v).toFixed(1)}%`,
@@ -1006,25 +2093,16 @@ alt="Lakpue Drug Inc." class="login-logo" />
             const attrDecode = s => { try { return decodeURIComponent(s); } catch { return s; } };
             const varClass = v => v < 0 ? 'text-negative' : 'text-positive';
 
-            /**
-             * Extract plain text from HTML – used for display and fallback sorting.
-             */
             function extractPlainText(html) {
                 const tmp = document.createElement('div');
                 tmp.innerHTML = html;
                 return tmp.textContent || tmp.innerText || '';
             }
 
-            /**
-             * Extract a numeric value from a formatted cell for sorting.
-             * Handles: ₱1,234.56 → 1234.56, 12.3% → 12.3, N/A → NaN
-             */
             function extractSortValue(html) {
                 const raw = extractPlainText(html).trim();
                 if (!raw) return NaN;
-                // Check for N/A (case-insensitive)
                 if (/^n\/a$/i.test(raw)) return NaN;
-                // Remove ₱, commas, spaces, and % sign
                 let cleaned = raw.replace(/[₱,]/g, '').trim();
                 const isPct = cleaned.includes('%');
                 if (isPct) cleaned = cleaned.replace('%', '').trim();
@@ -1032,12 +2110,8 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 return isNaN(num) ? NaN : num;
             }
 
-            /**
-             * Extract the status text from a badge HTML (e.g., "High Expense", "Tolerable").
-             */
             function extractStatusText(html) {
                 const raw = extractPlainText(html).trim();
-                // If the raw text is empty, try to extract from the badge content
                 if (!raw) {
                     const match = html.match(/<span[^>]*class="[^"]*badge[^"]*"[^>]*>([^<]*)<\/span>/i);
                     if (match) return match[1].trim();
@@ -1071,9 +2145,65 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 document.querySelectorAll('.sticky-col').forEach(el => el.style.backgroundColor = bg);
             };
 
-            // ──────────────────────────────────────────────────────────────
+            function sortRows(rows, column, direction, isMatrix = false) {
+                if (!rows || rows.length === 0) return rows;
+                const dir = direction === 'asc' ? 1 : -1;
+                return [...rows].sort((a, b) => {
+                    let aVal, bVal;
+                    if (isMatrix) {
+                        if (column === 0) { aVal = a.category;
+                            bVal = b.category; } else {
+                            const keys = ['totalExp', 'totalBud', 'totalVar', 'totalVarPct'];
+                            aVal = a.totals[keys[column - 1]];
+                            bVal = b.totals[keys[column - 1]];
+                        }
+                    } else {
+                        const rawA = a[column] || '';
+                        const rawB = b[column] || '';
+                        const numA = extractSortValue(rawA);
+                        const numB = extractSortValue(rawB);
+                        if (!isNaN(numA) && !isNaN(numB)) { aVal = numA;
+                            bVal = numB; } else { aVal = extractPlainText(rawA);
+                            bVal = extractPlainText(rawB); }
+                    }
+                    if (typeof aVal === 'number' && typeof bVal === 'number') {
+                        return (aVal - bVal) * dir;
+                    }
+                    const aStr = String(aVal);
+                    const bStr = String(bVal);
+                    return aStr.localeCompare(bStr) * dir;
+                });
+            }
+
+            // ════════════════════════════════════════════════════════════
+            //  AUTH
+            // ════════════════════════════════════════════════════════════
+            const Auth = {
+                getSession() { try { return JSON.parse(sessionStorage.getItem(CFG.AUTH_KEY)); } catch { return null; } },
+                saveSession(user) { sessionStorage.setItem(CFG.AUTH_KEY, JSON.stringify({ user })); },
+                clearSession() { sessionStorage.removeItem(CFG.AUTH_KEY); },
+                async login(username, password) {
+                    if (!username || !password) throw new Error('Username and password are required.');
+                    const rows = await SB.getAll('users',
+                        `select=username,password,company,department,user&username=eq.${encodeURIComponent(username.trim())}`);
+                    if (!rows.length) throw new Error('Invalid username or password.');
+                    const u = rows[0];
+                    if (u.password !== password.trim()) throw new Error('Invalid username or password.');
+                    const user = {
+                        username: u.username,
+                        company: u.company,
+                        department: u.department,
+                        displayName: u.user || u.username
+                    };
+                    this.saveSession(user);
+                    return user;
+                },
+                logout() { this.clearSession(); }
+            };
+
+            // ════════════════════════════════════════════════════════════
             //  APPLICATION STATE
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             const AppState = {
                 budgets: [],
                 expenses: [],
@@ -1109,89 +2239,88 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 tableData: { matrix: [], bv: [], exceptions: [], dept: [] }
             };
 
-            // ──────────────────────────────────────────────────────────────
-            //  SORTING ENGINE  (fixed numeric sorting)
-            // ──────────────────────────────────────────────────────────────
-            function sortRows(rows, column, direction, isMatrix = false) {
-                if (!rows || rows.length === 0) return rows;
-                const dir = direction === 'asc' ? 1 : -1;
-
-                return [...rows].sort((a, b) => {
-                    let aVal, bVal;
-
-                    if (isMatrix) {
-                        // Matrix rows are objects with .category and .totals
-                        if (column === 0) {
-                            aVal = a.category;
-                            bVal = b.category;
-                        } else {
-                            const keys = ['totalExp', 'totalBud', 'totalVar', 'totalVarPct'];
-                            aVal = a.totals[keys[column - 1]];
-                            bVal = b.totals[keys[column - 1]];
-                        }
-                        // aVal and bVal are already numbers (or strings for category)
+            // ════════════════════════════════════════════════════════════
+            //  PAGINATOR
+            // ════════════════════════════════════════════════════════════
+            class Paginator {
+                constructor(id, fn) {
+                    this.el = document.getElementById(id);
+                    this.fn = fn;
+                    this.p = 1;
+                    this.ps = 25;
+                    this.total = 0;
+                    this._m = {};
+                }
+                reset() { this.p = 1; }
+                get tp() { return (this.ps === 'All' || !this.total) ? 1 : Math.ceil(this.total / this.ps); }
+                getSlice(rows) {
+                    this.total = rows.length;
+                    if (this.ps === 'All') return rows;
+                    const s = (this.p - 1) * this.ps;
+                    return rows.slice(s, s + this.ps);
+                }
+                goTo(p) {
+                    this.p = Math.max(1, Math.min(p, this.tp));
+                    this.render();
+                    this.fn();
+                }
+                setPs(s) {
+                    this.ps = s === 'All' ? 'All' : +s;
+                    this.p = 1;
+                    this.render();
+                    this.fn();
+                }
+                render() {
+                    if (!this.el || !this.total) { if (this.el) this.el.innerHTML = ''; return; }
+                    const tp = this.tp,
+                        cp = this.p,
+                        ps = this.ps;
+                    const s = ps === 'All' ? 1 : (cp - 1) * ps + 1;
+                    const e = ps === 'All' ? this.total : Math.min(cp * ps, this.total);
+                    const opts = CFG.PAGE_SIZE_OPTIONS.map(o =>
+                        `<option value="${o}" ${String(ps) === String(o) ? 'selected' : ''}>${o === 'All' ? 'All' : o}</option>`
+                        ).join('');
+                    const btn = (p, l, a) => `<button class="page-btn${a ? ' active' : ''}" data-page="${p}">${l}</button>`;
+                    const ell = `<span class="page-ellipsis">…</span>`;
+                    let pg = '';
+                    if (tp <= 7) {
+                        for (let i = 1; i <= tp; i++) pg += btn(i, i, i === cp);
                     } else {
-                        // Detail rows are arrays of HTML strings.
-                        // Use extractSortValue for numeric columns, extractPlainText for text columns.
-                        const rawA = a[column] || '';
-                        const rawB = b[column] || '';
-
-                        // Try to extract numeric values first
-                        const numA = extractSortValue(rawA);
-                        const numB = extractSortValue(rawB);
-
-                        // If both are valid numbers, compare numerically
-                        if (!isNaN(numA) && !isNaN(numB)) {
-                            aVal = numA;
-                            bVal = numB;
-                        } else {
-                            // Fall back to plain text comparison (for categories, months, etc.)
-                            aVal = extractPlainText(rawA);
-                            bVal = extractPlainText(rawB);
-                        }
+                        pg += btn(1, 1, cp === 1);
+                        if (cp > 3) pg += ell;
+                        const lo = Math.max(2, cp - 1),
+                            hi = Math.min(tp - 1, cp + 1);
+                        for (let i = lo; i <= hi; i++) pg += btn(i, i, i === cp);
+                        if (cp < tp - 2) pg += ell;
+                        pg += btn(tp, tp, cp === tp);
                     }
-
-                    // Compare based on type
-                    if (typeof aVal === 'number' && typeof bVal === 'number') {
-                        return (aVal - bVal) * dir;
-                    }
-                    const aStr = String(aVal);
-                    const bStr = String(bVal);
-                    return aStr.localeCompare(bStr) * dir;
-                });
+                    this.el.innerHTML = `<div class="pagination-bar">
+                        <span class="rows-info">Showing <strong>${s}–${e}</strong> of <strong>${this.total}</strong> rows</span>
+                        <div class="rows-select"><span>Rows:</span><select class="page-size-select">${opts}</select></div>
+                        <div class="page-controls">
+                            <button class="page-btn" data-page="${cp - 1}" ${cp <= 1 ? 'disabled' : ''}>‹</button>
+                            ${pg}
+                            <button class="page-btn" data-page="${cp + 1}" ${cp >= tp ? 'disabled' : ''}>›</button>
+                        </div>
+                    </div>`;
+                    this.el.querySelectorAll('.page-btn[data-page]').forEach(b =>
+                        b.addEventListener('click', () => { if (!b.disabled) this.goTo(+b.dataset.page); })
+                    );
+                    const sel = this.el.querySelector('.page-size-select');
+                    if (sel) sel.addEventListener('change', () => this.setPs(sel.value));
+                }
             }
 
-            // ──────────────────────────────────────────────────────────────
-            //  AUTH
-            // ──────────────────────────────────────────────────────────────
-            const Auth = {
-                getSession() { try { return JSON.parse(sessionStorage.getItem(CFG.AUTH_KEY)); } catch { return null; } },
-                saveSession(user) { sessionStorage.setItem(CFG.AUTH_KEY, JSON.stringify({ user })); },
-                clearSession() { sessionStorage.removeItem(CFG.AUTH_KEY); },
-
-                async login(username, password) {
-                    if (!username || !password) throw new Error('Username and password are required.');
-                    const rows = await SB.getAll('users',
-                        `select=username,password,company,department,user&username=eq.${encodeURIComponent(username.trim())}`);
-                    if (!rows.length) throw new Error('Invalid username or password.');
-                    const u = rows[0];
-                    if (u.password !== password.trim()) throw new Error('Invalid username or password.');
-                    const user = {
-                        username: u.username,
-                        company: u.company,
-                        department: u.department,
-                        displayName: u.user || u.username
-                    };
-                    this.saveSession(user);
-                    return user;
-                },
-
-                logout() { this.clearSession(); }
+            const Paginators = {
+                matrix: new Paginator('matrixPagination', () => renderMatrixPage()),
+                bv: new Paginator('bvPagination', () => renderBvPage()),
+                ex: new Paginator('exPagination', () => renderExPage()),
+                dept: new Paginator('deptPagination', () => renderDeptPage())
             };
 
-            // ──────────────────────────────────────────────────────────────
-            //  DATA FETCHING & PROCESSING
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
+            //  DATA FETCHING
+            // ════════════════════════════════════════════════════════════
             async function fetchData({ silent = false, forceRefresh = false } = {}) {
                 const reloadBtn = document.getElementById('reloadSheetsBtn');
                 let savedHtml = null;
@@ -1207,13 +2336,12 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     if (silent && reloadBtn) {
                         savedHtml = reloadBtn.innerHTML;
                         reloadBtn.disabled = true;
-                        reloadBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Refreshing...';
+                        reloadBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Refreshing…';
                     } else {
-                        overlay.style.display = 'flex';
-                        overlay.style.opacity = '1';
+                        overlay.classList.remove('hidden');
                     }
-                    if (loadText) loadText.textContent = 'Connecting to Database...';
-                    if (loadSub) loadSub.textContent = 'Fetching budget and expense data...';
+                    if (loadText) loadText.textContent = 'Connecting to Database…';
+                    if (loadSub) loadSub.textContent = 'Fetching budget and expense data…';
 
                     const [budgetRows, expenseRows, notesRows, closeRows] = await Promise.all([
                         SB.getAll('budget'),
@@ -1262,9 +2390,8 @@ alt="Lakpue Drug Inc." class="login-logo" />
 
                     updateNavUserInfo();
 
-                    if (!silent && overlay) {
-                        overlay.style.opacity = '0';
-                        setTimeout(() => overlay.style.display = 'none', 300);
+                    if (!silent) {
+                        overlay.classList.add('hidden');
                     }
 
                     initUI();
@@ -1273,21 +2400,16 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     console.error('fetchData error:', err);
                     AppState.hasError = true;
                     const overlay = document.getElementById('loadingOverlay');
-                    if (overlay) {
-                        overlay.style.opacity = '0';
-                        setTimeout(() => {
-                            overlay.style.display = 'flex';
-                            overlay.innerHTML =
-                                `<div class="text-center px-3">
-                <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
-                <h5 class="text-danger">Connection Failed</h5>
-                <p class="text-muted">${fmt.html(err.message)}</p>
-                <p class="small text-muted">Check your SUPABASE_URL and SUPABASE_ANON_KEY in index.html, then make sure RLS policies are set.</p>
-                <button class="btn btn-outline-primary" onclick="location.reload()">Retry</button>
-              </div>`;
-                            overlay.style.opacity = '1';
-                        }, 300);
-                    }
+                    overlay.innerHTML = `
+                        <div class="text-center px-3">
+                            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                            <h5 class="text-danger">Connection Failed</h5>
+                            <p class="text-muted">${fmt.html(err.message)}</p>
+                            <p class="small text-muted">Check your SUPABASE_URL and SUPABASE_ANON_KEY, then make sure RLS policies are set.</p>
+                            <button class="btn btn-navy" onclick="location.reload()">Retry</button>
+                        </div>
+                    `;
+                    overlay.classList.remove('hidden');
                     showEmptyState();
                 } finally {
                     if (reloadBtn && savedHtml !== null) {
@@ -1346,9 +2468,9 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 );
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  ACCESS CONTROL
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function isAllToken(v) {
                 const s = String(v || '').trim().toUpperCase();
                 return s === 'ALL' || s === '*' || s.startsWith('ALL ');
@@ -1373,93 +2495,13 @@ alt="Lakpue Drug Inc." class="login-logo" />
             }
 
             function hasAccess(company, department, access) {
-                return !!(
-                    (access.viewAllCo || access.coSet[String(company || '').toUpperCase()]) &&
-                    (access.viewAllDept || access.deptSet[String(department || '').toUpperCase()])
-                );
+                return !!( (access.viewAllCo || access.coSet[String(company || '').toUpperCase()]) &&
+                    (access.viewAllDept || access.deptSet[String(department || '').toUpperCase()]) );
             }
 
-            // ──────────────────────────────────────────────────────────────
-            //  PAGINATOR
-            // ──────────────────────────────────────────────────────────────
-            class Paginator {
-                constructor(id, fn) {
-                    this.el = document.getElementById(id);
-                    this.fn = fn;
-                    this.p = 1;
-                    this.ps = 25;
-                    this.total = 0;
-                    this._m = {};
-                }
-                reset() { this.p = 1; }
-                get tp() { return (this.ps === 'All' || !this.total) ? 1 : Math.ceil(this.total / this.ps); }
-                getSlice(rows) {
-                    this.total = rows.length;
-                    if (this.ps === 'All') return rows;
-                    const s = (this.p - 1) * this.ps;
-                    return rows.slice(s, s + this.ps);
-                }
-                goTo(p) {
-                    this.p = Math.max(1, Math.min(p, this.tp));
-                    this.render();
-                    this.fn();
-                }
-                setPs(s) {
-                    this.ps = s === 'All' ? 'All' : +s;
-                    this.p = 1;
-                    this.render();
-                    this.fn();
-                }
-                render() {
-                    if (!this.el || !this.total) { if (this.el) this.el.innerHTML = ''; return; }
-                    const tp = this.tp,
-                        cp = this.p,
-                        ps = this.ps;
-                    const s = ps === 'All' ? 1 : (cp - 1) * ps + 1;
-                    const e = ps === 'All' ? this.total : Math.min(cp * ps, this.total);
-                    const opts = CFG.PAGE_SIZE_OPTIONS.map(o =>
-                        `<option value="${o}" ${String(ps) === String(o) ? 'selected' : ''}>${o === 'All' ? 'All' : o}</option>`
-                    ).join('');
-                    const btn = (p, l, a) => `<button class="page-btn${a ? ' active' : ''}" data-page="${p}">${l}</button>`;
-                    const ell = `<span class="page-ellipsis">…</span>`;
-                    let pg = '';
-                    if (tp <= 7) {
-                        for (let i = 1; i <= tp; i++) pg += btn(i, i, i === cp);
-                    } else {
-                        pg += btn(1, 1, cp === 1);
-                        if (cp > 3) pg += ell;
-                        const lo = Math.max(2, cp - 1),
-                            hi = Math.min(tp - 1, cp + 1);
-                        for (let i = lo; i <= hi; i++) pg += btn(i, i, i === cp);
-                        if (cp < tp - 2) pg += ell;
-                        pg += btn(tp, tp, cp === tp);
-                    }
-                    this.el.innerHTML = `<div class="pagination-bar">
-                <span class="rows-info">Showing <strong>${s}–${e}</strong> of <strong>${this.total}</strong> rows</span>
-                <div class="rows-select"><span>Rows per page:</span><select class="page-size-select">${opts}</select></div>
-                <div class="page-controls">
-                  <button class="page-btn" data-page="${cp - 1}" ${cp <= 1 ? 'disabled' : ''}>‹</button>
-                  ${pg}
-                  <button class="page-btn" data-page="${cp + 1}" ${cp >= tp ? 'disabled' : ''}>›</button>
-                </div></div>`;
-                    this.el.querySelectorAll('.page-btn[data-page]').forEach(b =>
-                        b.addEventListener('click', () => { if (!b.disabled) this.goTo(+b.dataset.page); })
-                    );
-                    const sel = this.el.querySelector('.page-size-select');
-                    if (sel) sel.addEventListener('change', () => this.setPs(sel.value));
-                }
-            }
-
-            const Paginators = {
-                matrix: new Paginator('matrixPagination', () => renderMatrixPage()),
-                bv: new Paginator('bvPagination', () => renderBvPage()),
-                ex: new Paginator('exPagination', () => renderExPage()),
-                dept: new Paginator('deptPagination', () => renderDeptPage())
-            };
-
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  DASHBOARD HELPERS
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function accessFiltered() {
                 if (!AppState.authUser) return [];
                 const access = resolveAccess(AppState.authUser);
@@ -1540,14 +2582,14 @@ alt="Lakpue Drug Inc." class="login-logo" />
             }
 
             function statusBadge(variance, variancePct, budget) {
-                if (budget === 0) return '<span class="badge bg-secondary">No Budget</span>';
+                if (budget === 0) return '<span class="badge-lakpue bg-secondary">No Budget</span>';
                 const excess = (Math.abs(variance) > AppState.budgetVariance.allowableAmount) &&
                     (Math.abs(variancePct) > AppState.budgetVariance.allowablePercent);
-                if (variance < 0) return excess ? '<span class="badge bg-danger">High Expense</span>' :
-                    '<span class="badge bg-success">Tolerable</span>';
-                if (variance > 0) return excess ? '<span class="badge bg-primary">High Budget</span>' :
-                    '<span class="badge bg-success">Tolerable</span>';
-                return '<span class="badge bg-success">Tolerable</span>';
+                if (variance < 0) return excess ? '<span class="badge-lakpue bg-danger">High Expense</span>' :
+                    '<span class="badge-lakpue bg-success">Tolerable</span>';
+                if (variance > 0) return excess ? '<span class="badge-lakpue bg-primary">High Budget</span>' :
+                    '<span class="badge-lakpue bg-success">Tolerable</span>';
+                return '<span class="badge-lakpue bg-success">Tolerable</span>';
             }
 
             const isException = html => html.includes('No Budget') || html.includes('High Expense');
@@ -1559,18 +2601,20 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     encCat = attrEncode(cat),
                     encMonth = attrEncode(month || '');
                 return `<div class="notes-cell">
-              <textarea class="form-control form-control-sm variance-note-input" rows="2"
-                data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}"
-                placeholder="Notes...">${fmt.html(note)}</textarea>
-              <button type="button" class="btn btn-sm btn-outline-success mt-1 save-note-btn"
-                data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">Save note</button>
-              <span class="note-save-status text-muted ms-1"></span>
-            </div>`;
+                        <textarea class="form-control variance-note-input" rows="2"
+                            data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}"
+                            placeholder="Add notes…">${fmt.html(note)}</textarea>
+                        <div class="note-actions">
+                            <button type="button" class="btn btn-outline-success btn-sm save-note-btn"
+                                data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">Save</button>
+                            <span class="note-status" id="ns-${encCo}-${encDept}-${encCat}-${encMonth}"></span>
+                        </div>
+                    </div>`;
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  MATRIX TABLE
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function buildMatrixRows() {
                 const filtered = getDashboardFiltered();
                 let months = getDisplayMonths(filtered);
@@ -1586,7 +2630,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                         const d = mData[m];
                         if (!d) return false;
                         if (thr === 0 && !AppState.dashboard.searchTerm) return d.budget > 0 || d.expense >
-                        0;
+                            0;
                         return d.budget > 0 && Math.abs(d.variancePercent) >= thr;
                     });
                 }).map(([category, mData]) => {
@@ -1599,11 +2643,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     }
                     const totalVar = totalBud - totalExp;
                     const totalVarPct = totalBud ? (totalVar / totalBud) * 100 : 0;
-                    return {
-                        category,
-                        mData,
-                        totals: { totalExp, totalBud, totalVar, totalVarPct }
-                    };
+                    return { category, mData, totals: { totalExp, totalBud, totalVar, totalVarPct } };
                 });
                 const sort = AppState.sort.matrix;
                 rows = sortRows(rows, sort.column, sort.direction, true);
@@ -1619,8 +2659,8 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 const indicator = (col) => sort.column === col ? (sort.direction === 'asc' ? '▲' : '▼') : '';
                 let thead = '';
                 if (!isExpBudLayout()) {
-                    thead = `<tr>
-                <th class="sticky-col clickable-header" data-sort-table="matrix" data-sort-col="0" rowspan="2">Category <span class="sort-indicator">${indicator(0)}</span></th>`;
+                    thead =
+                        `<tr><th class="sticky-col clickable-header" data-sort-table="matrix" data-sort-col="0" rowspan="2">Category <span class="sort-indicator">${indicator(0)}</span></th>`;
                     for (const m of months) thead += `<th colspan="${cols}" class="text-center bg-light">${m}</th>`;
                     thead += `<th colspan="4" class="text-center bg-secondary text-white">TOTALS</th></tr><tr>`;
                     for (const m of months) {
@@ -1642,8 +2682,8 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     if (showBud) groups.push({ name: 'BUDGET (₱)', type: 'budget' });
                     if (showVar) groups.push({ name: 'VARIANCE (₱)', type: 'variance' });
                     if (!groups.length) groups.push({ name: 'DATA', type: 'expense' });
-                    thead = `<tr>
-                <th class="sticky-col clickable-header" data-sort-table="matrix" data-sort-col="0" rowspan="2">Category <span class="sort-indicator">${indicator(0)}</span></th>`;
+                    thead =
+                        `<tr><th class="sticky-col clickable-header" data-sort-table="matrix" data-sort-col="0" rowspan="2">Category <span class="sort-indicator">${indicator(0)}</span></th>`;
                     for (const g of groups) {
                         const span = g.type === 'variance' ? months.length * 2 : months.length;
                         thead += `<th colspan="${span}" class="text-center bg-light">${g.name}</th>`;
@@ -1684,7 +2724,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 const tbody = document.getElementById('dynamicTableBody');
                 if (!tbody) return;
                 if (!pageRows.length) { tbody.innerHTML =
-                    `<tr><td colspan="30" class="text-center p-4">No data</td></tr>`; return; }
+                    `<tr><td colspan="30" class="text-center p-4 text-muted">No data</td></tr>`; return; }
                 let html = '';
                 if (!isExpBudLayout()) {
                     for (const rowObj of pageRows) {
@@ -1766,9 +2806,9 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 fixStickyBg();
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  MONTHLY TOTALS
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function renderMonthlyTotals() {
                 const filtered = getDashboardFiltered();
                 const months = getDisplayMonths(filtered);
@@ -1808,9 +2848,9 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 if (body) body.innerHTML = tb + gRow;
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  KPIs
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function renderKPIs() {
                 const filtered = getDashboardFiltered();
                 const budget = filtered.reduce((s, r) => s + r.budget, 0);
@@ -1821,11 +2861,13 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 document.getElementById('totalExpense').textContent = fmt.currency(expense);
                 document.getElementById('totalVariance').textContent = fmt.currency(variance);
                 document.getElementById('variancePercentLabel').textContent = `${pct.toFixed(1)}% Variance`;
+                document.getElementById('variancePercentLabel').className =
+                    `sub ${pct >= 0 ? 'positive' : 'negative'}`;
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  BUDGET VARIANCE TABLE
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function buildBvRows() {
                 if (AppState.hasError || !AppState.mergedRecords.length) return [];
                 const access = resolveAccess(AppState.authUser);
@@ -1859,7 +2901,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                         `<span class="${vc} fw-semibold">${fmt.currency(v)}</span>`,
                         vpDisp !== 'N/A' ? `<span class="${pc} fw-semibold">${vpDisp}</span>` : vpDisp,
                         sb,
-                        `<button class="btn btn-sm btn-outline-info view-details-btn" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">View Details</button>`,
+                        `<button class="btn btn-outline-info btn-sm view-details-btn" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">View</button>`,
                         notesCell(item.company, item.department, item.category, item.month)
                     ];
                 });
@@ -1880,9 +2922,9 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 updateSortIndicators('bv');
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  EXCEPTIONS TABLE
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function buildExRows() {
                 if (AppState.hasError || !AppState.mergedRecords.length) return [];
                 const access = resolveAccess(AppState.authUser);
@@ -1917,7 +2959,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                             `<span class="${vc} fw-semibold">${fmt.currency(variance)}</span>`,
                             vpDisp !== 'N/A' ? `<span class="${pc} fw-semibold">${vpDisp}</span>` : vpDisp,
                             sb,
-                            `<button class="btn btn-sm btn-outline-info view-exception-details" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">View Details</button>`,
+                            `<button class="btn btn-outline-info btn-sm view-exception-details" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">View</button>`,
                             notesCell(r.company, r.department, r.category, r.month)
                         ]);
                     }
@@ -1939,9 +2981,9 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 updateSortIndicators('ex');
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  DEPARTMENT SUMMARY
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function buildDeptRows() {
                 if (AppState.hasError || !AppState.mergedRecords.length) return [];
                 const filtered = getDashboardFiltered();
@@ -1956,8 +2998,8 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     const variance = v.budget - v.expense,
                         vp = v.budget ? (variance / v.budget) * 100 : 0;
                     const vc = varClass(variance);
-                    const badge = vp >= 0 ? '<span class="badge bg-success">Within Budget</span>' :
-                        '<span class="badge bg-danger">Over Budget</span>';
+                    const badge = vp >= 0 ? '<span class="badge-lakpue bg-success">Within Budget</span>' :
+                        '<span class="badge-lakpue bg-danger">Over Budget</span>';
                     return [fmt.html(dept), fmt.currency(v.budget), fmt.currency(v.expense),
                         `<span class="${vc} fw-semibold">${fmt.currency(variance)}</span>`,
                         fmt.percent(vp), badge
@@ -1973,7 +3015,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 if (!body) return;
                 body.innerHTML = page.length ?
                     page.map(cols => `<tr>${cols.map(c => `<td>${c}</td>`).join('')}</tr>`).join('') :
-                    `<tr><td colspan="6" class="text-center">No data</td></tr>`;
+                    `<tr><td colspan="6" class="text-center text-muted">No data</td></tr>`;
                 Paginators.dept.render();
             }
 
@@ -1992,9 +3034,9 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     `<tr><td colspan="11" class="text-center p-4 text-muted">${fmt.html(emptyMsg)}</td></tr>`;
             }
 
-            // ──────────────────────────────────────────────────────────────
-            //  SORT HANDLER (event delegation)
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
+            //  SORT HANDLER
+            // ════════════════════════════════════════════════════════════
             function handleHeaderClick(tableKey, column) {
                 const sortState = AppState.sort[tableKey];
                 if (!sortState) return;
@@ -2004,15 +3046,10 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     sortState.column = column;
                     sortState.direction = 'asc';
                 }
-                if (tableKey === 'matrix') {
-                    renderMatrixTable();
-                } else if (tableKey === 'bv') {
-                    renderBudgetVariance();
-                } else if (tableKey === 'ex') {
-                    renderExceptions();
-                } else if (tableKey === 'dept') {
-                    renderDeptSummary();
-                }
+                if (tableKey === 'matrix') renderMatrixTable();
+                else if (tableKey === 'bv') renderBudgetVariance();
+                else if (tableKey === 'ex') renderExceptions();
+                else if (tableKey === 'dept') renderDeptSummary();
                 updateSortIndicators(tableKey);
             }
 
@@ -2024,18 +3061,15 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     const col = parseInt(th.dataset.sortCol);
                     const indicator = th.querySelector('.sort-indicator');
                     if (indicator) {
-                        if (col === sortState.column) {
-                            indicator.textContent = sortState.direction === 'asc' ? ' ▲' : ' ▼';
-                        } else {
-                            indicator.textContent = '';
-                        }
+                        indicator.textContent = (col === sortState.column) ? (sortState.direction === 'asc' ?
+                            ' ▲' : ' ▼') : '';
                     }
                 });
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  EXPENSE DETAIL MODAL
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function showExpenseDetails(co, dept, cat, monthFilter) {
                 const exps = AppState.expenses.filter(e =>
                     e.COMPANY === co && e.COR_DEPT === dept && e.CODE_DESC === cat &&
@@ -2063,9 +3097,9 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 new bootstrap.Modal(document.getElementById('expenseDetailModal')).show();
             }
 
-            // ──────────────────────────────────────────────────────────────
-            //  NOTES SAVING — BATCH UPSERT
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
+            //  NOTES SAVING
+            // ════════════════════════════════════════════════════════════
             async function saveNotesBatch(notesArray) {
                 if (!notesArray || !notesArray.length) return true;
                 const body = notesArray.map(n => ({
@@ -2096,9 +3130,10 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     updated_by: session.user.username
                 }]);
                 if (statusEl) {
-                    statusEl.textContent = 'Saved';
-                    statusEl.className = 'note-save-status text-success ms-1';
-                    setTimeout(() => statusEl.textContent = '', 2000);
+                    statusEl.textContent = '✓ Saved';
+                    statusEl.className = 'note-status success';
+                    setTimeout(() => { statusEl.textContent = '';
+                        statusEl.className = 'note-status'; }, 2500);
                 }
             }
 
@@ -2109,11 +3144,11 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 if (!cells.length) { alert('No notes to save.'); return; }
                 const session = Auth.getSession();
                 if (!session?.user) { alert('Please sign in.'); return; }
-                const allStatuses = container.querySelectorAll('.note-save-status');
+                const allStatuses = container.querySelectorAll('.note-status');
                 const allBtns = container.querySelectorAll('.save-note-btn');
                 allBtns.forEach(b => b.disabled = true);
-                allStatuses.forEach(el => { el.textContent = 'Saving...';
-                    el.className = 'note-save-status text-muted ms-1'; });
+                allStatuses.forEach(el => { el.textContent = 'Saving…';
+                    el.className = 'note-status'; });
                 try {
                     const notesArray = [];
                     cells.forEach(cell => {
@@ -2134,24 +3169,21 @@ alt="Lakpue Drug Inc." class="login-logo" />
                         });
                     });
                     await saveNotesBatch(notesArray);
-                    allStatuses.forEach(el => {
-                        el.textContent = 'Saved all';
-                        el.className = 'note-save-status text-success ms-1';
-                        setTimeout(() => el.textContent = '', 3000);
-                    });
+                    allStatuses.forEach(el => { el.textContent = '✓ All saved';
+                        el.className = 'note-status success';
+                        setTimeout(() => { el.textContent = '';
+                            el.className = 'note-status'; }, 3000); });
                 } catch (err) {
-                    allStatuses.forEach(el => {
-                        el.textContent = err.message || 'Failed';
-                        el.className = 'note-save-status text-danger ms-1';
-                    });
+                    allStatuses.forEach(el => { el.textContent = '✗ ' + (err.message || 'Failed');
+                        el.className = 'note-status error'; });
                 } finally {
                     allBtns.forEach(b => b.disabled = false);
                 }
             }
 
-            // ──────────────────────────────────────────────────────────────
-            //  CSV IMPORT (uses batch upsert)
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
+            //  CSV IMPORT
+            // ════════════════════════════════════════════════════════════
             function parseCSV(csvText) {
                 const lines = csvText.split(/\r?\n/).filter(l => l.trim());
                 if (lines.length < 2) throw new Error('CSV must have a header row and at least one data row.');
@@ -2207,7 +3239,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 const statusEl = document.getElementById('csvUploadStatus');
                 const uploadBtn = document.getElementById('uploadCsvBtn');
                 uploadBtn.disabled = true;
-                statusEl.textContent = 'Reading file...';
+                statusEl.textContent = 'Reading file…';
                 statusEl.className = 'small text-muted';
                 try {
                     const text = await new Promise((res, rej) => {
@@ -2216,9 +3248,9 @@ alt="Lakpue Drug Inc." class="login-logo" />
                         r.onerror = () => rej(new Error('Failed to read file'));
                         r.readAsText(file);
                     });
-                    statusEl.textContent = 'Parsing CSV...';
+                    statusEl.textContent = 'Parsing CSV…';
                     const notesList = parseCSV(text);
-                    statusEl.textContent = `Saving ${notesList.length} notes...`;
+                    statusEl.textContent = `Saving ${notesList.length} notes…`;
                     const session = Auth.getSession();
                     if (!session?.user) throw new Error('Please sign in.');
                     const notesArray = notesList.map(n => ({
@@ -2235,7 +3267,8 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     statusEl.className = 'small text-success';
                     document.getElementById('csvFileInput').value = '';
                     document.getElementById('csvFileInfo').textContent = '';
-                    document.querySelector('#csvDropArea .mb-1').textContent = 'Drag & drop your CSV file here, or click to browse';
+                    document.querySelector('#csvDropArea p').textContent =
+                    'Drag & drop your CSV file here, or click to browse';
                 } catch (err) {
                     statusEl.textContent = '❌ ' + (err.message || 'Import failed');
                     statusEl.className = 'small text-danger';
@@ -2244,9 +3277,9 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 }
             }
 
-            // ──────────────────────────────────────────────────────────────
-            //  EXPORT – Raw numbers, no ₱, no commas, no %
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
+            //  EXPORT
+            // ════════════════════════════════════════════════════════════
             const csvEscape = t => String(t).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(
                 /[🔴🟢⚠️✅❌]/g, '').trim();
 
@@ -2391,22 +3424,15 @@ alt="Lakpue Drug Inc." class="login-logo" />
                         };
                     });
                 }
-
                 if (!records.length) { alert('No data to export'); return; }
-
                 const headers = ['Company', 'Department', 'Category', 'Month', 'Budget', 'Expense', 'Variance',
                     'Variance %', 'Status', 'Notes'
                 ];
                 const rows = records.map(r => {
                     const note = getNote(r.company, r.department, r.category, r.month);
                     return [
-                        r.company,
-                        r.department,
-                        r.category,
-                        r.month,
-                        r.budget.toFixed(2),
-                        r.expense.toFixed(2),
-                        r.variance.toFixed(2),
+                        r.company, r.department, r.category, r.month,
+                        r.budget.toFixed(2), r.expense.toFixed(2), r.variance.toFixed(2),
                         r.variancePct.toFixed(2),
                         extractPlainText(r.status).trim(),
                         note
@@ -2415,17 +3441,17 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 downloadCSV(headers, rows, filename);
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  UI HELPERS
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function showLoginScreen() {
-                document.getElementById('loginOverlay').style.display = 'flex';
+                document.getElementById('loginOverlay').classList.remove('hidden');
                 document.getElementById('appShell').classList.remove('authenticated');
-                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('loadingOverlay').classList.add('hidden');
             }
 
             function showAppShell() {
-                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('loginOverlay').classList.add('hidden');
                 document.getElementById('appShell').classList.add('authenticated');
             }
 
@@ -2450,14 +3476,16 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 const session = Auth.getSession();
                 if (!session?.user) return;
                 const u = session.user;
+                const avatar = document.getElementById('navAvatar');
+                if (avatar) avatar.textContent = (u.displayName || u.username).charAt(0).toUpperCase();
                 document.getElementById('navUsername').textContent = u.displayName || u.username;
                 const parts = [];
                 const co = String(u.company || '');
                 const dept = String(u.department || '');
                 if (co.toUpperCase() === 'ALL' || co === '*') parts.push('All companies');
                 else if (co) parts.push(co.split('|').length + ' companies');
-                if (dept.toUpperCase() === 'ALL' || dept === '*') parts.push('All departments');
-                else if (dept) parts.push(dept.split('|').length + ' departments');
+                if (dept.toUpperCase() === 'ALL' || dept === '*') parts.push('All depts');
+                else if (dept) parts.push(dept.split('|').length + ' depts');
                 document.getElementById('navUserScope').textContent = parts.join(' · ') || '—';
             }
 
@@ -2489,8 +3517,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 const metric = document.getElementById('metricSelect').value;
                 const isAll = metric === 'all';
                 const btns = document.querySelectorAll('#layoutToggle .toggle-option');
-                btns.forEach(b => { b.disabled = !isAll;
-                    b.classList.toggle('disabled', !isAll); });
+                btns.forEach(b => { b.disabled = !isAll; });
                 if (!isAll) {
                     AppState.dashboard.layout = 'month';
                     btns.forEach(b => b.classList.toggle('active', b.dataset.layout === 'month'));
@@ -2512,13 +3539,19 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 updateSortIndicators('bv');
                 updateSortIndicators('ex');
                 updateSortIndicators('dept');
+                // Restore dark mode
+                const darkMode = localStorage.getItem(CFG.DARK_MODE_KEY) === 'true';
+                if (darkMode) {
+                    document.body.classList.add('dark-mode');
+                    document.getElementById('darkModeToggle').querySelector('i').className = 'fas fa-sun';
+                }
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  EVENT BINDING
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function bindEvents() {
-                // Login
+                // ── Login ──
                 document.getElementById('loginForm').addEventListener('submit', async e => {
                     e.preventDefault();
                     const username = document.getElementById('loginUsername').value.trim();
@@ -2527,7 +3560,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     const btn = document.getElementById('loginSubmitBtn');
                     errorEl.style.display = 'none';
                     btn.disabled = true;
-                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
+                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in…';
                     try {
                         await Auth.login(username, password);
                         showAppShell();
@@ -2549,38 +3582,57 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     showLoginScreen();
                 });
 
-                // Sidebar & theme
+                // ── Sidebar toggle (mobile) ──
+                const sidebar = document.getElementById('sidebar');
                 document.getElementById('toggleSidebarBtn').addEventListener('click', () => {
-                    document.getElementById('sidebar').classList.toggle('collapsed');
-                    document.getElementById('mainContent').classList.toggle('expanded');
+                    sidebar.classList.toggle('open');
                 });
+                // Close sidebar on nav link click (mobile)
+                document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth <= 992) sidebar.classList.remove('open');
+                    });
+                });
+                // Close sidebar on outside click (mobile)
+                document.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 992 && sidebar.classList.contains('open') &&
+                        !sidebar.contains(e.target) &&
+                        !e.target.closest('#toggleSidebarBtn')) {
+                        sidebar.classList.remove('open');
+                    }
+                });
+
+                // ── Dark mode ──
                 document.getElementById('darkModeToggle').addEventListener('click', () => {
                     document.body.classList.toggle('dark-mode');
                     const isDark = document.body.classList.contains('dark-mode');
                     document.getElementById('darkModeToggle').querySelector('i').className =
                         `fas ${isDark ? 'fa-sun' : 'fa-moon'}`;
+                    localStorage.setItem(CFG.DARK_MODE_KEY, String(isDark));
                     fixStickyBg();
                     renderMonthlyTotals();
                 });
+
+                // ── Notification bell ──
                 document.getElementById('notificationBell').addEventListener('click', () => alert(
                     '🔔 No new notifications.'));
+
+                // ── Clock ──
                 setInterval(() => {
                     document.getElementById('currentDateTime').textContent = new Date().toLocaleString();
                 }, 1000);
 
-                // ── Event delegation for sorting headers ──
+                // ── Sort headers (event delegation) ──
                 document.addEventListener('click', function(e) {
                     const th = e.target.closest('.clickable-header');
                     if (th) {
                         const table = th.dataset.sortTable;
                         const col = parseInt(th.dataset.sortCol);
-                        if (table && !isNaN(col)) {
-                            handleHeaderClick(table, col);
-                        }
+                        if (table && !isNaN(col)) handleHeaderClick(table, col);
                     }
                 });
 
-                // Dashboard filters
+                // ── Dashboard filters ──
                 const applyDashFilters = () => {
                     AppState.dashboard.company = document.getElementById('companyFilter').value;
                     AppState.dashboard.department = document.getElementById('deptFilter').value;
@@ -2610,6 +3662,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
 
                 document.querySelectorAll('#layoutToggle .toggle-option').forEach(btn => btn.addEventListener(
                     'click', function() {
+                        if (this.disabled) return;
                         this.parentNode.querySelectorAll('.toggle-option').forEach(b => b.classList.remove(
                             'active'));
                         this.classList.add('active');
@@ -2629,7 +3682,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     updateLayoutToggleState();
                 });
 
-                // BV filters
+                // ── BV filters ──
                 const applyBvFilters = () => {
                     AppState.budgetVariance.company = document.getElementById('bvCompanyFilter').value;
                     AppState.budgetVariance.department = document.getElementById('bvDeptFilter').value;
@@ -2656,7 +3709,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     renderExceptions();
                 });
 
-                // Exceptions filters
+                // ── Exceptions filters ──
                 const applyExFilters = () => {
                     AppState.exceptions.company = document.getElementById('exCompanyFilter').value;
                     AppState.exceptions.department = document.getElementById('exDeptFilter').value;
@@ -2675,7 +3728,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     renderExceptions();
                 });
 
-                // Export
+                // ── Exports ──
                 document.getElementById('exportTableBtn').addEventListener('click', exportMatrixCSV);
                 document.getElementById('exportBvTableBtn').addEventListener('click', () =>
                     exportDetailTableCSV(AppState.tableData.bv, 'budget_variance_by_company.csv')
@@ -2684,13 +3737,13 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     exportDetailTableCSV(AppState.tableData.exceptions, 'explanation_list.csv')
                 );
 
-                // Save notes
+                // ── Save all notes ──
                 document.getElementById('saveAllBvNotes').addEventListener('click', () => saveAllNotes(
                     '#budgetVarianceSection .table-container'));
                 document.getElementById('saveAllExNotes').addEventListener('click', () => saveAllNotes(
                     '#exceptionsSection .table-container'));
 
-                // Nav
+                // ── Navigation ──
                 const TITLES = { dashboard: 'Budget Variance Dashboard', budgetVariance: 'Budget Variance',
                     exceptions: 'Explanations (Over/No Expense)', deptSummary: 'Department Summary' };
                 document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click',
@@ -2707,7 +3760,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                     if (section === 'exceptions') renderExceptions();
                 }));
 
-                // Individual note save
+                // ── Individual note save ──
                 document.addEventListener('click', async e => {
                     const btn = e.target.closest('.save-note-btn');
                     if (!btn) return;
@@ -2717,21 +3770,21 @@ alt="Lakpue Drug Inc." class="login-logo" />
                         month = attrDecode(btn.dataset.month || '');
                     const cell = btn.closest('.notes-cell');
                     const notes = cell.querySelector('.variance-note-input').value;
-                    const statusEl = cell.querySelector('.note-save-status');
+                    const statusEl = cell.querySelector('.note-status');
                     btn.disabled = true;
-                    statusEl.textContent = 'Saving...';
-                    statusEl.className = 'note-save-status text-muted ms-1';
+                    statusEl.textContent = 'Saving…';
+                    statusEl.className = 'note-status';
                     try {
                         await saveNote(co, dept, cat, month, notes, statusEl);
                     } catch (err) {
-                        statusEl.textContent = err.message || 'Failed';
-                        statusEl.className = 'note-save-status text-danger ms-1';
+                        statusEl.textContent = '✗ ' + (err.message || 'Failed');
+                        statusEl.className = 'note-status error';
                     } finally {
                         btn.disabled = false;
                     }
                 });
 
-                // Detail buttons
+                // ── Detail view buttons ──
                 document.addEventListener('click', e => {
                     const el = e.target.closest('.view-details-btn, .view-exception-details');
                     if (!el) return;
@@ -2739,36 +3792,31 @@ alt="Lakpue Drug Inc." class="login-logo" />
                         el.dataset.cat), attrDecode(el.dataset.month || 'All'));
                 });
 
-                // Password toggle
+                // ── Password toggle ──
                 const togglePwd = document.getElementById('togglePassword');
                 const pwdInput = document.getElementById('loginPassword');
                 if (togglePwd && pwdInput) {
                     togglePwd.addEventListener('click', function() {
                         const t = pwdInput.getAttribute('type') === 'password' ? 'text' : 'password';
                         pwdInput.setAttribute('type', t);
-                        this.classList.toggle('fa-eye');
-                        this.classList.toggle('fa-eye-slash');
+                        this.querySelector('i').classList.toggle('fa-eye');
+                        this.querySelector('i').classList.toggle('fa-eye-slash');
                     });
                 }
 
-                // CSV upload
+                // ── CSV upload ──
                 const fileInput = document.getElementById('csvFileInput');
                 const dropArea = document.getElementById('csvDropArea');
                 const uploadBtn = document.getElementById('uploadCsvBtn');
                 dropArea.addEventListener('click', () => fileInput.click());
                 dropArea.addEventListener('dragover', e => {
                     e.preventDefault();
-                    dropArea.style.borderColor = '#0A1929';
-                    dropArea.style.background = '#f0f4ff';
+                    dropArea.classList.add('dragover');
                 });
-                dropArea.addEventListener('dragleave', () => {
-                    dropArea.style.borderColor = '#cbd5e1';
-                    dropArea.style.background = '';
-                });
+                dropArea.addEventListener('dragleave', () => dropArea.classList.remove('dragover'));
                 dropArea.addEventListener('drop', e => {
                     e.preventDefault();
-                    dropArea.style.borderColor = '#cbd5e1';
-                    dropArea.style.background = '';
+                    dropArea.classList.remove('dragover');
                     if (e.dataTransfer.files.length) {
                         fileInput.files = e.dataTransfer.files;
                         fileInput.dispatchEvent(new Event('change'));
@@ -2777,7 +3825,7 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 fileInput.addEventListener('change', function() {
                     const file = this.files[0];
                     const info = document.getElementById('csvFileInfo');
-                    const dropText = document.querySelector('#csvDropArea .mb-1');
+                    const dropText = document.querySelector('#csvDropArea p');
                     if (file) {
                         info.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
                         dropText.textContent = 'Click or drop another file to replace';
@@ -2795,21 +3843,22 @@ alt="Lakpue Drug Inc." class="login-logo" />
                 });
             }
 
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             //  BOOT
-            // ──────────────────────────────────────────────────────────────
+            // ════════════════════════════════════════════════════════════
             function boot() {
                 if (SUPABASE_URL.includes('YOUR_PROJECT_ID') || SUPABASE_ANON_KEY.includes('YOUR_ANON_KEY')) {
-                    document.getElementById('loadingOverlay').innerHTML =
-                        `<div class="text-center px-3">
-                    <i class="fas fa-cog fa-3x text-warning mb-3"></i>
-                    <h5 class="text-warning">Setup Required</h5>
-                    <p class="text-muted">Open <strong>index.html</strong> and replace<br>
-                      <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code><br>with your Supabase project values.</p>
-                    <p class="small text-muted">Find them in: Supabase Dashboard → Project Settings → API</p>
-                  </div>`;
-                    document.getElementById('loadingOverlay').style.display = 'flex';
-                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('loadingOverlay').innerHTML = `
+                        <div class="text-center px-3">
+                            <i class="fas fa-cog fa-3x text-warning mb-3"></i>
+                            <h5 class="text-warning">Setup Required</h5>
+                            <p class="text-muted">Open <strong>index.html</strong> and replace<br>
+                                <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code><br>with your Supabase project values.</p>
+                            <p class="small text-muted">Find them in: Supabase Dashboard → Project Settings → API</p>
+                        </div>
+                    `;
+                    document.getElementById('loadingOverlay').classList.remove('hidden');
+                    document.getElementById('loginOverlay').classList.add('hidden');
                     return;
                 }
                 bindEvents();
