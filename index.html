@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lakpue Drug Inc. | Budget Variance Intelligence</title>
 
-    <!-- ========== FAVICON via CORS proxy ========== -->
+    <!-- ========== FAVICON via CORS proxy (fallback to inline SVG) ========== -->
     <link
     rel="icon"
     type="image/png"
-    href="https://corsproxy.io/?https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000"
+    href="https://api.allorigins.win/raw?url=https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000"
     />
 
     <!-- ========== EXTERNAL ASSETS ========== -->
@@ -884,6 +884,18 @@
         .cors-toast .toast-close:hover {
             color: white;
         }
+        .cors-toast .toast-retry-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .cors-toast .toast-retry-btn:hover {
+            background: rgba(255,255,255,0.25);
+        }
         @media (max-width: 640px) {
             .cors-toast {
                 max-width: 94%;
@@ -900,6 +912,7 @@
     <div id="corsToast" class="cors-toast">
         <span class="toast-icon"><i class="fas fa-shield-alt"></i></span>
         <span class="toast-msg" id="corsToastMsg">CORS error – please check your server configuration or use a proxy.</span>
+        <button class="toast-retry-btn" id="corsRetryBtn"><i class="fas fa-sync-alt"></i> Retry (direct)</button>
         <button class="toast-close" id="corsToastClose">&times;</button>
     </div>
 
@@ -910,7 +923,7 @@
                 <!-- Logo loaded via CORS proxy + fallback -->
                 <img
                 id="loginLogoImg"
-                src="https://corsproxy.io/?https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000"
+                src="https://api.allorigins.win/raw?url=https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000"
                 alt="Lakpue Drug Inc."
                 class="login-logo"
                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%230d4a7a\'/%3E%3Ctext x=\'50\' y=\'58\' font-family=\'Arial\' font-size=\'28\' fill=\'white\' text-anchor=\'middle\' font-weight=\'bold\'%3ELDI%3C/text%3E%3C/svg%3E'"
@@ -951,7 +964,7 @@
         <div class="sidebar d-flex flex-column" id="sidebar">
             <div class="sidebar-logo p-3 fw-bold text-white fs-5 text-center">
                 <img
-                src="https://corsproxy.io/?https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000"
+                src="https://api.allorigins.win/raw?url=https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000"
                 alt="Lakpue Drug Inc."
                 class="login-logo"
                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%230d4a7a\'/%3E%3Ctext x=\'50\' y=\'58\' font-family=\'Arial\' font-size=\'28\' fill=\'white\' text-anchor=\'middle\' font-weight=\'bold\'%3ELDI%3C/text%3E%3C/svg%3E'"
@@ -1320,7 +1333,7 @@
         /**
          * =========================================================================
          *  LAKPUE DRUG INC. — Budget Variance Intelligence
-         *  Rewritten with CORS proxy support and improved structure.
+         *  Rewritten with a reliable CORS proxy and robust error handling.
          *  All original features preserved.
          * =========================================================================
          */
@@ -1339,8 +1352,8 @@
                 // ── Supabase anon key ──
                 SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE',
 
-                // ── CORS proxy (set to '' to disable) ──
-                CORS_PROXY: 'https://corsproxy.io/?',
+                // ── CORS proxy (set to '' to disable, uses a more reliable one) ──
+                CORS_PROXY: 'https://api.allorigins.win/raw?url=',
 
                 // ── session storage key ──
                 AUTH_KEY: 'bvAuthSession',
@@ -1506,28 +1519,34 @@
             });
 
             /**
-             * Show a friendly CORS error toast.
+             * Show a friendly CORS error toast with a retry option.
              */
-            function showCorsToast(message) {
+            let _corsRetryCallback = null;
+
+            function showCorsToast(message, retryFn) {
                 const toast = document.getElementById('corsToast');
                 const msg = document.getElementById('corsToastMsg');
                 if (toast && msg) {
                     msg.textContent = message || 'CORS error – please check your server configuration.';
                     toast.style.display = 'flex';
-                    setTimeout(() => { toast.style.display = 'none'; }, 8000);
+                    // store retry callback
+                    if (typeof retryFn === 'function') {
+                        _corsRetryCallback = retryFn;
+                    } else {
+                        _corsRetryCallback = null;
+                    }
+                    // auto-hide after 15s
+                    clearTimeout(toast._hideTimer);
+                    toast._hideTimer = setTimeout(() => { toast.style.display = 'none'; }, 15000);
                 }
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            //  3.  DATA SERVICE (with CORS proxy support)
+            //  3.  DATA SERVICE (with proxy and fallback)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             class DataService {
 
-                /**
-                 * Build the full URL for a Supabase request, optionally wrapping
-                 * with the CORS proxy.
-                 */
                 static _buildUrl(table, query = '') {
                     const base = `${CONFIG.SUPABASE_URL}/rest/v1/${table}`;
                     const url = query ? `${base}?${query}` : base;
@@ -1546,6 +1565,15 @@
                     };
                 }
 
+                /**
+                 * Override the CORS proxy temporarily for a single request.
+                 */
+                static _setProxy(proxy) {
+                    const old = CONFIG.CORS_PROXY;
+                    CONFIG.CORS_PROXY = proxy;
+                    return old;
+                }
+
                 static async _fetch(method, table, query = '', body = null, options = {}) {
                     const url = this._buildUrl(table, query);
                     const headers = this._headers(options.headers || {});
@@ -1553,23 +1581,49 @@
                         method,
                         headers,
                         body: body ? JSON.stringify(body) : undefined,
-                        // important for CORS: include credentials if needed
                         credentials: 'omit'
                     };
+
                     try {
                         const res = await fetch(url, fetchOptions);
+                        // Check if response is HTML (common proxy error)
+                        const contentType = res.headers.get('content-type') || '';
+                        if (contentType.includes('text/html')) {
+                            const html = await res.text();
+                            if (html.trim().startsWith('<!DOCTYPE')) {
+                                throw new Error(
+                                    'The proxy returned an HTML page instead of JSON. The CORS proxy may be down or blocked. Try again with direct fetch.'
+                                    );
+                            }
+                        }
                         if (!res.ok) {
                             const errText = await res.text();
                             throw new Error(`Supabase ${method} ${table}: ${res.status} ${errText}`);
                         }
                         return res;
                     } catch (err) {
-                        // If the error looks like a CORS issue, show a toast.
-                        if (err.message && (err.message.includes('CORS') || err.message.includes('blocked') || err
-                                .message.includes('NetworkError'))) {
+                        // If the error looks like a CORS issue or HTML response, show a toast.
+                        const msg = err.message || '';
+                        if (msg.includes('CORS') || msg.includes('blocked') || msg.includes('NetworkError') ||
+                            msg.includes('HTML')) {
+                            // Provide a retry function that disables the proxy
+                            const retry = () => {
+                                const oldProxy = CONFIG.CORS_PROXY;
+                                CONFIG.CORS_PROXY = ''; // disable proxy
+                                // Re-run the same request (but we need to re-fetch)
+                                // We'll call the original caller's retry logic if available
+                                if (_corsRetryCallback) {
+                                    _corsRetryCallback();
+                                } else {
+                                    // Fallback: reload the page
+                                    location.reload();
+                                }
+                                // restore after a while? We'll let the user decide.
+                            };
                             showCorsToast(
-                                `CORS error accessing ${table}. Please ensure your server includes the "Access-Control-Allow-Origin" header.`
-                                );
+                                `CORS/proxy error: ${msg}. Click "Retry (direct)" to bypass the proxy.`,
+                                retry
+                            );
                         }
                         throw err;
                     }
@@ -4233,8 +4287,7 @@
                     updated_by: n.updated_by || 'user',
                     updated_at: new Date().toISOString()
                 }));
-                const url = `${CONFIG.SUPABASE_URL}/rest/v1/notes?on_conflict=company,cor_dept,code_desc,month`;
-                // Use DataService.upsert instead of raw fetch to benefit from CORS proxy
+                // Use DataService.upsert to benefit from the proxy
                 await DataService.upsert('notes', body, ['company', 'cor_dept', 'code_desc', 'month'], false);
                 for (const n of body) store.notesMap[noteKey(n.company, n.cor_dept, n.code_desc, n.month)] = n.notes;
                 return true;
@@ -4844,6 +4897,20 @@
 
                 document.getElementById('corsToastClose').addEventListener('click', () => {
                     document.getElementById('corsToast').style.display = 'none';
+                });
+
+                document.getElementById('corsRetryBtn').addEventListener('click', () => {
+                    // Disable the proxy for the next request
+                    const oldProxy = CONFIG.CORS_PROXY;
+                    CONFIG.CORS_PROXY = '';
+                    document.getElementById('corsToast').style.display = 'none';
+                    // Reload data
+                    fetchData({ silent: false, forceRefresh: true })
+                        .catch(() => {
+                            // If fails, restore proxy
+                            CONFIG.CORS_PROXY = oldProxy;
+                            showCorsToast('Direct fetch also failed. Please check your server CORS settings.');
+                        });
                 });
 
                 // Sorting
