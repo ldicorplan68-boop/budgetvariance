@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        /* ── CSS ── */
+        /* ── CSS (unchanged from original) ── */
         :root {
             --blue-primary: #0d4a7a;
             --blue-secondary: #0c3d66;
@@ -24,8 +24,6 @@
             --gray-bg: #f1f5f9;
             --planning-header-bg: #e9edf2;
             --planning-stripe: #f8fafc;
-            --ai-bubble-user: #0d4a7a;
-            --ai-bubble-assistant: #e9edf2;
         }
         * {
             font-family: 'Inter', sans-serif;
@@ -845,210 +843,6 @@
         .dark-mode .planning-search-row {
             border-top-color: #1e3a5a;
         }
-
-        /* ── AI Assistant Styles ── */
-        .ai-assistant-panel {
-            background: white;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-            margin-top: 16px;
-        }
-        .dark-mode .ai-assistant-panel {
-            background: var(--blue-dark-mode);
-            border-color: #1e3a5a;
-        }
-        .ai-chat-messages {
-            max-height: 320px;
-            overflow-y: auto;
-            padding: 16px;
-            background: #fafbfc;
-        }
-        .dark-mode .ai-chat-messages {
-            background: #0f1e2e;
-        }
-        .ai-message {
-            display: flex;
-            margin-bottom: 12px;
-            animation: fadeIn 0.3s ease;
-        }
-        .ai-message.user {
-            justify-content: flex-end;
-        }
-        .ai-message .bubble {
-            max-width: 80%;
-            padding: 10px 16px;
-            border-radius: 16px;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            word-wrap: break-word;
-            white-space: pre-wrap;
-        }
-        .ai-message.user .bubble {
-            background: var(--ai-bubble-user);
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-        .ai-message.assistant .bubble {
-            background: var(--ai-bubble-assistant);
-            color: #1a2634;
-            border-bottom-left-radius: 4px;
-        }
-        .dark-mode .ai-message.assistant .bubble {
-            background: #1e3a5a;
-            color: #e2e8f0;
-        }
-        .ai-message .bubble .loading-dots {
-            display: inline-flex;
-            gap: 4px;
-        }
-        .ai-message .bubble .loading-dots span {
-            animation: dotPulse 1.4s infinite both;
-            font-size: 1.4rem;
-            line-height: 1;
-        }
-        .ai-message .bubble .loading-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .ai-message .bubble .loading-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-        @keyframes dotPulse {
-            0%,
-            80%,
-            100% {
-                opacity: 0.2;
-            }
-            40% {
-                opacity: 1;
-            }
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .ai-chat-input-row {
-            display: flex;
-            gap: 8px;
-            padding: 12px 16px;
-            border-top: 1px solid #e2e8f0;
-            background: white;
-        }
-        .dark-mode .ai-chat-input-row {
-            background: var(--blue-dark-mode);
-            border-top-color: #1e3a5a;
-        }
-        .ai-chat-input-row input {
-            flex: 1;
-            padding: 8px 14px;
-            border-radius: 24px;
-            border: 1px solid #cbd5e1;
-            font-size: 0.9rem;
-            outline: none;
-            transition: border-color .2s;
-            background: white;
-        }
-        .dark-mode .ai-chat-input-row input {
-            background: #1e3a5a;
-            color: #e2e8f0;
-            border-color: #2a4a6a;
-        }
-        .ai-chat-input-row input:focus {
-            border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
-        }
-        .ai-chat-input-row button {
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--blue-primary);
-            color: white;
-            border: none;
-            transition: background .2s;
-            flex-shrink: 0;
-        }
-        .ai-chat-input-row button:hover {
-            background: var(--blue-secondary);
-        }
-        .ai-chat-input-row button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .ai-suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            padding: 8px 16px 12px;
-            border-top: 1px solid #f0f2f5;
-            background: #fafbfc;
-        }
-        .dark-mode .ai-suggestions {
-            background: #0f1e2e;
-            border-top-color: #1e3a5a;
-        }
-        .ai-suggestions .suggestion-chip {
-            background: var(--blue-bg);
-            color: var(--blue-primary);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            border: none;
-            cursor: pointer;
-            transition: background .2s;
-            white-space: nowrap;
-        }
-        .dark-mode .ai-suggestions .suggestion-chip {
-            background: #1e3a5a;
-            color: #8bb9e0;
-        }
-        .ai-suggestions .suggestion-chip:hover {
-            background: #d0dce8;
-        }
-        .dark-mode .ai-suggestions .suggestion-chip:hover {
-            background: #2a4a6a;
-        }
-        .ai-error {
-            color: var(--soft-red);
-            font-size: 0.8rem;
-            padding: 4px 16px 8px;
-        }
-        .ai-clear-btn {
-            background: none;
-            border: none;
-            color: #6c757d;
-            font-size: 0.75rem;
-            cursor: pointer;
-            padding: 0 8px;
-            text-decoration: underline;
-        }
-        .ai-clear-btn:hover {
-            color: var(--soft-red);
-        }
-
-        /* Planning insight badge */
-        .planning-insight-badge {
-            font-size: 0.65rem;
-            background: var(--blue-bg);
-            color: var(--blue-primary);
-            padding: 2px 8px;
-            border-radius: 12px;
-            margin-left: 6px;
-            cursor: default;
-        }
-        .dark-mode .planning-insight-badge {
-            background: #1e3a5a;
-            color: #8bb9e0;
-        }
     </style>
 </head>
 <body>
@@ -1361,45 +1155,6 @@
                         <div class="row mt-2">
                             <div class="col-12"><span id="planningSaveStatus" class="small text-muted"></span></div>
                         </div>
-
-                        <!-- ─── AI ASSISTANT PANEL ─── -->
-                        <div class="ai-assistant-panel mt-3" id="aiAssistantPanel">
-                            <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="background:#f8fafc;">
-                                <div>
-                                    <i class="fas fa-robot me-2" style="color:var(--blue-primary);"></i>
-                                    <span class="fw-semibold">AI Budget &amp; Planning Assistant</span>
-                                    <span class="badge bg-success ms-2" style="font-size:0.6rem;">GROQ</span>
-                                    <span class="badge bg-info ms-1" style="font-size:0.6rem;">Planning Data Ready</span>
-                                </div>
-                                <button class="btn btn-sm btn-outline-secondary" id="aiClearChatBtn" title="Clear chat history">
-                                    <i class="fas fa-eraser"></i>
-                                </button>
-                            </div>
-                            <div class="ai-chat-messages" id="aiChatMessages">
-                                <div class="ai-message assistant">
-                                    <div class="bubble">
-                                        👋 Hi! I'm your AI Budget &amp; Planning Assistant. I can analyze your budget data <strong>and</strong> your planning table.<br />
-                                        <small class="text-muted" style="font-size:0.75rem;">
-                                            Try: "What's the total budget for next year?" • "Which categories have the largest variance?" • "Show me the monthly breakdown for Salary and Wages" • "What's the MLS for Ads and Promo?"
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ai-suggestions" id="aiSuggestions">
-                                <button class="suggestion-chip" data-prompt="Show me the top 5 categories with the largest budget variance">🔍 Top 5 variances</button>
-                                <button class="suggestion-chip" data-prompt="Which departments are over budget?">🏢 Over-budget depts</button>
-                                <button class="suggestion-chip" data-prompt="Forecast next year's budget for the Marketing department">📈 Forecast Marketing</button>
-                                <button class="suggestion-chip" data-prompt="Explain the variance for Salary and Wages">💬 Explain Salary variance</button>
-                                <button class="suggestion-chip" data-prompt="What is the total MLS across all categories?">📊 Total MLS</button>
-                                <button class="suggestion-chip" data-prompt="Show me the monthly budget trend for the next year">📅 Next year trend</button>
-                            </div>
-                            <div id="aiError" class="ai-error" style="display:none;"></div>
-                            <div class="ai-chat-input-row">
-                                <input type="text" id="aiChatInput" placeholder="Ask about budget, planning, or variances…" />
-                                <button id="aiSendBtn" title="Send message"><i class="fas fa-paper-plane"></i></button>
-                            </div>
-                        </div>
-                        <!-- ─── END AI ASSISTANT ─── -->
                     </div>
 
                     <div class="table-container p-0">
@@ -1506,17 +1261,16 @@
     <script>
         /**
          * LAKPUE DRUG INC. — Budget Variance Intelligence
-         *
-         * MAJOR IMPROVEMENTS (v2.0):
-         * 1. AI ENHANCEMENT: GROQ now analyzes the FULL PLANNING TABLE data — MLS, monthly budgets,
-         *    next-year projections, division aggregates, and year-over-year comparisons.
-         * 2. MODULAR ARCHITECTURE: Clear separation of Config, Helpers, DataService, Auth, Store,
-         *    AIService (with planning awareness), Paginator, Renderers, Events, and Boot.
-         * 3. PERFORMANCE: Debounced search, reduced DOM thrashing, batch DOM updates.
-         * 4. MAINTAINABILITY: Centralized state, consistent naming, smaller focused functions.
-         * 5. All existing features preserved: matrix, variance, exceptions, dept summary, planning,
-         *    notes, CSV import/export, permissions, dark mode, pagination.
-         * 6. Better error handling with user-friendly feedback.
+         * 
+         * MAJOR IMPROVEMENTS in this rewrite:
+         * 1. Code is organized into clear modules: Config, Helpers, DataService, Auth, Store, Paginator, Renderers, Events, Boot.
+         * 2. Removed redundant logic and unified helper functions.
+         * 3. Improved variable naming for clarity.
+         * 4. Admin default behavior: when user type is 'admin', all company/department filters default to "All".
+         * 5. Maintained all existing features including the Budget Planning search box and Search button.
+         * 6. Paginator for Planning defaults to "All" rows per page.
+         * 7. Consistent error handling and loading states.
+         * 8. All calculations (formula categories, variance, thresholds) are preserved.
          */
         (function() {
             'use strict';
@@ -1529,8 +1283,6 @@
                 SUPABASE_URL: 'https://mufvqitipaoixzrwoslo.supabase.co',
                 SUPABASE_ANON_KEY: 'sb_publishable_7TVs9n2xlyRJrnYvuFOQbA_hSQBuB7Z',
                 AUTH_KEY: 'bvAuthSession',
-                GROQ_API_KEY: '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',
-                GROQ_MODEL: 'openai/gpt-oss-20b',
                 MONTHS: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 MONTH_KEYS: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
                 MONTH_NAMES: ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER',
@@ -1685,18 +1437,15 @@
                 defaultPlan: () => ({
                     base: Object.fromEntries(['mls', ...CONFIG.MONTH_KEYS].map(k => [k, 0])),
                     additions: []
-                }),
-                getMonthIndex: (m) => { const idx = CONFIG.MONTHS.indexOf(m); return idx >= 0 ? idx : -1; },
-                getMonthKey: (idx) => CONFIG.MONTH_KEYS[idx] || null,
-                getMonthName: (idx) => CONFIG.MONTHS[idx] || null,
+                })
             };
 
             const { fmt, toNum, debounce, attrEncode, attrDecode, varClass, parseFormattedNumber, extractPlainText,
-                extractSortValue, monthFromDate, noteKey, isAllToken, splitPipe, compareDivisions, defaultPlan,
-                getMonthIndex, getMonthKey, getMonthName } = Helpers;
+                extractSortValue, monthFromDate, noteKey, isAllToken, splitPipe, compareDivisions, defaultPlan } =
+            Helpers;
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 3. DATA SERVICE (Supabase)
+            // 3. DATA SERVICE
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             class DataService {
@@ -1823,288 +1572,11 @@
                     collapsedSections: {}
                 },
                 tableData: { matrix: [], bv: [], exceptions: [], dept: [] },
-                modal: { hideMonthlyBase: false },
-                ai: {
-                    messages: [],
-                    isProcessing: false,
-                    context: null
-                }
+                modal: { hideMonthlyBase: false }
             };
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 6. AI SERVICE (GROQ API with Planning Data Awareness)
-            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-            class AIService {
-                constructor() {
-                    this.apiKey = CONFIG.GROQ_API_KEY;
-                    this.model = CONFIG.GROQ_MODEL;
-                    this.baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
-                }
-
-                async ask(question, contextData) {
-                    if (!this.apiKey || this.apiKey === 'gsk_...') {
-                        throw new Error('GROQ API key not configured. Please set CONFIG.GROQ_API_KEY.');
-                    }
-
-                    const systemPrompt = this._buildSystemPrompt(contextData);
-                    const userMessage = question;
-
-                    const response = await fetch(this.baseUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${this.apiKey}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            model: this.model,
-                            messages: [
-                                { role: 'system', content: systemPrompt },
-                                { role: 'user', content: userMessage }
-                            ],
-                            temperature: 0.7,
-                            max_tokens: 1200,
-                            top_p: 0.9,
-                        })
-                    });
-
-                    if (!response.ok) {
-                        const errText = await response.text();
-                        let errMsg = errText;
-                        try {
-                            const errJson = JSON.parse(errText);
-                            errMsg = errJson.error?.message || errText;
-                        } catch (_) { /* ignore */ }
-                        throw new Error(`GROQ API error (${response.status}): ${errMsg}`);
-                    }
-
-                    const data = await response.json();
-                    return data.choices?.[0]?.message?.content || 'I could not generate a response. Please try again.';
-                }
-
-                /**
-                 * Enhanced system prompt that includes BOTH budget/expense data AND planning table data.
-                 * This enables the AI to answer questions about MLS, monthly budgets, next-year projections,
-                 * and compare planned vs actual figures.
-                 */
-                _buildSystemPrompt(contextData) {
-                    const { company, department, records, totals, variances, planningData, planningTotals } = contextData ||
-                    {};
-
-                    let prompt = `You are a budget planning and variance analysis assistant for Lakpue Drug Inc. ` +
-                        `You have access to both actual budget/expense data AND the company's budget planning table. ` +
-                        `Provide clear, concise, actionable insights. Use bullet points when helpful. Be professional but friendly.\n\n`;
-
-                    // ---- Context scope ----
-                    if (company && department) {
-                        prompt += `Current context: Company = ${company}, Department = ${department}\n`;
-                    } else {
-                        prompt += 'Current context: All companies and departments\n';
-                    }
-
-                    // ---- Budget/Expense totals ----
-                    if (totals) {
-                        prompt += `\n📊 ACTUAL DATA TOTALS:\n`;
-                        prompt += `- Total Budget: ₱${totals.budget?.toLocaleString() || 0}\n`;
-                        prompt += `- Total Expense: ₱${totals.expense?.toLocaleString() || 0}\n`;
-                        prompt += `- Variance: ₱${totals.variance?.toLocaleString() || 0} (${totals.variancePct?.toFixed(1) || 0}%)\n`;
-                    }
-
-                    // ---- Top variances ----
-                    if (variances && variances.length) {
-                        prompt += '\n🔍 TOP VARIANCES BY CATEGORY:\n';
-                        for (const v of variances.slice(0, 12)) {
-                            const pct = v.variancePct !== undefined ? `(${v.variancePct.toFixed(1)}%)` : '';
-                            prompt +=
-                                `- ${v.category}: Budget ₱${v.budget?.toLocaleString() || 0}, Expense ₱${v.expense?.toLocaleString() || 0}, Variance ₱${v.variance?.toLocaleString() || 0} ${pct}\n`;
-                        }
-                    }
-
-                    // ---- PLANNING TABLE DATA ----
-                    if (planningData && planningData.length > 0) {
-                        prompt += '\n📋 BUDGET PLANNING TABLE DATA (Next Year Projections):\n';
-                        prompt +=
-                            `The planning table contains ${planningData.length} categories with monthly budget projections.\n`;
-
-                        // Include a summary of planning totals
-                        if (planningTotals) {
-                            prompt += `\n📈 PLANNING TOTALS:\n`;
-                            prompt += `- Total MLS (Multi-Level Spread): ₱${planningTotals.mls?.toLocaleString() || 0}\n`;
-                            prompt +=
-                                `- Total This Year MLS (Actual Expense + MLS): ₱${planningTotals.thisYearMls?.toLocaleString() || 0}\n`;
-                            prompt +=
-                                `- Total This Year Budget Variance: ₱${planningTotals.thisYearBudgetVariance?.toLocaleString() || 0}\n`;
-                            prompt +=
-                                `- Total Budget for Next Year: ₱${planningTotals.budgetNextYear?.toLocaleString() || 0}\n`;
-                            if (planningTotals.months) {
-                                const monthlySum = planningTotals.months.reduce((a, b) => a + b, 0);
-                                prompt +=
-                                    `- Sum of Monthly Budgets: ₱${monthlySum.toLocaleString()}\n`;
-                            }
-                        }
-
-                        // Include key categories with their planning data (limit to avoid token overflow)
-                        const topCategories = planningData
-                            .filter(r => !r.isTotal)
-                            .sort((a, b) => (b.budgetNextYear || 0) - (a.budgetNextYear || 0))
-                            .slice(0, 15);
-
-                        prompt += '\n📊 TOP 15 CATEGORIES BY BUDGET FOR NEXT YEAR:\n';
-                        for (const r of topCategories) {
-                            const months = r.months || [];
-                            const totalMonths = months.reduce((a, b) => a + b, 0);
-                            const mls = r.mls || 0;
-                            prompt +=
-                                `- ${r.category}: MLS ₱${mls.toLocaleString()}, Next Year Budget ₱${(r.budgetNextYear || 0).toLocaleString()}, ` +
-                                `Monthly Total ₱${totalMonths.toLocaleString()}, ` +
-                                `Actual Expense ₱${(r.actualExpense || 0).toLocaleString()}, ` +
-                                `Variance ₱${((r.actualBudget || 0) - (r.actualExpense || 0)).toLocaleString()}\n`;
-                        }
-
-                        // Division-level breakdown
-                        const divisions = {};
-                        for (const r of planningData) {
-                            if (r.isTotal) continue;
-                            const div = r.division || 'Uncategorized';
-                            if (!divisions[div]) divisions[div] = { count: 0, totalNext: 0, totalMls: 0 };
-                            divisions[div].count++;
-                            divisions[div].totalNext += (r.budgetNextYear || 0);
-                            divisions[div].totalMls += (r.mls || 0);
-                        }
-                        const sortedDivs = Object.entries(divisions).sort((a, b) => b[1].totalNext - a[1].totalNext);
-                        if (sortedDivs.length) {
-                            prompt += '\n🏢 PLANNING BY DIVISION:\n';
-                            for (const [div, data] of sortedDivs.slice(0, 10)) {
-                                prompt +=
-                                    `- ${div}: ${data.count} categories, Total Next Year ₱${data.totalNext.toLocaleString()}, Total MLS ₱${data.totalMls.toLocaleString()}\n`;
-                            }
-                        }
-
-                        // Monthly trend summary
-                        if (planningTotals && planningTotals.months && planningTotals.months.length === 12) {
-                            const months = planningTotals.months;
-                            const maxMonth = Math.max(...months);
-                            const maxIdx = months.indexOf(maxMonth);
-                            const minMonth = Math.min(...months);
-                            const minIdx = months.indexOf(minMonth);
-                            const total = months.reduce((a, b) => a + b, 0);
-                            prompt += `\n📅 MONTHLY BUDGET TREND:\n`;
-                            prompt +=
-                                `- Total across all months: ₱${total.toLocaleString()}\n`;
-                            prompt +=
-                                `- Highest month: ${CONFIG.MONTH_NAMES[maxIdx]} (₱${maxMonth.toLocaleString()})\n`;
-                            prompt +=
-                                `- Lowest month: ${CONFIG.MONTH_NAMES[minIdx]} (₱${minMonth.toLocaleString()})\n`;
-                            const avg = total / 12;
-                            prompt += `- Average monthly budget: ₱${avg.toLocaleString()}\n`;
-                        }
-                    } else {
-                        prompt += '\n⚠️ No planning data available for the current filter.\n';
-                    }
-
-                    prompt +=
-                        '\n💡 INSTRUCTIONS:\n' +
-                        '- Answer questions about budget variances, planning projections, MLS, and monthly trends.\n' +
-                        '- When comparing actual vs planned, use the ACTUAL DATA TOTALS for current year and PLANNING TABLE for next year.\n' +
-                        '- Provide specific numbers and percentages when available.\n' +
-                        '- If asked about a specific category, reference its planning data.\n' +
-                        '- Keep responses concise and actionable.\n';
-
-                    return prompt;
-                }
-
-                /**
-                 * Build rich context from store state, including planning table data.
-                 * This is the key enhancement that enables GROQ to analyze the planning table.
-                 */
-                static buildContext() {
-                    const f = store.filters.planning;
-                    const company = f.company;
-                    const department = f.department;
-
-                    // ---- Budget/Expense records ----
-                    const access = resolveAccess(store.authUser);
-                    let records = store.mergedRecords.filter(r => hasAccess(r.company, r.department, access));
-                    if (company !== 'All') records = records.filter(r => r.company === company);
-                    if (department !== 'All') records = records.filter(r => r.department === department);
-
-                    // Totals
-                    const budget = records.reduce((s, r) => s + r.budget, 0);
-                    const expense = records.reduce((s, r) => s + r.expense, 0);
-                    const variance = budget - expense;
-                    const variancePct = budget ? (variance / budget) * 100 : 0;
-
-                    // Per-category variances
-                    const catMap = new Map();
-                    for (const r of records) {
-                        if (!catMap.has(r.category)) catMap.set(r.category, { budget: 0, expense: 0, category: r
-                                .category });
-                        const e = catMap.get(r.category);
-                        e.budget += r.budget;
-                        e.expense += r.expense;
-                    }
-                    const variances = Array.from(catMap.values()).map(e => ({
-                        category: e.category,
-                        budget: e.budget,
-                        expense: e.expense,
-                        variance: e.budget - e.expense,
-                        variancePct: e.budget ? ((e.budget - e.expense) / e.budget) * 100 : 0
-                    })).sort((a, b) => Math.abs(b.variance) - Math.abs(a.variance));
-
-                    // ---- PLANNING TABLE DATA ----
-                    // Build planning rows using the same logic as renderPlanning but for context
-                    let planningData = [];
-                    let planningTotals = null;
-
-                    if (store.planningTableExists) {
-                        // Use the existing buildPlanningRows function (defined later)
-                        // We need to call it with the current store state
-                        // Since buildPlanningRows uses store, we can just call it
-                        try {
-                            const rows = buildPlanningRows();
-                            planningData = rows || [];
-                            // Compute planning totals
-                            const childRows = planningData.filter(r => !r.isTotal);
-                            const totals = {
-                                mls: 0,
-                                thisYearMls: 0,
-                                thisYearBudgetVariance: 0,
-                                budgetNextYear: 0,
-                                months: Array(12).fill(0)
-                            };
-                            for (const row of childRows) {
-                                totals.mls += row.mls || 0;
-                                totals.thisYearMls += row.thisYearMls || 0;
-                                totals.thisYearBudgetVariance += row.thisYearBudgetVariance || 0;
-                                totals.budgetNextYear += row.budgetNextYear || 0;
-                                if (row.months) {
-                                    for (let i = 0; i < 12; i++) {
-                                        totals.months[i] += (row.months[i] || 0);
-                                    }
-                                }
-                            }
-                            planningTotals = totals;
-                        } catch (_) {
-                            // If buildPlanningRows isn't available yet, skip planning data
-                            planningData = [];
-                            planningTotals = null;
-                        }
-                    }
-
-                    return {
-                        company,
-                        department,
-                        records,
-                        totals: { budget, expense, variance, variancePct },
-                        variances,
-                        planningData,
-                        planningTotals
-                    };
-                }
-            }
-
-            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 7. PERMISSIONS
+            // 6. PERMISSIONS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function isPlanningEditable(company, department) {
@@ -2154,7 +1626,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 8. PAGINATOR
+            // 7. PAGINATOR (with per-instance default page size)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             class Paginator {
@@ -2223,6 +1695,8 @@
                 }
             }
 
+            // ── Paginator instances ──
+            // Planning paginator defaults to "All"
             const paginators = {
                 matrix: new Paginator('matrixPagination', renderMatrixPage, 25),
                 bv: new Paginator('bvPagination', renderBvPage, 25),
@@ -2232,7 +1706,7 @@
             };
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 9. DATA MERGING & ACCESS
+            // 8. DATA MERGING & ACCESS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function mergeData(budgets, expenses) {
@@ -2375,7 +1849,7 @@
             function fixStickyBg() { /* handled by CSS */ }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 10. RENDER HELPERS
+            // 9. RENDER HELPERS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function mountTableBody(bodyId, rows, emptyMsg) {
@@ -2477,7 +1951,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 11. DASHBOARD RENDERERS
+            // 10. DASHBOARD RENDERERS (hierarchy)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function renderKPIs() {
@@ -2553,8 +2027,6 @@
                 return { totalExp, totalBud, totalVar, totalVarPct };
             }
 
-            let matrixFlatRows = [];
-
             function buildHierarchicalMatrixRows() {
                 const filtered = getDashboardFiltered();
                 let months = getDisplayMonths(filtered);
@@ -2629,6 +2101,8 @@
                 }
                 return hierarchical;
             }
+
+            let matrixFlatRows = [];
 
             function renderMonthlyTotals() {
                 const filtered = getDashboardFiltered();
@@ -2909,7 +2383,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 12. BUDGET VARIANCE
+            // 11. BUDGET VARIANCE
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function buildBvRows() {
@@ -2967,7 +2441,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 13. EXCEPTIONS
+            // 12. EXCEPTIONS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function buildExRows() {
@@ -3026,7 +2500,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 14. DEPT SUMMARY
+            // 13. DEPT SUMMARY
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function buildDeptRows() {
@@ -3080,7 +2554,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 15. BUDGET PLANNING
+            // 14. BUDGET PLANNING (with search)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             let planningFlatRows = [];
@@ -3133,11 +2607,13 @@
                 const multipliers = store.multipliers || {};
                 const excludedDivs = store.excludedDivisions || new Set();
 
+                // Gather all categories, then filter by search term
                 const allCategories = [...new Set(store.mergedRecords.map(r => r.category))];
                 for (const cat of Object.keys(store.divisionMap)) {
                     if (!allCategories.includes(cat)) allCategories.push(cat);
                 }
                 let filteredCategories = allCategories.filter(cat => !store.excludedCategories.has(cat));
+                // Apply search filter
                 if (searchTerm) {
                     filteredCategories = filteredCategories.filter(cat => cat.toLowerCase().includes(searchTerm));
                 }
@@ -3465,6 +2941,7 @@
 
                 updateGlobalToggleIcon();
 
+                // Update search result count
                 const countEl = document.getElementById('planSearchResultCount');
                 if (countEl) {
                     const total = planningFlatRows.filter(r => !r.isTotal).length;
@@ -3853,7 +3330,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 16. PLANNING MODAL
+            // 15. PLANNING MODAL
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             let planningModalInstance = null;
@@ -4154,7 +3631,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 17. SAVE PLANNING
+            // 16. SAVE PLANNING
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             async function savePlanning() {
@@ -4292,7 +3769,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 18. LOAD PLANNING DATA
+            // 17. LOAD PLANNING DATA
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function loadPlanningData(additionRows) {
@@ -4334,7 +3811,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 19. EXPORT: TEXT FILE
+            // 18. EXPORT: TEXT FILE
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function exportPlanningText() {
@@ -4475,7 +3952,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 20. EXCEL EXPORT
+            // 19. EXCEL EXPORT
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             const excelColumnName = index => {
@@ -4652,7 +4129,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 21. NOTES & CSV IMPORT
+            // 20. NOTES & CSV IMPORT
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             async function saveNote(co, dept, cat, month, notes, statusEl) {
@@ -4813,7 +4290,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 22. CSV EXPORT
+            // 21. CSV EXPORT
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function downloadCSV(headers, rows, filename) {
@@ -4949,7 +4426,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 23. EXPENSE DETAIL MODAL
+            // 22. EXPENSE DETAIL MODAL
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function showExpenseDetails(co, dept, cat, monthFilter) {
@@ -4977,7 +4454,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 24. POPULATE FILTERS
+            // 23. POPULATE FILTERS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function populateFilters() {
@@ -4985,6 +4462,7 @@
                 const user = store.authUser;
                 const access = resolveAccess(user);
                 const userType = user.type;
+                // Admin and modify types can see "All"; others see only their assigned companies/departments.
                 const includeAllCompany = (userType === 'admin');
                 const includeAllDept = (userType === 'admin' || userType === 'modify');
 
@@ -4998,6 +4476,7 @@
                 const coOpts = genOpts(access.companies, includeAllCompany);
                 const deptOpts = genOpts(access.departments, includeAllDept);
 
+                // Default to "All" if allowed, otherwise first available.
                 const defaultCompany = includeAllCompany ? 'All' : (access.companies[0] || 'All');
                 const defaultDept = includeAllDept ? 'All' : (access.departments[0] || 'All');
 
@@ -5020,6 +4499,7 @@
                     }
                 });
 
+                // Sync store filters with default values.
                 store.filters.dashboard.company = defaultCompany;
                 store.filters.dashboard.department = defaultDept;
                 store.filters.budgetVariance.company = defaultCompany;
@@ -5054,105 +4534,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 25. AI CHAT (GROQ Integration with Planning Data)
-            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-            async function sendAIMessage(question) {
-                const messagesEl = document.getElementById('aiChatMessages');
-                const inputEl = document.getElementById('aiChatInput');
-                const sendBtn = document.getElementById('aiSendBtn');
-                const errorEl = document.getElementById('aiError');
-
-                if (!question || !question.trim()) return;
-                if (store.ai.isProcessing) return;
-
-                const userMsg = question.trim();
-                store.ai.isProcessing = true;
-                inputEl.disabled = true;
-                sendBtn.disabled = true;
-                errorEl.style.display = 'none';
-
-                // Add user message to UI
-                const userDiv = document.createElement('div');
-                userDiv.className = 'ai-message user';
-                userDiv.innerHTML = `<div class="bubble">${fmt.html(userMsg)}</div>`;
-                messagesEl.appendChild(userDiv);
-                messagesEl.scrollTop = messagesEl.scrollHeight;
-
-                // Show loading indicator
-                const loadingDiv = document.createElement('div');
-                loadingDiv.className = 'ai-message assistant';
-                loadingDiv.id = 'aiLoading';
-                loadingDiv.innerHTML =
-                    `<div class="bubble"><div class="loading-dots"><span>•</span><span>•</span><span>•</span></div></div>`;
-                messagesEl.appendChild(loadingDiv);
-                messagesEl.scrollTop = messagesEl.scrollHeight;
-
-                try {
-                    // Build context with planning data
-                    const context = AIService.buildContext();
-                    const aiService = new AIService();
-                    const response = await aiService.ask(userMsg, context);
-
-                    // Remove loading indicator
-                    const loadingEl = document.getElementById('aiLoading');
-                    if (loadingEl) loadingEl.remove();
-
-                    // Add assistant response
-                    const assistantDiv = document.createElement('div');
-                    assistantDiv.className = 'ai-message assistant';
-                    assistantDiv.innerHTML = `<div class="bubble">${fmt.html(response)}</div>`;
-                    messagesEl.appendChild(assistantDiv);
-                    messagesEl.scrollTop = messagesEl.scrollHeight;
-
-                    // Store in history
-                    store.ai.messages.push({ role: 'user', content: userMsg });
-                    store.ai.messages.push({ role: 'assistant', content: response });
-                    if (store.ai.messages.length > 50) store.ai.messages = store.ai.messages.slice(-50);
-
-                } catch (err) {
-                    const loadingEl = document.getElementById('aiLoading');
-                    if (loadingEl) loadingEl.remove();
-
-                    errorEl.textContent = '❌ ' + (err.message || 'Failed to get AI response. Please try again.');
-                    errorEl.style.display = 'block';
-
-                    // Add fallback response
-                    const fallbackDiv = document.createElement('div');
-                    fallbackDiv.className = 'ai-message assistant';
-                    fallbackDiv.innerHTML =
-                        `<div class="bubble">⚠️ I'm having trouble connecting to the AI service. Please check your GROQ API key and try again later.</div>`;
-                    messagesEl.appendChild(fallbackDiv);
-                    messagesEl.scrollTop = messagesEl.scrollHeight;
-                } finally {
-                    store.ai.isProcessing = false;
-                    inputEl.disabled = false;
-                    sendBtn.disabled = false;
-                    inputEl.value = '';
-                    inputEl.focus();
-                }
-            }
-
-            function clearAIChat() {
-                const messagesEl = document.getElementById('aiChatMessages');
-                store.ai.messages = [];
-                messagesEl.innerHTML = `
-                    <div class="ai-message assistant">
-                        <div class="bubble">
-                            👋 Hi! I'm your AI Budget &amp; Planning Assistant. I can analyze your budget data <strong>and</strong> your planning table.<br />
-                            <small class="text-muted" style="font-size:0.75rem;">
-                                Try: "What's the total budget for next year?" • "Which categories have the largest variance?" • "Show me the monthly breakdown for Salary and Wages" • "What's the MLS for Ads and Promo?"
-                            </small>
-                        </div>
-                    </div>
-                `;
-                const errorEl = document.getElementById('aiError');
-                errorEl.style.display = 'none';
-                document.getElementById('aiChatInput').value = '';
-            }
-
-            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 26. FETCH DATA
+            // 24. FETCH DATA
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             async function fetchData({ silent = false, forceRefresh = false } = {}) {
@@ -5323,7 +4705,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 27. INIT UI
+            // 25. INIT UI
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function initUI() {
@@ -5340,7 +4722,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 28. EVENT BINDING
+            // 26. EVENT BINDING
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function bindEvents() {
@@ -5594,6 +4976,7 @@
                         store.filters.planning.searchTerm = this.value || '';
                         renderPlanning();
                     }, 300));
+                    // Allow Enter key to trigger search
                     searchInput.addEventListener('keydown', function(e) {
                         if (e.key === 'Enter') {
                             e.preventDefault();
@@ -5603,6 +4986,7 @@
                     });
                 }
 
+                // Planning search button
                 document.getElementById('planSearchBtn').addEventListener('click', function() {
                     const inp = document.getElementById('planSearchInput');
                     if (inp) {
@@ -5611,6 +4995,7 @@
                     }
                 });
 
+                // Planning search clear button
                 document.getElementById('planSearchClearBtn').addEventListener('click', function() {
                     const inp = document.getElementById('planSearchInput');
                     if (inp) {
@@ -5808,35 +5193,10 @@
                         alert(err.message);
                     }
                 });
-
-                // ── AI Chat Events ──
-                document.getElementById('aiSendBtn').addEventListener('click', function() {
-                    const input = document.getElementById('aiChatInput');
-                    sendAIMessage(input.value);
-                });
-
-                document.getElementById('aiChatInput').addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        sendAIMessage(this.value);
-                    }
-                });
-
-                document.getElementById('aiClearChatBtn').addEventListener('click', clearAIChat);
-
-                document.querySelectorAll('#aiSuggestions .suggestion-chip').forEach(chip => {
-                    chip.addEventListener('click', function() {
-                        const prompt = this.dataset.prompt;
-                        if (prompt) {
-                            document.getElementById('aiChatInput').value = prompt;
-                            sendAIMessage(prompt);
-                        }
-                    });
-                });
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 29. BOOT
+            // 27. BOOT
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function boot() {
