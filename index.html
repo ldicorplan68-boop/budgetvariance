@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        /* ── CSS (unchanged from original) ── */
+        /* ── CSS ── */
         :root {
             --blue-primary: #0d4a7a;
             --blue-secondary: #0c3d66;
@@ -24,6 +24,8 @@
             --gray-bg: #f1f5f9;
             --planning-header-bg: #e9edf2;
             --planning-stripe: #f8fafc;
+            --ai-bubble-user: #0d4a7a;
+            --ai-bubble-assistant: #e9edf2;
         }
         * {
             font-family: 'Inter', sans-serif;
@@ -843,6 +845,227 @@
         .dark-mode .planning-search-row {
             border-top-color: #1e3a5a;
         }
+
+        /* ── AI Assistant Styles ── */
+        .ai-assistant-panel {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+        .dark-mode .ai-assistant-panel {
+            background: var(--blue-dark-mode);
+            border-color: #1e3a5a;
+        }
+        .ai-chat-messages {
+            max-height: 320px;
+            overflow-y: auto;
+            padding: 16px;
+            background: #fafbfc;
+        }
+        .dark-mode .ai-chat-messages {
+            background: #0f1e2e;
+        }
+        .ai-message {
+            display: flex;
+            margin-bottom: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+        .ai-message.user {
+            justify-content: flex-end;
+        }
+        .ai-message .bubble {
+            max-width: 80%;
+            padding: 10px 16px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        .ai-message.user .bubble {
+            background: var(--ai-bubble-user);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .ai-message.assistant .bubble {
+            background: var(--ai-bubble-assistant);
+            color: #1a2634;
+            border-bottom-left-radius: 4px;
+        }
+        .dark-mode .ai-message.assistant .bubble {
+            background: #1e3a5a;
+            color: #e2e8f0;
+        }
+        .ai-message .bubble .loading-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+        .ai-message .bubble .loading-dots span {
+            animation: dotPulse 1.4s infinite both;
+            font-size: 1.4rem;
+            line-height: 1;
+        }
+        .ai-message .bubble .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .ai-message .bubble .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes dotPulse {
+            0%,
+            80%,
+            100% {
+                opacity: 0.2;
+            }
+            40% {
+                opacity: 1;
+            }
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .ai-chat-input-row {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+        .dark-mode .ai-chat-input-row {
+            background: var(--blue-dark-mode);
+            border-top-color: #1e3a5a;
+        }
+        .ai-chat-input-row input {
+            flex: 1;
+            padding: 8px 14px;
+            border-radius: 24px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color .2s;
+            background: white;
+        }
+        .dark-mode .ai-chat-input-row input {
+            background: #1e3a5a;
+            color: #e2e8f0;
+            border-color: #2a4a6a;
+        }
+        .ai-chat-input-row input:focus {
+            border-color: var(--blue-primary);
+            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
+        }
+        .ai-chat-input-row button {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--blue-primary);
+            color: white;
+            border: none;
+            transition: background .2s;
+            flex-shrink: 0;
+        }
+        .ai-chat-input-row button:hover {
+            background: var(--blue-secondary);
+        }
+        .ai-chat-input-row button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .ai-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px 16px 12px;
+            border-top: 1px solid #f0f2f5;
+            background: #fafbfc;
+        }
+        .dark-mode .ai-suggestions {
+            background: #0f1e2e;
+            border-top-color: #1e3a5a;
+        }
+        .ai-suggestions .suggestion-chip {
+            background: var(--blue-bg);
+            color: var(--blue-primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: none;
+            cursor: pointer;
+            transition: background .2s;
+            white-space: nowrap;
+        }
+        .dark-mode .ai-suggestions .suggestion-chip {
+            background: #1e3a5a;
+            color: #8bb9e0;
+        }
+        .ai-suggestions .suggestion-chip:hover {
+            background: #d0dce8;
+        }
+        .dark-mode .ai-suggestions .suggestion-chip:hover {
+            background: #2a4a6a;
+        }
+        .ai-assistant-panel.collapsed .ai-assistant-body {
+            display: none;
+        }
+        .ai-assistant-panel .ai-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ai-assistant-panel #aiTogglePanelBtn .ai-toggle-label-show {
+            display: none;
+        }
+        .ai-assistant-panel.collapsed #aiTogglePanelBtn .ai-toggle-label-hide {
+            display: none;
+        }
+        .ai-assistant-panel.collapsed #aiTogglePanelBtn .ai-toggle-label-show {
+            display: inline;
+        }
+        .ai-error {
+            color: var(--soft-red);
+            font-size: 0.8rem;
+            padding: 4px 16px 8px;
+        }
+        .ai-clear-btn {
+            background: none;
+            border: none;
+            color: #6c757d;
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: 0 8px;
+            text-decoration: underline;
+        }
+        .ai-clear-btn:hover {
+            color: var(--soft-red);
+        }
+
+        /* Planning insight badge */
+        .planning-insight-badge {
+            font-size: 0.65rem;
+            background: var(--blue-bg);
+            color: var(--blue-primary);
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 6px;
+            cursor: default;
+        }
+        .dark-mode .planning-insight-badge {
+            background: #1e3a5a;
+            color: #8bb9e0;
+        }
     </style>
 </head>
 <body>
@@ -1155,6 +1378,53 @@
                         <div class="row mt-2">
                             <div class="col-12"><span id="planningSaveStatus" class="small text-muted"></span></div>
                         </div>
+
+                        <!-- ─── AI ASSISTANT PANEL ─── -->
+                        <div class="ai-assistant-panel mt-3" id="aiAssistantPanel">
+                            <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom ai-assistant-header" style="background:#f8fafc;">
+                                <div>
+                                    <i class="fas fa-robot me-2" style="color:var(--blue-primary);"></i>
+                                    <span class="fw-semibold">AI Budget &amp; Planning Assistant</span>
+                                    <span class="badge bg-success ms-2" style="font-size:0.6rem;">GROQ</span>
+                                    <span class="badge bg-info ms-1" style="font-size:0.6rem;">Planning Data Ready</span>
+                                </div>
+                                <div class="ai-header-actions">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="aiTogglePanelBtn" title="Hide or show AI assistant">
+                                        <i class="fas fa-eye-slash me-1 ai-toggle-label-hide"></i><span class="ai-toggle-label-hide">Hide</span>
+                                        <i class="fas fa-eye me-1 ai-toggle-label-show"></i><span class="ai-toggle-label-show">Show</span>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="aiClearChatBtn" title="Clear chat history">
+                                        <i class="fas fa-eraser"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="ai-assistant-body" id="aiAssistantBody">
+                                <div class="ai-chat-messages" id="aiChatMessages">
+                                    <div class="ai-message assistant">
+                                        <div class="bubble">
+                                            👋 Hi! I'm your AI Budget &amp; Planning Assistant. I can analyze your budget data <strong>and</strong> your planning table.<br />
+                                            <small class="text-muted" style="font-size:0.75rem;">
+                                                Try: "What's the total budget for next year?" • "Which categories have the largest variance?" • "Show me the monthly breakdown for Salary and Wages" • "What's the MLS for Ads and Promo?"
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ai-suggestions" id="aiSuggestions">
+                                    <button class="suggestion-chip" data-prompt="Show me the top 5 categories with the largest budget variance">🔍 Top 5 variances</button>
+                                    <button class="suggestion-chip" data-prompt="Which departments are over budget?">🏢 Over-budget depts</button>
+                                    <button class="suggestion-chip" data-prompt="Forecast next year's budget for the Marketing department">📈 Forecast Marketing</button>
+                                    <button class="suggestion-chip" data-prompt="Explain the variance for Salary and Wages">💬 Explain Salary variance</button>
+                                    <button class="suggestion-chip" data-prompt="What is the total MLS across all categories?">📊 Total MLS</button>
+                                    <button class="suggestion-chip" data-prompt="Show me the monthly budget trend for the next year">📅 Next year trend</button>
+                                </div>
+                                <div id="aiError" class="ai-error" style="display:none;"></div>
+                                <div class="ai-chat-input-row">
+                                    <input type="text" id="aiChatInput" placeholder="Ask about budget, planning, or variances…" />
+                                    <button id="aiSendBtn" title="Send message"><i class="fas fa-paper-plane"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ─── END AI ASSISTANT ─── -->
                     </div>
 
                     <div class="table-container p-0">
@@ -1261,16 +1531,18 @@
     <script>
         /**
          * LAKPUE DRUG INC. — Budget Variance Intelligence
-         * 
-         * MAJOR IMPROVEMENTS in this rewrite:
-         * 1. Code is organized into clear modules: Config, Helpers, DataService, Auth, Store, Paginator, Renderers, Events, Boot.
-         * 2. Removed redundant logic and unified helper functions.
-         * 3. Improved variable naming for clarity.
-         * 4. Admin default behavior: when user type is 'admin', all company/department filters default to "All".
-         * 5. Maintained all existing features including the Budget Planning search box and Search button.
-         * 6. Paginator for Planning defaults to "All" rows per page.
-         * 7. Consistent error handling and loading states.
-         * 8. All calculations (formula categories, variance, thresholds) are preserved.
+         *
+         * ENHANCEMENTS:
+         * - AI understands planning variance as ACTUAL BUDGET - THIS YEAR MLS.
+         * - Modular layout: Config, Helpers, DataService, Auth, Store, AIService,
+         *   Paginator, Renderers, Events, Boot.
+         * - Groq multi-key rotation: on ANY per-key failure (rate limit, auth, network),
+         *   automatically tries the next CONFIG.GROQ_API_KEYS entry instead of aborting.
+         * - Shared calcMetrics() helper for consistent variance math everywhere.
+         * - Dashboard matrix default Rows per page is All.
+         * - Dashboard division rows recompute Variance / Variance % after aggregating.
+         * - All existing functionality preserved (matrix, variance, exceptions, dept summary,
+         *   planning, notes, CSV, Excel, permissions, dark mode, pagination).
          */
         (function() {
             'use strict';
@@ -1280,9 +1552,19 @@
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             const CONFIG = {
-                SUPABASE_URL: 'https://mufvqitipaoixzrwoslo.supabase.co',
-                SUPABASE_ANON_KEY: 'sb_publishable_7TVs9n2xlyRJrnYvuFOQbA_hSQBuB7Z',
+              SUPABASE_URL: 'https://mufvqitipaoixzrwoslo.supabase.co',
+              SUPABASE_ANON_KEY: 'sb_publishable_7TVs9n2xlyRJrnYvuFOQbA_hSQBuB7Z',
+               // SUPABASE_URL: 'https://scam-retouch-hull.ngrok-free.dev',
+              //  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE',
                 AUTH_KEY: 'bvAuthSession',
+                // Add as many Groq keys as you want (different Gmail accounts).
+                // On rate-limit / quota errors the app automatically tries the next key.
+                GROQ_API_KEYS: [
+                    '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',
+                     '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',
+                    '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',
+                ],
+                GROQ_MODEL: 'openai/gpt-oss-20b',
                 MONTHS: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 MONTH_KEYS: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
                 MONTH_NAMES: ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER',
@@ -1437,15 +1719,32 @@
                 defaultPlan: () => ({
                     base: Object.fromEntries(['mls', ...CONFIG.MONTH_KEYS].map(k => [k, 0])),
                     additions: []
-                })
+                }),
+                getMonthIndex: (m) => { const idx = CONFIG.MONTHS.indexOf(m); return idx >= 0 ? idx : -1; },
+                getMonthKey: (idx) => CONFIG.MONTH_KEYS[idx] || null,
+                getMonthName: (idx) => CONFIG.MONTHS[idx] || null,
+                /** Budget − Expense metrics used across dashboard / variance tables */
+                calcMetrics: (budget, expense) => {
+                    const b = Helpers.toNum(budget);
+                    const e = Helpers.toNum(expense);
+                    const variance = b - e;
+                    return {
+                        budget: b,
+                        expense: e,
+                        variance,
+                        variancePercent: b ? (variance / b) * 100 : 0,
+                        variancePct: b ? (variance / b) * 100 : 0,
+                        utilizationPct: b ? (e / b) * 100 : 0
+                    };
+                },
             };
 
             const { fmt, toNum, debounce, attrEncode, attrDecode, varClass, parseFormattedNumber, extractPlainText,
-                extractSortValue, monthFromDate, noteKey, isAllToken, splitPipe, compareDivisions, defaultPlan } =
-            Helpers;
+                extractSortValue, monthFromDate, noteKey, isAllToken, splitPipe, compareDivisions, defaultPlan,
+                getMonthIndex, getMonthKey, getMonthName, calcMetrics } = Helpers;
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 3. DATA SERVICE
+            // 3. DATA SERVICE (Supabase)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             class DataService {
@@ -1572,11 +1871,395 @@
                     collapsedSections: {}
                 },
                 tableData: { matrix: [], bv: [], exceptions: [], dept: [] },
-                modal: { hideMonthlyBase: false }
+                modal: { hideMonthlyBase: false },
+                ai: {
+                    messages: [],
+                    isProcessing: false,
+                    context: null,
+                    collapsed: false
+                }
             };
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 6. PERMISSIONS
+            // 6. AI SERVICE (GROQ API with multi-key rotation + Planning Data Awareness)
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            class AIService {
+                constructor() {
+                    this.model = CONFIG.GROQ_MODEL;
+                    this.baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
+                    this.keyIndex = 0;
+                    this.keyCooldowns = {}; // key -> resume-at timestamp (ms)
+                    this.apiKeys = this._loadKeys();
+                }
+
+                _loadKeys() {
+                    const fromList = Array.isArray(CONFIG.GROQ_API_KEYS) ? CONFIG.GROQ_API_KEYS : [];
+                    const legacy = CONFIG.GROQ_API_KEY ? [CONFIG.GROQ_API_KEY] : [];
+                    const cleaned = [...fromList, ...legacy]
+                        .map(k => String(k || '')
+                            .replace(/[\u200B-\u200D\uFEFF]/g, '') // zero-width / BOM
+                            .trim())
+                        .filter(k => k && k !== 'gsk_...' && k.startsWith('gsk_') && k.length > 20);
+                    return [...new Set(cleaned)];
+                }
+
+                _keyLabel(index) {
+                    return `key #${index + 1}`;
+                }
+
+                _isCooldownActive(key) {
+                    return !!(this.keyCooldowns[key] && this.keyCooldowns[key] > Date.now());
+                }
+
+                _markLimited(key, retryAfterSec) {
+                    const sec = Math.max(15, Number(retryAfterSec) || 45);
+                    this.keyCooldowns[key] = Date.now() + sec * 1000;
+                }
+
+                _isLimitError(status, errMsg) {
+                    const msg = String(errMsg || '').toLowerCase();
+                    return status === 429 ||
+                        msg.includes('rate limit') ||
+                        msg.includes('quota') ||
+                        msg.includes('too many requests') ||
+                        msg.includes('tokens per day') ||
+                        msg.includes('tpm') ||
+                        msg.includes('rpm') ||
+                        msg.includes('rpd') ||
+                        msg.includes('limit exceeded') ||
+                        msg.includes('over capacity');
+                }
+
+                /** Ordered key list starting at keyIndex, preferring non-cooldown keys first. */
+                _keysToTry() {
+                    // Reload in case CONFIG was edited (e.g. live tweak) without full remount
+                    this.apiKeys = this._loadKeys();
+                    if (!this.apiKeys.length) return [];
+
+                    if (this.keyIndex < 0 || this.keyIndex >= this.apiKeys.length) this.keyIndex = 0;
+
+                    const ordered = [];
+                    for (let i = 0; i < this.apiKeys.length; i++) {
+                        ordered.push({
+                            key: this.apiKeys[(this.keyIndex + i) % this.apiKeys.length],
+                            index: (this.keyIndex + i) % this.apiKeys.length
+                        });
+                    }
+
+                    const ready = ordered.filter(e => !this._isCooldownActive(e.key));
+                    // Always return a full rotation list: ready keys first, then cooling-down ones last
+                    const cooling = ordered.filter(e => this._isCooldownActive(e.key));
+                    return ready.length ? [...ready, ...cooling] : ordered;
+                }
+
+                async _requestWithKey(apiKey, payload) {
+                    const response = await fetch(this.baseUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${apiKey}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const rawText = await response.text();
+                    let parsed = null;
+                    try { parsed = rawText ? JSON.parse(rawText) : null; } catch (_) { /* non-JSON body */ }
+
+                    if (!response.ok) {
+                        const errMsg = parsed?.error?.message || rawText || response.statusText || 'Unknown error';
+                        const retryAfter = response.headers.get('retry-after');
+                        const err = new Error(errMsg);
+                        err.status = response.status;
+                        err.retryAfter = retryAfter;
+                        err.isLimit = this._isLimitError(response.status, errMsg);
+                        throw err;
+                    }
+
+                    return parsed || {};
+                }
+
+                async ask(question, contextData) {
+                    const entries = this._keysToTry();
+                    if (!entries.length) {
+                        throw new Error('No GROQ API keys configured. Add keys to CONFIG.GROQ_API_KEYS.');
+                    }
+
+                    const systemPrompt = this._buildSystemPrompt(contextData);
+                    const payload = {
+                        model: this.model,
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: question }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1200,
+                        top_p: 0.9,
+                    };
+
+                    const failures = [];
+
+                    for (const { key: apiKey, index } of entries) {
+                        const label = this._keyLabel(index);
+                        try {
+                            if (this._isCooldownActive(apiKey)) {
+                                // Still try cooling-down keys as last resort (already sorted last)
+                                console.warn(`GROQ ${label} still in cooldown — trying anyway as fallback…`);
+                            }
+
+                            const data = await this._requestWithKey(apiKey, payload);
+                            this.keyIndex = index;
+                            delete this.keyCooldowns[apiKey];
+                            console.info(`GROQ OK via ${label} (${entries.length} key(s) configured)`);
+                            return data.choices?.[0]?.message?.content ||
+                                'I could not generate a response. Please try again.';
+                        } catch (err) {
+                            const status = err.status || 'network';
+                            const msg = err.message || String(err);
+
+                            if (err.isLimit) {
+                                this._markLimited(apiKey, err.retryAfter);
+                            }
+
+                            // Advance starting point so the *next* chat message starts on the next key
+                            this.keyIndex = (index + 1) % this.apiKeys.length;
+
+                            const detail = `GROQ ${label} failed (${status}): ${msg}`;
+                            failures.push(detail);
+                            console.warn(detail, '→ trying next key…');
+                            // IMPORTANT: always continue to the next key (do not abort the loop)
+                            continue;
+                        }
+                    }
+
+                    throw new Error(
+                        `All ${entries.length} GROQ API key(s) failed.\n` +
+                        failures.map((f, i) => `${i + 1}. ${f}`).join('\n')
+                    );
+                }
+
+                /**
+                 * Enhanced system prompt that includes planning data and explicitly defines
+                 * the planning variance as ACTUAL BUDGET - THIS YEAR MLS.
+                 */
+                _buildSystemPrompt(contextData) {
+                    const { company, department, records, totals, variances, planningData, planningTotals } = contextData ||
+                    {};
+
+                    let prompt = `You are a budget planning and variance analysis assistant for Lakpue Drug Inc. ` +
+                        `You have access to both actual budget/expense data AND the company's budget planning table. ` +
+                        `Provide clear, concise, actionable insights. Use bullet points when helpful. Be professional but friendly.\n\n`;
+
+                    // ---- Context scope ----
+                    if (company && department) {
+                        prompt += `Current context: Company = ${company}, Department = ${department}\n`;
+                    } else {
+                        prompt += 'Current context: All companies and departments\n';
+                    }
+
+                    // ---- Budget/Expense totals ----
+                    if (totals) {
+                        prompt += `\n📊 ACTUAL DATA TOTALS:\n`;
+                        prompt += `- Total Budget: ₱${totals.budget?.toLocaleString() || 0}\n`;
+                        prompt += `- Total Expense: ₱${totals.expense?.toLocaleString() || 0}\n`;
+                        prompt += `- Variance: ₱${totals.variance?.toLocaleString() || 0} (${totals.variancePct?.toFixed(1) || 0}%)\n`;
+                    }
+
+                    // ---- Top variances ----
+                    if (variances && variances.length) {
+                        prompt += '\n🔍 TOP VARIANCES BY CATEGORY (Actual Budget vs Actual Expense):\n';
+                        for (const v of variances.slice(0, 12)) {
+                            const pct = v.variancePct !== undefined ? `(${v.variancePct.toFixed(1)}%)` : '';
+                            prompt +=
+                                `- ${v.category}: Budget ₱${v.budget?.toLocaleString() || 0}, Expense ₱${v.expense?.toLocaleString() || 0}, Variance ₱${v.variance?.toLocaleString() || 0} ${pct}\n`;
+                        }
+                    }
+
+                    // ---- PLANNING TABLE DATA ----
+                    if (planningData && planningData.length > 0) {
+                        prompt += '\n📋 BUDGET PLANNING TABLE (Next Year Projections):\n';
+                        prompt +=
+                            `The planning table contains ${planningData.length} categories with monthly budget projections.\n`;
+                        prompt += `IMPORTANT: In the planning context, the variance is calculated as ACTUAL BUDGET - THIS YEAR MLS.\n`;
+                        prompt +=
+                            `THIS YEAR MLS = ACTUAL EXPENSE + MLS (Multi-Level Spread). This is the key metric for budget adherence.\n\n`;
+
+                        // Include a summary of planning totals
+                        if (planningTotals) {
+                            prompt += `📈 PLANNING TOTALS:\n`;
+                            prompt += `- Total MLS: ₱${planningTotals.mls?.toLocaleString() || 0}\n`;
+                            prompt +=
+                                `- Total This Year MLS (Actual Expense + MLS): ₱${planningTotals.thisYearMls?.toLocaleString() || 0}\n`;
+                            prompt +=
+                                `- Total Planning Variance (ACTUAL BUDGET - THIS YEAR MLS): ₱${planningTotals.thisYearBudgetVariance?.toLocaleString() || 0}\n`;
+                            prompt +=
+                                `- Total Budget for Next Year: ₱${planningTotals.budgetNextYear?.toLocaleString() || 0}\n`;
+                        }
+
+                        // Build a condensed table of top categories
+                        const topCategories = planningData
+                            .filter(r => !r.isTotal)
+                            .sort((a, b) => (b.budgetNextYear || 0) - (a.budgetNextYear || 0))
+                            .slice(0, 20);
+
+                        prompt += '\n📊 TOP 20 CATEGORIES BY BUDGET FOR NEXT YEAR (with planning variance):\n';
+                        prompt +=
+                            `Category | Actual Budget | Actual Expense | MLS | This Year MLS | Planning Variance (Actual Budget - This Year MLS) | Budget Next Year\n`;
+                        for (const r of topCategories) {
+                            const mls = r.mls || 0;
+                            const thisYearMls = r.thisYearMls || 0;
+                            const planningVar = r.thisYearBudgetVariance || 0;
+                            const nextYear = r.budgetNextYear || 0;
+                            prompt +=
+                                `${r.category} | ₱${(r.actualBudget||0).toLocaleString()} | ₱${(r.actualExpense||0).toLocaleString()} | ₱${mls.toLocaleString()} | ₱${thisYearMls.toLocaleString()} | ₱${planningVar.toLocaleString()} | ₱${nextYear.toLocaleString()}\n`;
+                        }
+
+                        // Division-level breakdown
+                        const divisions = {};
+                        for (const r of planningData) {
+                            if (r.isTotal) continue;
+                            const div = r.division || 'Uncategorized';
+                            if (!divisions[div]) divisions[div] = { count: 0, totalNext: 0, totalMls: 0,
+                                totalPlanningVar: 0 };
+                            divisions[div].count++;
+                            divisions[div].totalNext += (r.budgetNextYear || 0);
+                            divisions[div].totalMls += (r.mls || 0);
+                            divisions[div].totalPlanningVar += (r.thisYearBudgetVariance || 0);
+                        }
+                        const sortedDivs = Object.entries(divisions).sort((a, b) => b[1].totalNext - a[1].totalNext);
+                        if (sortedDivs.length) {
+                            prompt += '\n🏢 PLANNING BY DIVISION:\n';
+                            for (const [div, data] of sortedDivs.slice(0, 10)) {
+                                prompt +=
+                                    `- ${div}: ${data.count} categories, Total Next Year ₱${data.totalNext.toLocaleString()}, Total MLS ₱${data.totalMls.toLocaleString()}, Total Planning Variance ₱${data.totalPlanningVar.toLocaleString()}\n`;
+                            }
+                        }
+
+                        // Monthly trend summary
+                        if (planningTotals && planningTotals.months && planningTotals.months.length === 12) {
+                            const months = planningTotals.months;
+                            const maxMonth = Math.max(...months);
+                            const maxIdx = months.indexOf(maxMonth);
+                            const minMonth = Math.min(...months);
+                            const minIdx = months.indexOf(minMonth);
+                            const total = months.reduce((a, b) => a + b, 0);
+                            prompt += `\n📅 MONTHLY BUDGET TREND (Next Year):\n`;
+                            prompt +=
+                                `- Total across all months: ₱${total.toLocaleString()}\n`;
+                            prompt +=
+                                `- Highest month: ${CONFIG.MONTH_NAMES[maxIdx]} (₱${maxMonth.toLocaleString()})\n`;
+                            prompt +=
+                                `- Lowest month: ${CONFIG.MONTH_NAMES[minIdx]} (₱${minMonth.toLocaleString()})\n`;
+                            const avg = total / 12;
+                            prompt += `- Average monthly budget: ₱${avg.toLocaleString()}\n`;
+                        }
+                    } else {
+                        prompt += '\n⚠️ No planning data available for the current filter.\n';
+                    }
+
+                    prompt +=
+                        '\n💡 INSTRUCTIONS:\n' +
+                        '- Answer questions about budget variances, planning projections, MLS, and monthly trends.\n' +
+                        '- When discussing planning, always use the variance formula: ACTUAL BUDGET - THIS YEAR MLS.\n' +
+                        '- Provide specific numbers and percentages when available.\n' +
+                        '- If asked about a specific category, reference its planning data.\n' +
+                        '- Keep responses concise and actionable.\n';
+
+                    return prompt;
+                }
+
+                /**
+                 * Build rich context from store state, including planning table data.
+                 * This now includes a clear note about the planning variance definition.
+                 */
+                static buildContext() {
+                    const f = store.filters.planning;
+                    const company = f.company;
+                    const department = f.department;
+
+                    // ---- Budget/Expense records ----
+                    const access = resolveAccess(store.authUser);
+                    let records = store.mergedRecords.filter(r => hasAccess(r.company, r.department, access));
+                    if (company !== 'All') records = records.filter(r => r.company === company);
+                    if (department !== 'All') records = records.filter(r => r.department === department);
+
+                    // Totals
+                    const budget = records.reduce((s, r) => s + r.budget, 0);
+                    const expense = records.reduce((s, r) => s + r.expense, 0);
+                    const { variance, variancePercent: variancePct } = calcMetrics(budget, expense);
+
+                    // Per-category variances
+                    const catMap = new Map();
+                    for (const r of records) {
+                        if (!catMap.has(r.category)) catMap.set(r.category, { budget: 0, expense: 0, category: r
+                                .category });
+                        const e = catMap.get(r.category);
+                        e.budget += r.budget;
+                        e.expense += r.expense;
+                    }
+                    const variances = Array.from(catMap.values()).map(e => {
+                        const m = calcMetrics(e.budget, e.expense);
+                        return {
+                            category: e.category,
+                            budget: e.budget,
+                            expense: e.expense,
+                            variance: m.variance,
+                            variancePct: m.variancePercent
+                        };
+                    }).sort((a, b) => Math.abs(b.variance) - Math.abs(a.variance));
+
+                    // ---- PLANNING TABLE DATA ----
+                    let planningData = [];
+                    let planningTotals = null;
+
+                    if (store.planningTableExists) {
+                        try {
+                            const rows = buildPlanningRows();
+                            planningData = rows || [];
+                            const childRows = planningData.filter(r => !r.isTotal);
+                            const totals = {
+                                mls: 0,
+                                thisYearMls: 0,
+                                thisYearBudgetVariance: 0,
+                                budgetNextYear: 0,
+                                months: Array(12).fill(0)
+                            };
+                            for (const row of childRows) {
+                                totals.mls += row.mls || 0;
+                                totals.thisYearMls += row.thisYearMls || 0;
+                                totals.thisYearBudgetVariance += row.thisYearBudgetVariance || 0;
+                                totals.budgetNextYear += row.budgetNextYear || 0;
+                                if (row.months) {
+                                    for (let i = 0; i < 12; i++) {
+                                        totals.months[i] += (row.months[i] || 0);
+                                    }
+                                }
+                            }
+                            planningTotals = totals;
+                        } catch (_) {
+                            planningData = [];
+                            planningTotals = null;
+                        }
+                    }
+
+                    return {
+                        company,
+                        department,
+                        records,
+                        totals: { budget, expense, variance, variancePct },
+                        variances,
+                        planningData,
+                        planningTotals
+                    };
+                }
+            }
+
+            // Shared instance so key rotation / cooldowns persist across chat messages
+            const groqAI = new AIService();
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 7. PERMISSIONS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function isPlanningEditable(company, department) {
@@ -1626,7 +2309,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 7. PAGINATOR (with per-instance default page size)
+            // 8. PAGINATOR
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             class Paginator {
@@ -1695,10 +2378,8 @@
                 }
             }
 
-            // ── Paginator instances ──
-            // Planning paginator defaults to "All"
             const paginators = {
-                matrix: new Paginator('matrixPagination', renderMatrixPage, 25),
+                matrix: new Paginator('matrixPagination', renderMatrixPage, 'All'),
                 bv: new Paginator('bvPagination', renderBvPage, 25),
                 ex: new Paginator('exPagination', renderExPage, 25),
                 dept: new Paginator('deptPagination', renderDeptPage, 25),
@@ -1706,7 +2387,7 @@
             };
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 8. DATA MERGING & ACCESS
+            // 9. DATA MERGING & ACCESS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function mergeData(budgets, expenses) {
@@ -1849,7 +2530,7 @@
             function fixStickyBg() { /* handled by CSS */ }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 9. RENDER HELPERS
+            // 10. RENDER HELPERS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function mountTableBody(bodyId, rows, emptyMsg) {
@@ -1951,19 +2632,18 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 10. DASHBOARD RENDERERS (hierarchy)
+            // 11. DASHBOARD RENDERERS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function renderKPIs() {
                 const filtered = getDashboardFiltered();
                 const budget = filtered.reduce((s, r) => s + r.budget, 0);
                 const expense = filtered.reduce((s, r) => s + r.expense, 0);
-                const variance = budget - expense;
-                const pct = budget ? (variance / budget) * 100 : 0;
+                const { variance, variancePercent } = calcMetrics(budget, expense);
                 document.getElementById('totalBudget').textContent = fmt.currency(budget);
                 document.getElementById('totalExpense').textContent = fmt.currency(expense);
                 document.getElementById('totalVariance').textContent = fmt.currency(variance);
-                document.getElementById('variancePercentLabel').textContent = `${pct.toFixed(1)}% Variance`;
+                document.getElementById('variancePercentLabel').textContent = `${variancePercent.toFixed(1)}% Variance`;
             }
 
             function getDashboardFiltered() {
@@ -2005,9 +2685,7 @@
                         const recs = filtered.filter(d => d.category === cat && d.month === m);
                         const expense = recs.reduce((s, r) => s + r.expense, 0);
                         const budget = recs.reduce((s, r) => s + r.budget, 0);
-                        mData[m] = { expense, budget, variance: budget - expense,
-                            variancePercent: budget ? ((budget - expense) / budget) * 100 : 0,
-                            utilizationPct: budget ? (expense / budget) * 100 : 0 };
+                        mData[m] = calcMetrics(budget, expense);
                     }
                     catMap.set(cat, mData);
                 }
@@ -2022,10 +2700,20 @@
                     totalExp += d.expense;
                     totalBud += d.budget;
                 }
-                const totalVar = totalBud - totalExp;
-                const totalVarPct = totalBud ? (totalVar / totalBud) * 100 : 0;
+                const { variance: totalVar, variancePercent: totalVarPct } = calcMetrics(totalBud, totalExp);
                 return { totalExp, totalBud, totalVar, totalVarPct };
             }
+
+            /** After summing expense/budget into a month bucket, recompute variance fields. */
+            function finalizeMonthMetrics(bucket) {
+                const m = calcMetrics(bucket.budget, bucket.expense);
+                bucket.variance = m.variance;
+                bucket.variancePercent = m.variancePercent;
+                bucket.utilizationPct = m.utilizationPct;
+                return bucket;
+            }
+
+            let matrixFlatRows = [];
 
             function buildHierarchicalMatrixRows() {
                 const filtered = getDashboardFiltered();
@@ -2077,8 +2765,11 @@
                             divMData[m].budget += d.budget;
                         }
                     }
-                    divTotals.totalVar = divTotals.totalBud - divTotals.totalExp;
-                    divTotals.totalVarPct = divTotals.totalBud ? (divTotals.totalVar / divTotals.totalBud) * 100 : 0;
+                    // Division rows previously left variance at 0 after summing budget/expense
+                    for (const m of months) finalizeMonthMetrics(divMData[m]);
+                    const divVar = calcMetrics(divTotals.totalBud, divTotals.totalExp);
+                    divTotals.totalVar = divVar.variance;
+                    divTotals.totalVarPct = divVar.variancePercent;
                     hierarchical.push({
                         isTotal: true,
                         category: div,
@@ -2102,8 +2793,6 @@
                 return hierarchical;
             }
 
-            let matrixFlatRows = [];
-
             function renderMonthlyTotals() {
                 const filtered = getDashboardFiltered();
                 const months = getDisplayMonths(filtered);
@@ -2124,8 +2813,13 @@
                         budget += d.budget;
                         expense += d.expense;
                     }
-                    monthTotals[m] = { expense, budget, variance: budget - expense,
-                        variancePct: budget ? ((budget - expense) / budget) * 100 : 0 };
+                    const metrics = calcMetrics(budget, expense);
+                    monthTotals[m] = {
+                        expense: metrics.expense,
+                        budget: metrics.budget,
+                        variance: metrics.variance,
+                        variancePct: metrics.variancePercent
+                    };
                 }
                 const { expense: sE, budget: sB, variance: sV } = resolvedMetrics();
                 let th = `<tr><th>Month</th>`;
@@ -2383,7 +3077,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 11. BUDGET VARIANCE
+            // 12. BUDGET VARIANCE
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function buildBvRows() {
@@ -2399,8 +3093,7 @@
                 );
                 const agg = aggregateByKey(records);
                 let rows = agg.map(item => {
-                    const v = item.budget - item.expense,
-                        vp = item.budget ? (v / item.budget) * 100 : 0;
+                    const { variance: v, variancePercent: vp } = calcMetrics(item.budget, item.expense);
                     const vpDisp = (item.budget === 0 && item.expense > 0) ? 'N/A' : fmt.percent(vp);
                     const vc = varClass(v),
                         pc = varClass(vp);
@@ -2441,7 +3134,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 12. EXCEPTIONS
+            // 13. EXCEPTIONS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function buildExRows() {
@@ -2457,8 +3150,7 @@
                 );
                 const exRows = [];
                 for (const r of records) {
-                    const variance = r.budget - r.expense,
-                        variancePct = r.budget ? (variance / r.budget) * 100 : 0;
+                    const { variance, variancePercent: variancePct } = calcMetrics(r.budget, r.expense);
                     const sb = statusBadge(variance, variancePct, r.budget);
                     if (isException(sb)) {
                         const vpDisp = (r.budget === 0 && r.expense > 0) ? 'N/A' : fmt.percent(variancePct);
@@ -2500,7 +3192,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 13. DEPT SUMMARY
+            // 14. DEPT SUMMARY
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function buildDeptRows() {
@@ -2521,8 +3213,7 @@
                     map.set(r.department, e);
                 }
                 let rows = [...map.entries()].map(([dept, v]) => {
-                    const variance = v.budget - v.expense,
-                        vp = v.budget ? (variance / v.budget) * 100 : 0;
+                    const { variance, variancePercent: vp } = calcMetrics(v.budget, v.expense);
                     const vc = varClass(variance);
                     const badge = vp >= 0 ? '<span class="badge bg-success">Within Budget</span>' :
                         '<span class="badge bg-danger">Over Budget</span>';
@@ -2554,7 +3245,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 14. BUDGET PLANNING (with search)
+            // 15. BUDGET PLANNING
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             let planningFlatRows = [];
@@ -2607,13 +3298,11 @@
                 const multipliers = store.multipliers || {};
                 const excludedDivs = store.excludedDivisions || new Set();
 
-                // Gather all categories, then filter by search term
                 const allCategories = [...new Set(store.mergedRecords.map(r => r.category))];
                 for (const cat of Object.keys(store.divisionMap)) {
                     if (!allCategories.includes(cat)) allCategories.push(cat);
                 }
                 let filteredCategories = allCategories.filter(cat => !store.excludedCategories.has(cat));
-                // Apply search filter
                 if (searchTerm) {
                     filteredCategories = filteredCategories.filter(cat => cat.toLowerCase().includes(searchTerm));
                 }
@@ -2941,7 +3630,6 @@
 
                 updateGlobalToggleIcon();
 
-                // Update search result count
                 const countEl = document.getElementById('planSearchResultCount');
                 if (countEl) {
                     const total = planningFlatRows.filter(r => !r.isTotal).length;
@@ -3330,7 +4018,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 15. PLANNING MODAL
+            // 16. PLANNING MODAL
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             let planningModalInstance = null;
@@ -3631,7 +4319,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 16. SAVE PLANNING
+            // 17. SAVE PLANNING
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             async function savePlanning() {
@@ -3769,7 +4457,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 17. LOAD PLANNING DATA
+            // 18. LOAD PLANNING DATA
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function loadPlanningData(additionRows) {
@@ -3811,7 +4499,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 18. EXPORT: TEXT FILE
+            // 19. EXPORT: TEXT FILE
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function exportPlanningText() {
@@ -3952,7 +4640,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 19. EXCEL EXPORT
+            // 20. EXCEL EXPORT
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             const excelColumnName = index => {
@@ -4129,7 +4817,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 20. NOTES & CSV IMPORT
+            // 21. NOTES & CSV IMPORT
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             async function saveNote(co, dept, cat, month, notes, statusEl) {
@@ -4290,7 +4978,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 21. CSV EXPORT
+            // 22. CSV EXPORT
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function downloadCSV(headers, rows, filename) {
@@ -4386,8 +5074,7 @@
                         (!f.categorySearch || r.category.toLowerCase().includes(f.categorySearch.toLowerCase()))
                     );
                     for (const r of filtered) {
-                        const variance = r.budget - r.expense,
-                            variancePct = r.budget ? (variance / r.budget) * 100 : 0;
+                        const { variance, variancePercent: variancePct } = calcMetrics(r.budget, r.expense);
                         const sb = statusBadge(variance, variancePct, r.budget);
                         if (isException(sb)) records.push({ company: r.company, department: r.department,
                             category: r.category, month: r.month, budget: r.budget, expense: r.expense,
@@ -4404,8 +5091,7 @@
                     );
                     const agg = aggregateByKey(filtered);
                     records = agg.map(item => {
-                        const v = item.budget - item.expense,
-                            vp = item.budget ? (v / item.budget) * 100 : 0;
+                        const { variance: v, variancePercent: vp } = calcMetrics(item.budget, item.expense);
                         return { company: item.company, department: item.department, category: item.category,
                             month: item.month, budget: item.budget, expense: item.expense, variance: v,
                             variancePct: vp, status: statusBadge(v, vp, item.budget) };
@@ -4426,7 +5112,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 22. EXPENSE DETAIL MODAL
+            // 23. EXPENSE DETAIL MODAL
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function showExpenseDetails(co, dept, cat, monthFilter) {
@@ -4454,7 +5140,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 23. POPULATE FILTERS
+            // 24. POPULATE FILTERS
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function populateFilters() {
@@ -4462,7 +5148,6 @@
                 const user = store.authUser;
                 const access = resolveAccess(user);
                 const userType = user.type;
-                // Admin and modify types can see "All"; others see only their assigned companies/departments.
                 const includeAllCompany = (userType === 'admin');
                 const includeAllDept = (userType === 'admin' || userType === 'modify');
 
@@ -4476,7 +5161,6 @@
                 const coOpts = genOpts(access.companies, includeAllCompany);
                 const deptOpts = genOpts(access.departments, includeAllDept);
 
-                // Default to "All" if allowed, otherwise first available.
                 const defaultCompany = includeAllCompany ? 'All' : (access.companies[0] || 'All');
                 const defaultDept = includeAllDept ? 'All' : (access.departments[0] || 'All');
 
@@ -4499,7 +5183,6 @@
                     }
                 });
 
-                // Sync store filters with default values.
                 store.filters.dashboard.company = defaultCompany;
                 store.filters.dashboard.department = defaultDept;
                 store.filters.budgetVariance.company = defaultCompany;
@@ -4534,7 +5217,132 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 24. FETCH DATA
+            // 25. AI CHAT (GROQ Integration with Planning Data)
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            async function sendAIMessage(question) {
+                const messagesEl = document.getElementById('aiChatMessages');
+                const inputEl = document.getElementById('aiChatInput');
+                const sendBtn = document.getElementById('aiSendBtn');
+                const errorEl = document.getElementById('aiError');
+
+                if (!question || !question.trim()) return;
+                if (store.ai.isProcessing) return;
+
+                const userMsg = question.trim();
+                store.ai.isProcessing = true;
+                inputEl.disabled = true;
+                sendBtn.disabled = true;
+                errorEl.style.display = 'none';
+
+                // Add user message to UI
+                const userDiv = document.createElement('div');
+                userDiv.className = 'ai-message user';
+                userDiv.innerHTML = `<div class="bubble">${fmt.html(userMsg)}</div>`;
+                messagesEl.appendChild(userDiv);
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+
+                // Show loading indicator
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'ai-message assistant';
+                loadingDiv.id = 'aiLoading';
+                loadingDiv.innerHTML =
+                    `<div class="bubble"><div class="loading-dots"><span>•</span><span>•</span><span>•</span></div></div>`;
+                messagesEl.appendChild(loadingDiv);
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+
+                try {
+                    // Build context with planning data
+                    const context = AIService.buildContext();
+                    const response = await groqAI.ask(userMsg, context);
+
+                    // Remove loading indicator
+                    const loadingEl = document.getElementById('aiLoading');
+                    if (loadingEl) loadingEl.remove();
+
+                    // Add assistant response
+                    const assistantDiv = document.createElement('div');
+                    assistantDiv.className = 'ai-message assistant';
+                    assistantDiv.innerHTML = `<div class="bubble">${fmt.html(response)}</div>`;
+                    messagesEl.appendChild(assistantDiv);
+                    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+                    // Store in history
+                    store.ai.messages.push({ role: 'user', content: userMsg });
+                    store.ai.messages.push({ role: 'assistant', content: response });
+                    if (store.ai.messages.length > 50) store.ai.messages = store.ai.messages.slice(-50);
+
+                } catch (err) {
+                    const loadingEl = document.getElementById('aiLoading');
+                    if (loadingEl) loadingEl.remove();
+
+                    const detail = err.message || 'Failed to get AI response. Please try again.';
+                    errorEl.textContent = '❌ ' + detail;
+                    errorEl.style.display = 'block';
+
+                    const keyCount = (groqAI && groqAI.apiKeys) ? groqAI.apiKeys.length : 0;
+                    const fallbackDiv = document.createElement('div');
+                    fallbackDiv.className = 'ai-message assistant';
+                    fallbackDiv.innerHTML =
+                        `<div class="bubble">⚠️ AI request failed after trying <strong>${keyCount}</strong> GROQ API key(s). ` +
+                        `Open the browser console (F12) to see which key failed and why. ` +
+                        `If every key is rate-limited, wait a minute or add another key in <code>CONFIG.GROQ_API_KEYS</code>.</div>`;
+                    messagesEl.appendChild(fallbackDiv);
+                    messagesEl.scrollTop = messagesEl.scrollHeight;
+                } finally {
+                    store.ai.isProcessing = false;
+                    inputEl.disabled = false;
+                    sendBtn.disabled = false;
+                    inputEl.value = '';
+                    inputEl.focus();
+                }
+            }
+
+            function clearAIChat() {
+                const messagesEl = document.getElementById('aiChatMessages');
+                store.ai.messages = [];
+                messagesEl.innerHTML = `
+                    <div class="ai-message assistant">
+                        <div class="bubble">
+                            👋 Hi! I'm your AI Budget &amp; Planning Assistant. I can analyze your budget data <strong>and</strong> your planning table.<br />
+                            <small class="text-muted" style="font-size:0.75rem;">
+                                Try: "What's the total budget for next year?" • "Which categories have the largest variance?" • "Show me the monthly breakdown for Salary and Wages" • "What's the MLS for Ads and Promo?"
+                            </small>
+                        </div>
+                    </div>
+                `;
+                const errorEl = document.getElementById('aiError');
+                errorEl.style.display = 'none';
+                document.getElementById('aiChatInput').value = '';
+            }
+
+            const AI_PANEL_COLLAPSE_KEY = 'bvAiPanelCollapsed';
+
+            function applyAIPanelCollapsed(collapsed) {
+                const panel = document.getElementById('aiAssistantPanel');
+                const btn = document.getElementById('aiTogglePanelBtn');
+                if (!panel) return;
+                store.ai.collapsed = !!collapsed;
+                panel.classList.toggle('collapsed', store.ai.collapsed);
+                if (btn) {
+                    btn.title = store.ai.collapsed ? 'Show AI assistant' : 'Hide AI assistant';
+                    btn.setAttribute('aria-expanded', store.ai.collapsed ? 'false' : 'true');
+                }
+                try { localStorage.setItem(AI_PANEL_COLLAPSE_KEY, store.ai.collapsed ? '1' : '0'); } catch (_) { /* ignore */ }
+            }
+
+            function toggleAIPanel() {
+                applyAIPanelCollapsed(!store.ai.collapsed);
+            }
+
+            function initAIPanelCollapse() {
+                let collapsed = false;
+                try { collapsed = localStorage.getItem(AI_PANEL_COLLAPSE_KEY) === '1'; } catch (_) { collapsed = false; }
+                applyAIPanelCollapsed(collapsed);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 26. FETCH DATA
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             async function fetchData({ silent = false, forceRefresh = false } = {}) {
@@ -4705,7 +5513,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 25. INIT UI
+            // 27. INIT UI
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function initUI() {
@@ -4722,7 +5530,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 26. EVENT BINDING
+            // 28. EVENT BINDING
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function bindEvents() {
@@ -4976,7 +5784,6 @@
                         store.filters.planning.searchTerm = this.value || '';
                         renderPlanning();
                     }, 300));
-                    // Allow Enter key to trigger search
                     searchInput.addEventListener('keydown', function(e) {
                         if (e.key === 'Enter') {
                             e.preventDefault();
@@ -4986,7 +5793,6 @@
                     });
                 }
 
-                // Planning search button
                 document.getElementById('planSearchBtn').addEventListener('click', function() {
                     const inp = document.getElementById('planSearchInput');
                     if (inp) {
@@ -4995,7 +5801,6 @@
                     }
                 });
 
-                // Planning search clear button
                 document.getElementById('planSearchClearBtn').addEventListener('click', function() {
                     const inp = document.getElementById('planSearchInput');
                     if (inp) {
@@ -5193,10 +5998,37 @@
                         alert(err.message);
                     }
                 });
+
+                // ── AI Chat Events ──
+                document.getElementById('aiSendBtn').addEventListener('click', function() {
+                    const input = document.getElementById('aiChatInput');
+                    sendAIMessage(input.value);
+                });
+
+                document.getElementById('aiChatInput').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        sendAIMessage(this.value);
+                    }
+                });
+
+                document.getElementById('aiClearChatBtn').addEventListener('click', clearAIChat);
+                document.getElementById('aiTogglePanelBtn').addEventListener('click', toggleAIPanel);
+                initAIPanelCollapse();
+
+                document.querySelectorAll('#aiSuggestions .suggestion-chip').forEach(chip => {
+                    chip.addEventListener('click', function() {
+                        const prompt = this.dataset.prompt;
+                        if (prompt) {
+                            document.getElementById('aiChatInput').value = prompt;
+                            sendAIMessage(prompt);
+                        }
+                    });
+                });
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 27. BOOT
+            // 29. BOOT
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             function boot() {
