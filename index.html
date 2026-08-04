@@ -2137,7 +2137,7 @@
                                 <div class="icon-wrapper download"><i class="fas fa-download"></i></div>
                                 <h5>Download Files</h5>
                                 <p>Access and download shared company files, reports, and templates.</p>
-                                <a href="https://drive.google.com/drive/folders/1S5ezMy673eOdZ32GhCI027EZ_58SIzc0" target="_blank" rel="noopener noreferrer" class="btn btn-primary-blue"><i class="fas fa-external-link-alt me-2"></i>Open Download Folder</a>
+                                <a href="https://script.google.com/macros/s/AKfycbzv48qF4CrhSv93gMPhFofADQEi1jqgTU9tjFY5Jfjt/dev" target="_blank" rel="noopener noreferrer" class="btn btn-primary-blue"><i class="fas fa-external-link-alt me-2"></i>Open Download Folder</a>
                             </div>
                             <div class="file-card">
                                 <div class="icon-wrapper upload"><i class="fas fa-upload"></i></div>
@@ -2310,9 +2310,6 @@
          *     - Pagination & sorting
          *     - Permission toggles
          *     - Files section
-         *
-         *  NEW: Capex division is now excluded from the Grand Total row
-         *  in the Budget Planning section (both UI and exports).
          */
         (function() {
             'use strict';
@@ -4432,8 +4429,7 @@
 
             function computeGrandTotals() {
                 const allRows = buildPlanningRows();
-                // Exclude Capex division from Grand Total
-                const childRows = allRows.filter(r => !r.isTotal && (r.division || '').toLowerCase() !== 'capex');
+                const childRows = allRows.filter(r => !r.isTotal);
                 const totals = {
                     lastYearExpense: 0,
                     actualBudget: 0,
@@ -4465,7 +4461,7 @@
                 const totals = computeGrandTotals();
                 const fmtCur = v => fmt.currency(v);
                 let rowHtml = `<tr>
-                    <td class="grand-total-label">GRAND TOTAL (excl. CAPEX)</td>
+                    <td class="grand-total-label">GRAND TOTAL</td>
                     <td>${fmtCur(totals.lastYearExpense)}</td>
                     <td>${fmtCur(totals.actualBudget)}</td>
                     <td>${fmtCur(totals.actualExpense)}</td>
@@ -5550,7 +5546,7 @@
 
                 const totals = computeGrandTotals();
                 const gtLine =
-                    `\n${'='.repeat(80)}\nGRAND TOTAL (excl. CAPEX)`.padEnd(28) +
+                    `\n${'='.repeat(80)}\nGRAND TOTAL`.padEnd(28) +
                     ` | ${plain(totals.lastYearExpense).padStart(12)}` +
                     ` | ${plain(totals.actualBudget).padStart(14)}` +
                     ` | ${plain(totals.actualExpense).padStart(14)}` +
@@ -5732,16 +5728,16 @@
                 });
                 const grandTotals = computeGrandTotals();
                 const grandTotalRow = rows.length + 2;
-                XLSX.utils.sheet_add_aoa(planningSheet, [['', '', 'GRAND TOTAL (excl. CAPEX)']], { origin: `A${grandTotalRow}` });
+                XLSX.utils.sheet_add_aoa(planningSheet, [['', '', 'GRAND TOTAL']], { origin: `A${grandTotalRow}` });
                 const grandValues = [
                     grandTotals.lastYearExpense, grandTotals.actualBudget, grandTotals.actualExpense, grandTotals.mls,
                     grandTotals.thisYearMls, grandTotals.thisYearBudgetVariance, grandTotals.budgetNextYear,
                     ...grandTotals.months
                 ];
                 for (let column = 3; column <= 21; column++) {
-                    // Use computed value, not a formula, to exclude Capex
-                    const cellAddress = excelCellAddress(column, grandTotalRow);
-                    planningSheet[cellAddress] = { t: 'n', v: grandValues[column - 3] };
+                    const totalFormula = parentRows.length ?
+                        `SUM(${parentRows.map(parent => excelCellAddress(column, parent.excelRow)).join(',')})` : '0';
+                    setExcelFormula(planningSheet, column, grandTotalRow, totalFormula, grandValues[column - 3]);
                 }
                 for (let rowNumber = 2; rowNumber <= grandTotalRow; rowNumber++) {
                     for (let column = 3; column <= 21; column++) setExcelNumberFormat(planningSheet, column, rowNumber);
