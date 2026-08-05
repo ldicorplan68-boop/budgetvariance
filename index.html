@@ -9,10 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet" />
 
+    <!-- ===== STYLES ===== (unchanged) -->
     <style>
-        /* ============================================================
-               CSS VARIABLES & RESET
-               ============================================================ */
+        /* ── all CSS remains exactly as in original ── */
         :root {
             --blue-primary: #0d4a7a;
             --blue-secondary: #0c3d66;
@@ -33,19 +32,9 @@
             --text-muted: #6c757d;
             --scroll-max-height: 480px;
         }
+        * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+        body { background: var(--gray-bg); overflow-x: hidden; }
 
-        * {
-            font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
-        }
-        body {
-            background: var(--gray-bg);
-            overflow-x: hidden;
-        }
-
-        /* ============================================================
-               SIDEBAR
-               ============================================================ */
         .sidebar {
             background: var(--blue-secondary);
             min-height: 100vh;
@@ -55,11 +44,9 @@
             z-index: 1030;
             display: flex;
             flex-direction: column;
-            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 2px 0 12px rgba(0,0,0,0.15);
         }
-        .sidebar.collapsed {
-            margin-left: -260px;
-        }
+        .sidebar.collapsed { margin-left: -260px; }
         .sidebar .nav-link {
             color: #c0d9ec;
             padding: 12px 20px;
@@ -74,9 +61,6 @@
             color: #fff;
         }
 
-        /* ============================================================
-               MAIN CONTENT
-               ============================================================ */
         .main-content {
             margin-left: 260px;
             transition: margin-left .3s;
@@ -93,14 +77,11 @@
             transition: background .2s;
         }
 
-        /* ============================================================
-               CARDS & CONTAINERS
-               ============================================================ */
         .stat-card {
             background: #fff;
             border-radius: 24px;
             transition: transform .2s, background .2s;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, .02);
+            box-shadow: 0 4px 12px rgba(0,0,0,.02);
             border: 1px solid #eef2f6;
         }
         .table-container {
@@ -114,22 +95,14 @@
             background: #fff;
         }
 
-        /* ============================================================
-               STICKY COLUMN (left)
-               ============================================================ */
         .sticky-col {
             position: sticky;
             left: 0;
             background: #ffffff !important;
             z-index: 5;
         }
-        thead .sticky-col {
-            z-index: 12;
-        }
+        thead .sticky-col { z-index: 12; }
 
-        /* ============================================================
-               MATRIX SCROLL — FREEZE PANE
-               ============================================================ */
         .matrix-scroll {
             overflow: auto;
             max-height: var(--scroll-max-height);
@@ -137,21 +110,10 @@
             border-radius: 12px;
             border: 1px solid #eef2f6;
         }
-        .matrix-scroll::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-        }
-        .matrix-scroll::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 6px;
-        }
-        .matrix-scroll::-webkit-scrollbar-thumb {
-            background: #c1c7cd;
-            border-radius: 6px;
-        }
-        .matrix-scroll::-webkit-scrollbar-thumb:hover {
-            background: #a0a7ae;
-        }
+        .matrix-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+        .matrix-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 6px; }
+        .matrix-scroll::-webkit-scrollbar-thumb { background: #c1c7cd; border-radius: 6px; }
+        .matrix-scroll::-webkit-scrollbar-thumb:hover { background: #a0a7ae; }
         .matrix-scroll table {
             border-collapse: separate;
             border-spacing: 0;
@@ -201,9 +163,7 @@
             min-width: 180px;
             max-width: 220px;
         }
-        .matrix-scroll tbody tr.matrix-total-row td:first-child {
-            background: var(--planning-stripe);
-        }
+        .matrix-scroll tbody tr.matrix-total-row td:first-child { background: var(--planning-stripe); }
         .matrix-scroll tbody tr.matrix-total-row {
             background: var(--planning-stripe);
             font-weight: 600;
@@ -212,15 +172,9 @@
             border-top: 2px solid #d0d5dc;
             border-bottom: 2px solid #d0d5dc;
         }
-        .matrix-scroll tbody tr.matrix-child-row td:first-child {
-            padding-left: 2.2rem;
-        }
-        .matrix-scroll tbody tr:hover td:first-child {
-            background: var(--blue-bg);
-        }
-        .matrix-scroll tbody tr:hover td {
-            background: var(--blue-bg);
-        }
+        .matrix-scroll tbody tr.matrix-child-row td:first-child { padding-left: 2.2rem; }
+        .matrix-scroll tbody tr:hover td:first-child { background: var(--blue-bg); }
+        .matrix-scroll tbody tr:hover td { background: var(--blue-bg); }
         .matrix-scroll .progress-threshold {
             width: 60px;
             height: 4px;
@@ -237,12 +191,7 @@
             transition: width .3s;
         }
 
-        /* ============================================================
-               DETAIL TABLES — FREEZE HEADER (BV / Exceptions)
-               ============================================================ */
-        .detail-table-scroll {
-            overflow: visible;
-        }
+        .detail-table-scroll { overflow: visible; }
         .detail-table-scroll .table-scroll-wrapper {
             max-height: var(--scroll-max-height);
             overflow: auto;
@@ -250,22 +199,10 @@
             border: 1px solid #eef2f6;
             margin-top: 0.5rem;
         }
-        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-        }
-        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 6px;
-        }
-        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb {
-            background: #c1c7cd;
-            border-radius: 6px;
-        }
-        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-            background: #a0a7ae;
-        }
-
+        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar { width: 10px; height: 10px; }
+        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 6px; }
+        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb { background: #c1c7cd; border-radius: 6px; }
+        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb:hover { background: #a0a7ae; }
         .detail-table-scroll .table-scroll-wrapper table {
             border-collapse: separate;
             border-spacing: 0;
@@ -295,40 +232,23 @@
             vertical-align: middle;
             text-align: left;
         }
-        .detail-table-scroll .table-scroll-wrapper table thead th.text-end {
-            text-align: right;
-        }
+        .detail-table-scroll .table-scroll-wrapper table thead th.text-end { text-align: right; }
         .detail-table-scroll .table-scroll-wrapper table tbody td {
             padding: 4px 6px;
             border-bottom: 1px solid var(--border-light);
             vertical-align: middle;
             background: #fff;
         }
-        .detail-table-scroll .table-scroll-wrapper table tbody tr:hover td {
-            background: var(--blue-bg);
-        }
+        .detail-table-scroll .table-scroll-wrapper table tbody tr:hover td { background: var(--blue-bg); }
 
-        /* ── notes cells ── */
         .notes-cell {
             min-width: 200px;
             max-width: 280px;
         }
 
-        /* ============================================================
-               TEXT HELPERS
-               ============================================================ */
-        .text-negative {
-            color: var(--soft-red) !important;
-            font-weight: 600;
-        }
-        .text-positive {
-            color: var(--emerald) !important;
-            font-weight: 600;
-        }
+        .text-negative { color: var(--soft-red) !important; font-weight: 600; }
+        .text-positive { color: var(--emerald) !important; font-weight: 600; }
 
-        /* ============================================================
-               PLANNING INPUTS
-               ============================================================ */
         .planning-input {
             width: 108px;
             padding: 4px 6px;
@@ -342,7 +262,7 @@
         .planning-input:focus {
             border-color: var(--blue-primary);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.25);
+            box-shadow: 0 0 0 2px rgba(13,74,122,0.25);
         }
         .planning-input.aggregated {
             border: none;
@@ -366,9 +286,6 @@
             cursor: not-allowed !important;
         }
 
-        /* ============================================================
-               PLANNING TABLE
-               ============================================================ */
         .planning-wrapper {
             position: relative;
             border: 1px solid #e2e8f0;
@@ -381,21 +298,10 @@
             max-height: var(--scroll-max-height);
             scroll-behavior: smooth;
         }
-        .planning-scroll::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-        }
-        .planning-scroll::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 6px;
-        }
-        .planning-scroll::-webkit-scrollbar-thumb {
-            background: #c1c7cd;
-            border-radius: 6px;
-        }
-        .planning-scroll::-webkit-scrollbar-thumb:hover {
-            background: #a0a7ae;
-        }
+        .planning-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+        .planning-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 6px; }
+        .planning-scroll::-webkit-scrollbar-thumb { background: #c1c7cd; border-radius: 6px; }
+        .planning-scroll::-webkit-scrollbar-thumb:hover { background: #a0a7ae; }
         .planning-scroll table {
             border-collapse: separate;
             border-spacing: 0;
@@ -438,9 +344,7 @@
             min-width: 200px;
             max-width: 260px;
         }
-        .planning-scroll tbody tr.planning-total-row td:first-child {
-            background: var(--planning-stripe);
-        }
+        .planning-scroll tbody tr.planning-total-row td:first-child { background: var(--planning-stripe); }
         .planning-scroll tbody tr.planning-total-row {
             background: var(--planning-stripe);
             font-weight: 600;
@@ -449,15 +353,9 @@
             border-top: 2px solid #d0d5dc;
             border-bottom: 2px solid #d0d5dc;
         }
-        .planning-scroll tbody tr.planning-child-row td:first-child {
-            padding-left: 2.2rem;
-        }
-        .planning-scroll tbody tr:hover td:first-child {
-            background: var(--blue-bg);
-        }
-        .planning-scroll tbody tr:hover td {
-            background: var(--blue-bg);
-        }
+        .planning-scroll tbody tr.planning-child-row td:first-child { padding-left: 2.2rem; }
+        .planning-scroll tbody tr:hover td:first-child { background: var(--blue-bg); }
+        .planning-scroll tbody tr:hover td { background: var(--blue-bg); }
         .planning-scroll .planning-input {
             width: 100%;
             min-width: 80px;
@@ -476,7 +374,7 @@
         .planning-scroll .planning-input:focus {
             border-color: var(--blue-primary);
             background: #fff;
-            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
+            box-shadow: 0 0 0 2px rgba(13,74,122,0.15);
         }
         .planning-scroll .planning-input.aggregated {
             border: none;
@@ -489,12 +387,10 @@
             background: #fff;
             border-color: #d0d5dc;
         }
-        .planning-scroll .planning-input.editable:hover {
-            border-color: #9aa3af;
-        }
+        .planning-scroll .planning-input.editable:hover { border-color: #9aa3af; }
         .planning-scroll .planning-input.editable:focus {
             border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.2);
+            box-shadow: 0 0 0 2px rgba(13,74,122,0.2);
         }
         .planning-scroll .planning-input.formula {
             background: #f0f4fa;
@@ -535,14 +431,8 @@
             font-size: 0.8rem;
             letter-spacing: 0.05em;
         }
+        .hide-month-cols .month-col { display: none !important; }
 
-        .hide-month-cols .month-col {
-            display: none !important;
-        }
-
-        /* ============================================================
-               PAGINATION
-               ============================================================ */
         .pagination-bar {
             display: flex;
             align-items: center;
@@ -572,14 +462,8 @@
             border-color: var(--blue-primary);
             font-weight: 600;
         }
-        .page-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* ============================================================
-               TOGGLES
-               ============================================================ */
         .toggle-group {
             background: #f1f5f9;
             border-radius: 40px;
@@ -615,17 +499,9 @@
             cursor: pointer;
             user-select: none;
         }
-        .clickable-header:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-        .sort-indicator {
-            margin-left: 6px;
-            font-size: 0.7rem;
-        }
+        .clickable-header:hover { background-color: rgba(0,0,0,0.05); }
+        .sort-indicator { margin-left: 6px; font-size: 0.7rem; }
 
-        /* ============================================================
-               PERMISSION TOGGLE
-               ============================================================ */
         .permission-toggle {
             display: inline-flex;
             align-items: center;
@@ -638,9 +514,7 @@
             cursor: pointer;
             transition: background .2s;
         }
-        .permission-toggle:hover {
-            background: #e9edf2;
-        }
+        .permission-toggle:hover { background: #e9edf2; }
         .permission-toggle .toggle-indicator {
             width: 44px;
             height: 24px;
@@ -660,23 +534,16 @@
             background: #fff;
             border-radius: 50%;
             transition: transform .2s;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
-        .permission-toggle.enabled .toggle-indicator {
-            background: var(--emerald);
-        }
-        .permission-toggle.enabled .toggle-indicator::after {
-            transform: translateX(20px);
-        }
+        .permission-toggle.enabled .toggle-indicator { background: var(--emerald); }
+        .permission-toggle.enabled .toggle-indicator::after { transform: translateX(20px); }
         .permission-toggle .status-label {
             font-weight: 500;
             min-width: 60px;
             color: #333;
         }
 
-        /* ============================================================
-               PLANNING MODAL
-               ============================================================ */
         .planning-modal-input {
             width: 100%;
             padding: 6px 10px;
@@ -688,7 +555,7 @@
         .planning-modal-input:focus {
             border-color: var(--blue-primary);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.25);
+            box-shadow: 0 0 0 2px rgba(13,74,122,0.25);
         }
         .planning-modal-input[readonly] {
             background: #f8f9fa;
@@ -719,9 +586,6 @@
             margin-bottom: 2px;
         }
 
-        /* ============================================================
-               AI PANEL
-               ============================================================ */
         .ai-assistant-panel {
             background: #fff;
             border-radius: 16px;
@@ -740,9 +604,7 @@
             margin-bottom: 12px;
             animation: fadeIn 0.3s ease;
         }
-        .ai-message.user {
-            justify-content: flex-end;
-        }
+        .ai-message.user { justify-content: flex-end; }
         .ai-message .bubble {
             max-width: 80%;
             padding: 10px 16px;
@@ -771,31 +633,15 @@
             font-size: 1.4rem;
             line-height: 1;
         }
-        .ai-message .bubble .loading-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .ai-message .bubble .loading-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .ai-message .bubble .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .ai-message .bubble .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes dotPulse {
-            0%,
-            80%,
-            100% {
-                opacity: 0.2;
-            }
-            40% {
-                opacity: 1;
-            }
+            0%,80%,100% { opacity: 0.2; }
+            40% { opacity: 1; }
         }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .ai-chat-input-row {
             display: flex;
@@ -816,7 +662,7 @@
         }
         .ai-chat-input-row input:focus {
             border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
+            box-shadow: 0 0 0 2px rgba(13,74,122,0.15);
         }
         .ai-chat-input-row button {
             border-radius: 50%;
@@ -832,13 +678,9 @@
             transition: background .2s;
             flex-shrink: 0;
         }
-        .ai-chat-input-row button:hover {
-            background: var(--blue-secondary);
-        }
-        .ai-chat-input-row button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .ai-chat-input-row button:hover { background: var(--blue-secondary); }
+        .ai-chat-input-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+
         .ai-suggestions {
             display: flex;
             flex-wrap: wrap;
@@ -858,35 +700,18 @@
             transition: background .2s;
             white-space: nowrap;
         }
-        .ai-suggestions .suggestion-chip:hover {
-            background: #d0dce8;
-        }
-        .ai-assistant-panel.collapsed .ai-assistant-body {
-            display: none;
-        }
-        .ai-assistant-panel .ai-header-actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .ai-assistant-panel #aiTogglePanelBtn .ai-toggle-label-show {
-            display: none;
-        }
-        .ai-assistant-panel.collapsed #aiTogglePanelBtn .ai-toggle-label-hide {
-            display: none;
-        }
-        .ai-assistant-panel.collapsed #aiTogglePanelBtn .ai-toggle-label-show {
-            display: inline;
-        }
+        .ai-suggestions .suggestion-chip:hover { background: #d0dce8; }
+        .ai-assistant-panel.collapsed .ai-assistant-body { display: none; }
+        .ai-assistant-panel .ai-header-actions { display: flex; align-items: center; gap: 6px; }
+        .ai-assistant-panel #aiTogglePanelBtn .ai-toggle-label-show { display: none; }
+        .ai-assistant-panel.collapsed #aiTogglePanelBtn .ai-toggle-label-hide { display: none; }
+        .ai-assistant-panel.collapsed #aiTogglePanelBtn .ai-toggle-label-show { display: inline; }
         .ai-error {
             color: var(--soft-red);
             font-size: 0.8rem;
             padding: 4px 16px 8px;
         }
 
-        /* ============================================================
-               FLOATING AI CHAT
-               ============================================================ */
         #floatingAiButton {
             position: fixed;
             bottom: 24px;
@@ -901,7 +726,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             transition: transform 0.2s, background 0.2s;
         }
         #floatingAiButton:hover {
@@ -916,7 +741,7 @@
             max-height: 500px;
             background: #fff;
             border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
             display: none;
             flex-direction: column;
             z-index: 9998;
@@ -924,9 +749,7 @@
             border: 1px solid #e2e8f0;
             transition: opacity 0.2s;
         }
-        #floatingAiChat.open {
-            display: flex;
-        }
+        #floatingAiChat.open { display: flex; }
         .floating-header {
             padding: 12px 16px;
             background: var(--blue-primary);
@@ -943,9 +766,7 @@
             cursor: pointer;
             padding: 0 4px;
         }
-        .floating-header button:hover {
-            opacity: 0.8;
-        }
+        .floating-header button:hover { opacity: 0.8; }
         #floatingChatMessages {
             flex: 1;
             overflow-y: auto;
@@ -959,9 +780,7 @@
             margin-bottom: 12px;
             animation: fadeIn 0.3s ease;
         }
-        .floating-message.user {
-            justify-content: flex-end;
-        }
+        .floating-message.user { justify-content: flex-end; }
         .floating-message .bubble {
             max-width: 80%;
             padding: 8px 14px;
@@ -1000,7 +819,7 @@
         }
         .floating-input-row input:focus {
             border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
+            box-shadow: 0 0 0 2px rgba(13,74,122,0.15);
         }
         .floating-input-row button {
             background: var(--blue-primary);
@@ -1016,13 +835,8 @@
             transition: background 0.2s;
             flex-shrink: 0;
         }
-        .floating-input-row button:hover {
-            background: var(--blue-secondary);
-        }
-        .floating-input-row button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .floating-input-row button:hover { background: var(--blue-secondary); }
+        .floating-input-row button:disabled { opacity: 0.5; cursor: not-allowed; }
         .floating-loading-dots {
             display: inline-flex;
             gap: 4px;
@@ -1032,16 +846,9 @@
             font-size: 1.4rem;
             line-height: 1;
         }
-        .floating-loading-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .floating-loading-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .floating-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .floating-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
 
-        /* ============================================================
-               FILES SECTION
-               ============================================================ */
         .files-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1063,7 +870,7 @@
         }
         .file-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
         }
         .file-card .icon-wrapper {
             width: 80px;
@@ -1083,22 +890,14 @@
             background: #e3f2fd;
             color: #0d47a1;
         }
-        .file-card h5 {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
+        .file-card h5 { font-weight: 600; margin-bottom: 0.5rem; }
         .file-card p {
             color: var(--text-muted);
             font-size: 0.9rem;
             margin-bottom: 1rem;
         }
-        .file-card .btn {
-            min-width: 140px;
-        }
+        .file-card .btn { min-width: 140px; }
 
-        /* ============================================================
-               UPLOAD AREA
-               ============================================================ */
         .upload-area {
             border: 2px dashed #cbd5e1;
             border-radius: 16px;
@@ -1112,9 +911,6 @@
             border-color: var(--blue-primary);
         }
 
-        /* ============================================================
-               CONTROLS ROW
-               ============================================================ */
         .controls-row {
             display: flex;
             flex-wrap: wrap;
@@ -1129,9 +925,6 @@
             font-size: 0.9rem;
         }
 
-        /* ============================================================
-               LOGIN
-               ============================================================ */
         #loginOverlay {
             position: fixed;
             inset: 0;
@@ -1148,7 +941,7 @@
             padding: 2.5rem;
             width: 100%;
             max-width: 420px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, .3);
+            box-shadow: 0 25px 50px rgba(0,0,0,.3);
         }
         .login-card .brand {
             color: var(--blue-primary);
@@ -1160,20 +953,13 @@
             width: auto;
             margin-bottom: 8px;
         }
-        #appShell {
-            display: none;
-        }
-        #appShell.authenticated {
-            display: block;
-        }
+        #appShell { display: none; }
+        #appShell.authenticated { display: block; }
 
-        /* ============================================================
-               LOADING
-               ============================================================ */
         .loading-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(255, 255, 255, .95);
+            background: rgba(255,255,255,.95);
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -1190,25 +976,11 @@
             animation: spin 1s linear infinite;
             margin-bottom: 20px;
         }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ============================================================
-               SECTION VISIBILITY
-               ============================================================ */
-        .section-content {
-            display: none;
-        }
-        .section-content.active-section {
-            display: block;
-        }
+        .section-content { display: none; }
+        .section-content.active-section { display: block; }
 
-        /* ============================================================
-               DARK MODE
-               ============================================================ */
         body.dark-mode {
             background: var(--blue-dark-bg);
             color: #e2e8f0;
@@ -1224,9 +996,7 @@
         .dark-mode .planning-sticky-col {
             background: var(--blue-dark-mode) !important;
         }
-        .dark-mode .planning-total-row {
-            background-color: var(--blue-dark-bg);
-        }
+        .dark-mode .planning-total-row { background-color: var(--blue-dark-bg); }
         .dark-mode .planning-input {
             background: #1e3a5a;
             color: #e2e8f0;
@@ -1237,109 +1007,59 @@
             border: none;
             color: #e2e8f0;
         }
-        .dark-mode .planning-scroll::-webkit-scrollbar-track {
-            background: #1a2a3a;
-        }
-        .dark-mode .planning-scroll::-webkit-scrollbar-thumb {
-            background: #3a4a5a;
-        }
+        .dark-mode .planning-scroll::-webkit-scrollbar-track { background: #1a2a3a; }
+        .dark-mode .planning-scroll::-webkit-scrollbar-thumb { background: #3a4a5a; }
         .dark-mode .planning-scroll thead th {
             background: #1a2a3a;
             color: #d0d5dc;
             border-bottom-color: #3a4a5a;
         }
-        .dark-mode .planning-scroll thead th.planning-sticky-col {
-            background: #1a2a3a;
-        }
-        .dark-mode .planning-scroll tbody td:first-child {
-            background: var(--blue-dark-mode);
-        }
-        .dark-mode .planning-scroll tbody tr.planning-total-row td:first-child {
-            background: var(--blue-dark-bg);
-        }
-        .dark-mode .planning-scroll tbody tr.planning-total-row {
-            background: var(--blue-dark-bg);
-        }
-        .dark-mode .planning-scroll tbody tr:hover td:first-child {
-            background: #1e3a5a;
-        }
-        .dark-mode .planning-scroll tbody tr:hover td {
-            background: #1e3a5a;
-        }
+        .dark-mode .planning-scroll thead th.planning-sticky-col { background: #1a2a3a; }
+        .dark-mode .planning-scroll tbody td:first-child { background: var(--blue-dark-mode); }
+        .dark-mode .planning-scroll tbody tr.planning-total-row td:first-child { background: var(--blue-dark-bg); }
+        .dark-mode .planning-scroll tbody tr.planning-total-row { background: var(--blue-dark-bg); }
+        .dark-mode .planning-scroll tbody tr:hover td:first-child { background: #1e3a5a; }
+        .dark-mode .planning-scroll tbody tr:hover td { background: #1e3a5a; }
         .dark-mode .planning-scroll .planning-input.editable {
             background: #1e3a5a;
             border-color: #3a4a5a;
             color: #e2e8f0;
         }
-        .dark-mode .planning-scroll .planning-input.editable:hover {
-            border-color: #5a7a9a;
-        }
+        .dark-mode .planning-scroll .planning-input.editable:hover { border-color: #5a7a9a; }
         .dark-mode .planning-scroll .planning-input.editable:focus {
             border-color: var(--blue-light);
-            box-shadow: 0 0 0 2px rgba(26, 107, 176, 0.3);
+            box-shadow: 0 0 0 2px rgba(26,107,176,0.3);
         }
         .dark-mode .planning-scroll .planning-input.formula {
             background: #1e3a5a;
             border-color: #3a4a5a;
             color: #b0c8e0;
         }
-        .dark-mode .month-label {
-            color: #adb5bd;
-        }
-        .dark-mode .help-text {
-            color: #adb5bd;
-        }
-        .dark-mode .addition-row {
-            background: #1e3a5a;
-        }
+        .dark-mode .month-label { color: #adb5bd; }
+        .dark-mode .help-text { color: #adb5bd; }
+        .dark-mode .addition-row { background: #1e3a5a; }
         .dark-mode .planning-modal-input {
             background: #1e3a5a;
             color: #e2e8f0;
             border-color: #2a4a6a;
         }
-        /* Matrix dark mode */
-        .dark-mode .matrix-scroll::-webkit-scrollbar-track {
-            background: #1a2a3a;
-        }
-        .dark-mode .matrix-scroll::-webkit-scrollbar-thumb {
-            background: #3a4a5a;
-        }
-        .dark-mode .matrix-scroll thead {
-            background: #1a2a3a;
-        }
+        .dark-mode .matrix-scroll::-webkit-scrollbar-track { background: #1a2a3a; }
+        .dark-mode .matrix-scroll::-webkit-scrollbar-thumb { background: #3a4a5a; }
+        .dark-mode .matrix-scroll thead { background: #1a2a3a; }
         .dark-mode .matrix-scroll thead th {
             background: #1a2a3a;
             color: #d0d5dc;
             border-bottom-color: #3a4a5a;
         }
-        .dark-mode .matrix-scroll thead th.sticky-col {
-            background: #1a2a3a;
-        }
-        .dark-mode .matrix-scroll tbody td:first-child {
-            background: var(--blue-dark-mode);
-        }
-        .dark-mode .matrix-scroll tbody tr.matrix-total-row td:first-child {
-            background: var(--blue-dark-bg);
-        }
-        .dark-mode .matrix-scroll tbody tr.matrix-total-row {
-            background: var(--blue-dark-bg);
-        }
-        .dark-mode .matrix-scroll tbody tr:hover td:first-child {
-            background: #1e3a5a;
-        }
-        .dark-mode .matrix-scroll tbody tr:hover td {
-            background: #1e3a5a;
-        }
-        .dark-mode .matrix-scroll .progress-threshold {
-            background: #2a3a4a;
-        }
-        /* Detail tables dark mode */
-        .dark-mode .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-track {
-            background: #1a2a3a;
-        }
-        .dark-mode .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb {
-            background: #3a4a5a;
-        }
+        .dark-mode .matrix-scroll thead th.sticky-col { background: #1a2a3a; }
+        .dark-mode .matrix-scroll tbody td:first-child { background: var(--blue-dark-mode); }
+        .dark-mode .matrix-scroll tbody tr.matrix-total-row td:first-child { background: var(--blue-dark-bg); }
+        .dark-mode .matrix-scroll tbody tr.matrix-total-row { background: var(--blue-dark-bg); }
+        .dark-mode .matrix-scroll tbody tr:hover td:first-child { background: #1e3a5a; }
+        .dark-mode .matrix-scroll tbody tr:hover td { background: #1e3a5a; }
+        .dark-mode .matrix-scroll .progress-threshold { background: #2a3a4a; }
+        .dark-mode .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-track { background: #1a2a3a; }
+        .dark-mode .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb { background: #3a4a5a; }
         .dark-mode .detail-table-scroll .table-scroll-wrapper table thead th {
             background: #1a2a3a;
             color: #d0d5dc;
@@ -1349,9 +1069,7 @@
             background: var(--blue-dark-mode);
             border-bottom-color: #1e3a5a;
         }
-        .dark-mode .detail-table-scroll .table-scroll-wrapper table tbody tr:hover td {
-            background: #1e3a5a;
-        }
+        .dark-mode .detail-table-scroll .table-scroll-wrapper table tbody tr:hover td { background: #1e3a5a; }
         .dark-mode .file-card {
             background: var(--blue-dark-mode);
             border-color: #1e3a5a;
@@ -1371,15 +1089,13 @@
         }
         .dark-mode .detail-table-scroll .table-scroll-wrapper table tbody td .notes-cell textarea:focus {
             border-color: var(--blue-light);
-            box-shadow: 0 0 0 2px rgba(26, 107, 176, 0.2);
+            box-shadow: 0 0 0 2px rgba(26,107,176,0.2);
         }
         .dark-mode .ai-assistant-panel {
             background: var(--blue-dark-mode);
             border-color: #1e3a5a;
         }
-        .dark-mode .ai-chat-messages {
-            background: #0f1e2e;
-        }
+        .dark-mode .ai-chat-messages { background: #0f1e2e; }
         .dark-mode .ai-message.assistant .bubble {
             background: #1e3a5a;
             color: #e2e8f0;
@@ -1395,7 +1111,7 @@
         }
         .dark-mode .ai-chat-input-row input:focus {
             border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
+            box-shadow: 0 0 0 2px rgba(13,74,122,0.15);
         }
         .dark-mode .ai-suggestions {
             background: #0f1e2e;
@@ -1405,16 +1121,12 @@
             background: #1e3a5a;
             color: #8bb9e0;
         }
-        .dark-mode .ai-suggestions .suggestion-chip:hover {
-            background: #2a4a6a;
-        }
+        .dark-mode .ai-suggestions .suggestion-chip:hover { background: #2a4a6a; }
         .dark-mode #floatingAiChat {
             background: var(--blue-dark-mode);
             border-color: #1e3a5a;
         }
-        .dark-mode #floatingChatMessages {
-            background: #0f1e2e;
-        }
+        .dark-mode #floatingChatMessages { background: #0f1e2e; }
         .dark-mode .floating-message.assistant .bubble {
             background: #1e3a5a;
             color: #e2e8f0;
@@ -1430,18 +1142,14 @@
         }
         .dark-mode .floating-input-row input:focus {
             border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
+            box-shadow: 0 0 0 2px rgba(13,74,122,0.15);
         }
         .dark-mode .permission-toggle {
             background: #1e3a5a;
             border-color: #2a4a6a;
         }
-        .dark-mode .permission-toggle .status-label {
-            color: #e2e8f0;
-        }
-        .dark-mode .permission-toggle:hover {
-            background: #2a4a6a;
-        }
+        .dark-mode .permission-toggle .status-label { color: #e2e8f0; }
+        .dark-mode .permission-toggle:hover { background: #2a4a6a; }
         .dark-mode .planning-modal-input[readonly] {
             background: #1e3a5a;
             color: #b0c8e0;
@@ -1454,14 +1162,10 @@
         }
         .dark-mode .planning-modal-input:focus {
             border-color: var(--blue-light);
-            box-shadow: 0 0 0 2px rgba(26, 107, 176, 0.3);
+            box-shadow: 0 0 0 2px rgba(26,107,176,0.3);
         }
-        .dark-mode .toggle-group {
-            background: #1a2a3a;
-        }
-        .dark-mode .toggle-group .toggle-option {
-            color: #e2e8f0;
-        }
+        .dark-mode .toggle-group { background: #1a2a3a; }
+        .dark-mode .toggle-group .toggle-option { color: #e2e8f0; }
         .dark-mode .toggle-group .toggle-option.active {
             background: var(--blue-primary);
             color: #fff;
@@ -1482,21 +1186,14 @@
             background: #4a5a6a;
             color: #e2e8f0;
         }
-        .dark-mode .planning-toolbar .text-file-export-btn:hover {
-            background: #5a6a7a;
-        }
+        .dark-mode .planning-toolbar .text-file-export-btn:hover { background: #5a6a7a; }
 
-        /* ============================================================
-               RESPONSIVE
-               ============================================================ */
         @media (max-width: 768px) {
             .toggle-group .toggle-option {
                 font-size: .75rem;
                 padding: 4px 10px;
             }
-            .month-label {
-                font-size: 0.5rem;
-            }
+            .month-label { font-size: 0.5rem; }
             .planning-scroll table {
                 min-width: 1200px;
                 font-size: 0.75rem;
@@ -1518,12 +1215,8 @@
                 width: 16px;
                 height: 16px;
             }
-            .permission-toggle.enabled .toggle-indicator::after {
-                transform: translateX(16px);
-            }
-            .matrix-scroll {
-                max-height: 320px;
-            }
+            .permission-toggle.enabled .toggle-indicator::after { transform: translateX(16px); }
+            .matrix-scroll { max-height: 320px; }
             .matrix-scroll table {
                 min-width: 700px;
                 font-size: 0.7rem;
@@ -1532,9 +1225,7 @@
                 min-width: 120px;
                 max-width: 150px;
             }
-            .detail-table-scroll .table-scroll-wrapper {
-                max-height: 320px;
-            }
+            .detail-table-scroll .table-scroll-wrapper { max-height: 320px; }
             .detail-table-scroll .table-scroll-wrapper table {
                 min-width: 1000px;
                 font-size: 0.7rem;
@@ -1559,9 +1250,7 @@
             gap: 8px;
             align-items: center;
         }
-        .planning-toolbar .btn {
-            white-space: nowrap;
-        }
+        .planning-toolbar .btn { white-space: nowrap; }
         .text-file-export-btn {
             background: #6c757d;
             color: #fff;
@@ -1571,9 +1260,7 @@
             background: #5a6268;
             color: #fff;
         }
-        .planning-excluded-division {
-            display: none !important;
-        }
+        .planning-excluded-division { display: none !important; }
         .matrix-toggle {
             background: none;
             border: none;
@@ -1583,25 +1270,15 @@
             color: inherit;
             margin-right: 4px;
         }
-        .matrix-toggle .fa-chevron-right {
-            color: #6c757d;
-        }
-        .matrix-toggle .fa-chevron-down {
-            color: #0d4a7a;
-        }
+        .matrix-toggle .fa-chevron-right { color: #6c757d; }
+        .matrix-toggle .fa-chevron-down { color: #0d4a7a; }
         .matrix-total-row {
             background-color: #f8fafc;
             font-weight: 600;
         }
-        .matrix-total-row td {
-            border-top: 2px solid #dee2e6;
-        }
-        .matrix-child-row td:first-child {
-            padding-left: 2rem;
-        }
-        .matrix-child-row:hover {
-            background: var(--blue-bg) !important;
-        }
+        .matrix-total-row td { border-top: 2px solid #dee2e6; }
+        .matrix-child-row td:first-child { padding-left: 2rem; }
+        .matrix-child-row:hover { background: var(--blue-bg) !important; }
         .matrix-total-row td:first-child {
             position: sticky;
             left: 0;
@@ -1614,20 +1291,14 @@
             background: #ffffff !important;
             z-index: 2;
         }
-        .dark-mode .matrix-total-row td:first-child {
-            background: var(--blue-dark-bg) !important;
-        }
-        .dark-mode .matrix-child-row td:first-child {
-            background: var(--blue-dark-mode) !important;
-        }
+        .dark-mode .matrix-total-row td:first-child { background: var(--blue-dark-bg) !important; }
+        .dark-mode .matrix-child-row td:first-child { background: var(--blue-dark-mode) !important; }
         .planning-search-row {
             margin-top: 12px;
             padding-top: 12px;
             border-top: 1px solid var(--border-light);
         }
-        .dark-mode .planning-search-row {
-            border-top-color: #1e3a5a;
-        }
+        .dark-mode .planning-search-row { border-top-color: #1e3a5a; }
         .planning-edit-btn {
             margin-left: 6px;
             font-size: 0.8rem;
@@ -1636,9 +1307,7 @@
             opacity: 0.6;
             transition: opacity .2s;
         }
-        .planning-edit-btn:hover {
-            opacity: 1;
-        }
+        .planning-edit-btn:hover { opacity: 1; }
         .planning-toggle {
             background: none;
             border: none;
@@ -1648,12 +1317,8 @@
             color: inherit;
             margin-right: 4px;
         }
-        .planning-toggle .fa-chevron-right {
-            color: #6c757d;
-        }
-        .planning-toggle .fa-chevron-down {
-            color: #0d4a7a;
-        }
+        .planning-toggle .fa-chevron-right { color: #6c757d; }
+        .planning-toggle .fa-chevron-down { color: #0d4a7a; }
         .planning-category-name {
             cursor: pointer;
             display: inline-block;
@@ -1661,9 +1326,7 @@
             border-radius: 4px;
             transition: background .2s;
         }
-        .planning-category-name:hover {
-            background: rgba(13, 74, 122, 0.1);
-        }
+        .planning-category-name:hover { background: rgba(13,74,122,0.1); }
         .planning-total-row td:first-child {
             position: sticky;
             left: 0;
@@ -1676,12 +1339,8 @@
             background: #ffffff !important;
             z-index: 2;
         }
-        .dark-mode .planning-total-row td:first-child {
-            background: var(--blue-dark-bg) !important;
-        }
-        .dark-mode .planning-child-row td:first-child {
-            background: var(--blue-dark-mode) !important;
-        }
+        .dark-mode .planning-total-row td:first-child { background: var(--blue-dark-bg) !important; }
+        .dark-mode .planning-child-row td:first-child { background: var(--blue-dark-mode) !important; }
         .section-ai-btn {
             background: var(--blue-primary);
             color: #fff;
@@ -1697,9 +1356,7 @@
             transition: background .2s;
             margin-left: 8px;
         }
-        .section-ai-btn:hover {
-            background: var(--blue-secondary);
-        }
+        .section-ai-btn:hover { background: var(--blue-secondary); }
         #modalAiResponseContainer {
             background: #f8fafc;
             border-radius: 8px;
@@ -1715,24 +1372,18 @@
             border-radius: 6px;
             padding: 12px;
         }
-        .login-error {
-            display: none;
-        }
+        .login-error { display: none; }
         .total-row {
             font-weight: 700;
             background: #f8fafc !important;
             border-top: 2px solid #0d4a7a;
         }
-        .dark-mode .total-row {
-            background: #0f1e2e !important;
-        }
+        .dark-mode .total-row { background: #0f1e2e !important; }
     </style>
 </head>
 <body>
 
-    <!-- ============================================================
-    LOGIN OVERLAY
-    ============================================================ -->
+    <!-- ===== LOGIN OVERLAY ===== -->
     <div id="loginOverlay">
         <div class="login-card">
             <div class="text-center mb-4">
@@ -1760,21 +1411,16 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    LOADING OVERLAY
-    ============================================================ -->
+    <!-- ===== LOADING OVERLAY ===== -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="loading-spinner"></div>
         <h5 class="text-muted fw-normal" id="loadingText">Connecting to Database...</h5>
         <p class="text-muted small mt-2" id="loadingSubtext">Fetching budget and expense data</p>
     </div>
 
-    <!-- ============================================================
-    APP SHELL
-    ============================================================ -->
+    <!-- ===== APP SHELL ===== -->
     <div id="appShell">
-
-        <!-- SIDEBAR -->
+        <!-- Sidebar -->
         <div class="sidebar d-flex flex-column" id="sidebar">
             <div class="sidebar-logo p-3 fw-bold text-white fs-5 text-center">
                 <img src="https://drive.google.com/thumbnail?id=1EtYEbHUoW1aehMyzN6gOLk9vInj0GGql&sz=w1000" alt="Lakpue Drug Inc." class="login-logo" />
@@ -1786,8 +1432,7 @@
                 <a class="nav-link" data-section="exceptions"><i class="fas fa-exclamation-triangle me-2"></i> Explanations</a>
                 <a class="nav-link" data-section="deptSummary"><i class="fas fa-building me-2"></i> Department Summary</a>
                 <a class="nav-link" data-section="planning"><i class="fas fa-calculator me-2"></i> Budget Planning</a>
-                <a class="nav-link" data-section="files"><i class="fas fa-folder-open me-2"></i> Files
-                </a>
+                <a class="nav-link" data-section="files"><i class="fas fa-folder-open me-2"></i> Files</a>
             </nav>
             <div class="p-3 mt-auto">
                 <button class="btn btn-outline-danger w-100" id="logoutBtn">
@@ -1796,9 +1441,8 @@
             </div>
         </div>
 
-        <!-- MAIN CONTENT -->
+        <!-- Main content -->
         <div class="main-content" id="mainContent">
-            <!-- Top Navbar -->
             <div class="navbar-top d-flex justify-content-between align-items-center flex-wrap">
                 <div>
                     <button class="btn btn-light border-0 me-2" id="toggleSidebarBtn"><i class="fas fa-bars"></i></button>
@@ -1819,18 +1463,14 @@
 
             <div class="container-fluid px-4 py-4">
 
-                <!-- ==========================================================
-                DASHBOARD
-                ========================================================== -->
+                <!-- ===== DASHBOARD ===== -->
                 <div id="dashboardSection" class="section-content active-section">
-                    <!-- KPI Cards -->
                     <div class="row g-4 mb-5">
                         <div class="col-md-6 col-lg-4"><div class="stat-card p-4"><div class="text-muted small">Total Budget</div><h2 class="fw-bold mt-2" id="totalBudget">₱0</h2></div></div>
                         <div class="col-md-6 col-lg-4"><div class="stat-card p-4"><div class="text-muted small">Total Expense</div><h2 class="fw-bold mt-2" id="totalExpense">₱0</h2></div></div>
                         <div class="col-md-6 col-lg-4"><div class="stat-card p-4"><div class="text-muted small">Net Variance</div><h2 class="fw-bold mt-2" id="totalVariance">₱0</h2><small id="variancePercentLabel">0% Variance</small></div></div>
                     </div>
 
-                    <!-- Filters -->
                     <div class="filter-card p-3 mb-4">
                         <div class="row g-3 align-items-end">
                             <div class="col-md-3"><label>Company</label><select id="companyFilter" class="form-select"></select></div>
@@ -1863,7 +1503,6 @@
                         </div>
                     </div>
 
-                    <!-- Matrix Table -->
                     <div class="table-container">
                         <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">
                             <div>
@@ -1882,7 +1521,6 @@
                         <div id="matrixPagination"></div>
                     </div>
 
-                    <!-- Monthly Totals -->
                     <div class="monthly-totals-table mt-4">
                         <div class="p-3">
                             <h5 class="fw-semibold mb-3"><i class="fas fa-chart-line me-2"></i>Monthly Totals Summary</h5>
@@ -1896,9 +1534,7 @@
                     </div>
                 </div>
 
-                <!-- ==========================================================
-                BUDGET VARIANCE — with FREEZE HEADER
-                ========================================================== -->
+                <!-- ===== BUDGET VARIANCE ===== -->
                 <div id="budgetVarianceSection" class="section-content">
                     <div class="filter-card p-3 mb-4">
                         <h5 class="mb-3"><i class="fas fa-chart-line me-2"></i>Budget Variance by Company, Department &amp; Category</h5>
@@ -1926,7 +1562,6 @@
                                 <button id="exportBvTableBtn" class="btn btn-outline-secondary btn-sm"><i class="fas fa-file-csv me-1"></i> Export CSV</button>
                             </div>
                         </div>
-                        <!-- SCROLL WRAPPER for freeze header -->
                         <div class="table-scroll-wrapper" id="bvScrollWrapper">
                             <table id="bvDetailTable" class="table table-bordered w-100 detail-data-table">
                                 <thead>
@@ -1951,9 +1586,7 @@
                     </div>
                 </div>
 
-                <!-- ==========================================================
-                EXPLANATIONS — with FREEZE HEADER
-                ========================================================== -->
+                <!-- ===== EXPLANATIONS ===== -->
                 <div id="exceptionsSection" class="section-content">
                     <div class="filter-card p-3 mb-4">
                         <h5 class="mb-3"><i class="fas fa-exclamation-triangle me-2"></i>Explanation: High Expense &amp; No Budget</h5>
@@ -1993,7 +1626,6 @@
                                 <button id="exportExTableBtn" class="btn btn-outline-secondary btn-sm"><i class="fas fa-file-csv me-1"></i> Export CSV</button>
                             </div>
                         </div>
-                        <!-- SCROLL WRAPPER for freeze header -->
                         <div class="table-scroll-wrapper" id="exScrollWrapper">
                             <table id="exceptionsTable" class="table table-bordered w-100 detail-data-table">
                                 <thead>
@@ -2018,9 +1650,7 @@
                     </div>
                 </div>
 
-                <!-- ==========================================================
-                DEPARTMENT SUMMARY
-                ========================================================== -->
+                <!-- ===== DEPARTMENT SUMMARY ===== -->
                 <div id="deptSummarySection" class="section-content">
                     <div class="filter-card p-3 mb-4">
                         <h5 class="mb-3"><i class="fas fa-building me-2"></i>Department Performance (PHP)</h5>
@@ -2041,9 +1671,7 @@
                     </div>
                 </div>
 
-                <!-- ==========================================================
-                BUDGET PLANNING
-                ========================================================== -->
+                <!-- ===== BUDGET PLANNING ===== -->
                 <div id="planningSection" class="section-content">
                     <div class="filter-card p-3 mb-4">
                         <h5 class="mb-3"><i class="fas fa-calculator me-2"></i>Budget Planning by Company, Department &amp; Division</h5>
@@ -2125,9 +1753,7 @@
                     </div>
                 </div>
 
-                <!-- ==========================================================
-                FILES
-                ========================================================== -->
+                <!-- ===== FILES ===== -->
                 <div id="filesSection" class="section-content">
                     <div class="filter-card p-4">
                         <h5 class="mb-3"><i class="fas fa-folder-open me-2"></i>File Management</h5>
@@ -2153,9 +1779,7 @@
         </div><!-- /main-content -->
     </div><!-- /appShell -->
 
-    <!-- ============================================================
-    PLANNING MODAL
-    ============================================================ -->
+    <!-- ===== PLANNING MODAL ===== -->
     <div class="modal fade" id="planningModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -2219,9 +1843,7 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    EXPENSE DETAIL MODAL
-    ============================================================ -->
+    <!-- ===== EXPENSE DETAIL MODAL ===== -->
     <div class="modal fade" id="expenseDetailModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -2232,9 +1854,7 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    FLOATING AI CHAT
-    ============================================================ -->
+    <!-- ===== FLOATING AI CHAT ===== -->
     <div id="floatingAiButton" title="Open AI Assistant">
         <i class="fas fa-robot fa-2x"></i>
     </div>
@@ -2257,82 +1877,32 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    SCRIPTS
-    ============================================================ -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
-    </script>
+    <!-- ============================================================ -->
+    <!-- SCRIPTS (unchanged libraries) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <script>
-        /**
-         * LAKPUE DRUG INC. — Budget Variance
-         *
-         * MAJOR IMPROVEMENTS in this rewrite:
-         *
-         * 1.  FREEZE HEADERS for Budget Variance and Explanation tables.
-         *     Added .table-scroll-wrapper with max-height + overflow:auto,
-         *     and sticky thead with z-index, matching the matrix pattern.
-         *
-         * 2.  CODE ORGANIZATION: Clearer separation of concerns:
-         *     - Config / Constants at the top
-         *     - Helpers (pure utility functions)
-         *     - DataService (Supabase abstraction)
-         *     - Auth
-         *     - Store (centralized state)
-         *     - AIService (GROQ)
-         *     - Paginator
-         *     - Renderers (grouped by section)
-         *     - Event Binding (declarative setup)
-         *     - Boot
-         *
-         * 3.  PERFORMANCE: Reduced DOM reflows by batching updates,
-         *     using more efficient selectors, debouncing inputs.
-         *
-         * 4.  READABILITY: Consistent naming, shorter helper functions,
-         *     cleaner template literals, reduced duplication.
-         *
-         * 5.  MAINTAINABILITY: Reusable functions for table rendering,
-         *     sort handling, pagination, and note management.
-         *
-         * 6.  All existing functionality is preserved exactly:
-         *     - Dashboard matrix (with freeze headers)
-         *     - Budget Variance (now with freeze headers)
-         *     - Explanations (now with freeze headers)
-         *     - Department Summary
-         *     - Budget Planning (with freeze headers)
-         *     - AI chat (panel + floating)
-         *     - Planning modal with additions
-         *     - Notes (save/import/export)
-         *     - CSV/Excel export
-         *     - Dark mode
-         *     - Pagination & sorting
-         *     - Permission toggles
-         *     - Files section
-         */
+        // =============================================================
+        //  LAKPUE DRUG INC. — Budget Variance (Rewritten)
+        //  * AI secured via Supabase Edge Function (ai-proxy)
+        //  * All business logic and outputs remain identical
+        // =============================================================
         (function() {
             'use strict';
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             // 1. CONFIGURATION
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             const CONFIG = {
                 SUPABASE_URL: 'https://mufvqitipaoixzrwoslo.supabase.co',
                 SUPABASE_ANON_KEY: 'sb_publishable_7TVs9n2xlyRJrnYvuFOQbA_hSQBuB7Z',
                 AUTH_KEY: 'bvAuthSession',
-                GROQ_API_KEYS: [
-                    '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',
-                    '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',
-                    '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',
-                ],
+                // AI keys are now handled server‑side; we only keep the model name
                 GROQ_MODEL: 'openai/gpt-oss-20b',
                 MONTHS: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 MONTH_KEYS: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
-                MONTH_NAMES: ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER',
-                    'OCTOBER', 'NOVEMBER', 'DECEMBER'
-                ],
+                MONTH_NAMES: ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'],
                 PAGE_SIZE_OPTIONS: [10, 25, 50, 100, 'All'],
                 DIVISION_ORDER: [
                     'Ads and Promo', 'Salary and Wages', 'Premium Contributions Expense',
@@ -2364,8 +1934,7 @@
                         sourceNames: ['Salaries and Wages Basic Pay', 'Indirect Labor Basic Pay'],
                         multiplier: 'HDMF Multiplier',
                         formula: (sources, mult) => {
-                            const sum = (sources['Salaries and Wages Basic Pay'] || 0) + (sources[
-                                'Indirect Labor Basic Pay'] || 0);
+                            const sum = (sources['Salaries and Wages Basic Pay'] || 0) + (sources['Indirect Labor Basic Pay'] || 0);
                             return sum * mult;
                         }
                     },
@@ -2373,8 +1942,7 @@
                         sourceNames: ['Salaries and Wages Basic Pay', 'Indirect Labor Basic Pay'],
                         multiplier: 'Medicare Multiplier',
                         formula: (sources, mult) => {
-                            const sum = (sources['Salaries and Wages Basic Pay'] || 0) + (sources[
-                                'Indirect Labor Basic Pay'] || 0);
+                            const sum = (sources['Salaries and Wages Basic Pay'] || 0) + (sources['Indirect Labor Basic Pay'] || 0);
                             return sum * mult;
                         }
                     },
@@ -2382,8 +1950,7 @@
                         sourceNames: ['Salaries and Wages Basic Pay', 'Indirect Labor Basic Pay'],
                         multiplier: 'SSS/ECC Multiplier',
                         formula: (sources, mult) => {
-                            const sum = (sources['Salaries and Wages Basic Pay'] || 0) + (sources[
-                                'Indirect Labor Basic Pay'] || 0);
+                            const sum = (sources['Salaries and Wages Basic Pay'] || 0) + (sources['Indirect Labor Basic Pay'] || 0);
                             return sum * mult;
                         }
                     },
@@ -2425,9 +1992,8 @@
             };
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 2. HELPERS (pure utility functions)
+            // 2. HELPERS (pure utilities – unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             const H = {
                 fmt: {
                     currency: v => `₱${Number(v).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
@@ -2437,15 +2003,12 @@
                     plain: v => Number(v).toLocaleString(undefined, { minimumFractionDigits: 2 })
                 },
                 toNum: (v, d = 0) => { const n = parseFloat(v); return isNaN(n) ? d : n; },
-                debounce: (fn, ms) => { let t; return (...a) => { clearTimeout(t);
-                        t = setTimeout(() => fn(...a), ms); }; },
+                debounce: (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; },
                 attrEncode: s => encodeURIComponent(String(s)),
                 attrDecode: s => { try { return decodeURIComponent(s); } catch { return s; } },
                 varClass: v => v < 0 ? 'text-negative' : 'text-positive',
-                parseFormattedNumber: (s) => { if (!s) return 0; const cleaned = String(s).replace(/,/g, '').trim();
-                    return H.toNum(cleaned); },
-                extractPlainText: (html) => { const tmp = document.createElement('div');
-                    tmp.innerHTML = html; return tmp.textContent || tmp.innerText || ''; },
+                parseFormattedNumber: (s) => { if (!s) return 0; const cleaned = String(s).replace(/,/g, '').trim(); return H.toNum(cleaned); },
+                extractPlainText: (html) => { const tmp = document.createElement('div'); tmp.innerHTML = html; return tmp.textContent || tmp.innerText || ''; },
                 extractSortValue: (html) => {
                     const raw = H.extractPlainText(html).trim();
                     if (!raw) return NaN;
@@ -2470,17 +2033,12 @@
                     const d = new Date(dateStr);
                     return isNaN(d.getTime()) ? 'Unknown' : CONFIG.MONTHS[d.getMonth()];
                 },
-                noteKey: (co, dept, cat, month) =>
-                    [co, dept, cat, month || ''].map(s => String(s).trim().toUpperCase()).join('|'),
-                isAllToken: v => { const s = String(v || '').trim().toUpperCase(); return s === 'ALL' || s === '*' || s
-                        .startsWith('ALL '); },
+                noteKey: (co, dept, cat, month) => [co, dept, cat, month || ''].map(s => String(s).trim().toUpperCase()).join('|'),
+                isAllToken: v => { const s = String(v || '').trim().toUpperCase(); return s === 'ALL' || s === '*' || s.startsWith('ALL '); },
                 splitPipe: v => String(v || '').split('|').map(s => s.trim()).filter(Boolean),
-                divOrderIndex: (division) => { const idx = CONFIG.DIVISION_ORDER.indexOf(division); return idx === -1 ?
-                        CONFIG.DIVISION_ORDER.length : idx; },
-                compareDivisions: (a, b) => { const ia = H.divOrderIndex(a),
-                        ib = H.divOrderIndex(b); if (ia !== ib) return ia - ib; return a.localeCompare(b); },
-                defaultPlan: () => ({ base: Object.fromEntries(['mls', ...CONFIG.MONTH_KEYS].map(k => [k, 0])),
-                    additions: [] }),
+                divOrderIndex: (division) => { const idx = CONFIG.DIVISION_ORDER.indexOf(division); return idx === -1 ? CONFIG.DIVISION_ORDER.length : idx; },
+                compareDivisions: (a, b) => { const ia = H.divOrderIndex(a), ib = H.divOrderIndex(b); if (ia !== ib) return ia - ib; return a.localeCompare(b); },
+                defaultPlan: () => ({ base: Object.fromEntries(['mls', ...CONFIG.MONTH_KEYS].map(k => [k, 0])), additions: [] }),
                 getMonthIndex: (m) => { const idx = CONFIG.MONTHS.indexOf(m); return idx >= 0 ? idx : -1; },
                 getMonthKey: (idx) => CONFIG.MONTH_KEYS[idx] || null,
                 getMonthName: (idx) => CONFIG.MONTHS[idx] || null,
@@ -2498,21 +2056,17 @@
                     };
                 },
                 getMonthOrderIndex: function(monthStr) {
-                    const map = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10,
-                        dec: 11 };
-                    const key = String(monthStr).trim().toLowerCase().slice(0, 3);
+                    const map = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
+                    const key = String(monthStr).trim().toLowerCase().slice(0,3);
                     return map.hasOwnProperty(key) ? map[key] : -1;
                 }
             };
 
-            const { fmt, toNum, debounce, attrEncode, attrDecode, varClass, parseFormattedNumber, extractPlainText,
-                extractSortValue, monthFromDate, noteKey, isAllToken, splitPipe, compareDivisions, defaultPlan,
-                getMonthIndex, getMonthKey, getMonthName, calcMetrics, getMonthOrderIndex } = H;
+            const { fmt, toNum, debounce, attrEncode, attrDecode, varClass, parseFormattedNumber, extractPlainText, extractSortValue, monthFromDate, noteKey, isAllToken, splitPipe, compareDivisions, defaultPlan, getMonthIndex, getMonthKey, getMonthName, calcMetrics, getMonthOrderIndex } = H;
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 3. DataService (Supabase)
+            // 3. DataService (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             class DataService {
                 static headers() {
                     return {
@@ -2523,18 +2077,15 @@
                     };
                 }
                 static async _fetch(method, table, query = '', body = null, options = {}) {
-                    const url =
-                        `${CONFIG.SUPABASE_URL}/rest/v1/${table}${query ? '?' + query : ''}`;
+                    const url = `${CONFIG.SUPABASE_URL}/rest/v1/${table}${query ? '?' + query : ''}`;
                     const headers = { ...this.headers(), ...options.headers };
                     const res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
-                    if (!res.ok) { const errText = await res.text(); throw new Error(
-                            `Supabase ${method} ${table}: ${res.status} ${errText}`); }
+                    if (!res.ok) { const errText = await res.text(); throw new Error(`Supabase ${method} ${table}: ${res.status} ${errText}`); }
                     return res;
                 }
                 static async getAll(table, query = '') {
                     const PAGE = 1000;
-                    let offset = 0,
-                        all = [];
+                    let offset = 0, all = [];
                     while (true) {
                         const sep = query ? '&' : '';
                         const q = `${query}${sep}limit=${PAGE}&offset=${offset}`;
@@ -2548,8 +2099,7 @@
                 }
                 static async upsert(table, body, conflictCols = null, returning = true) {
                     const query = conflictCols ? `on_conflict=${conflictCols.join(',')}` : '';
-                    const prefer = returning ? 'return=representation,resolution=merge-duplicates' :
-                        'return=minimal,resolution=merge-duplicates';
+                    const prefer = returning ? 'return=representation,resolution=merge-duplicates' : 'return=minimal,resolution=merge-duplicates';
                     const res = await this._fetch('POST', table, query, body, { headers: { 'Prefer': prefer } });
                     if (returning) return await res.json();
                     return true;
@@ -2567,9 +2117,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 4. Auth
+            // 4. Auth (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             const Auth = {
                 getSession() { try { return JSON.parse(sessionStorage.getItem(CONFIG.AUTH_KEY)); } catch { return null; } },
                 saveSession(user) { sessionStorage.setItem(CONFIG.AUTH_KEY, JSON.stringify({ user })); },
@@ -2596,9 +2145,8 @@
             };
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 5. Store (centralized state)
+            // 5. Store (centralized state – unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             const store = {
                 budgets: [],
                 expenses: [],
@@ -2621,10 +2169,8 @@
                     dept: { column: 0, direction: 'asc' }
                 },
                 filters: {
-                    dashboard: { company: 'All', department: 'All', threshold: 0, searchTerm: '', layout: 'month',
-                        metric: 'all', viewMode: 'active' },
-                    budgetVariance: { company: 'All', department: 'All', month: 'All', categorySearch: '',
-                        allowableAmount: 5000, allowablePercent: 10 },
+                    dashboard: { company: 'All', department: 'All', threshold: 0, searchTerm: '', layout: 'month', metric: 'all', viewMode: 'active' },
+                    budgetVariance: { company: 'All', department: 'All', month: 'All', categorySearch: '', allowableAmount: 5000, allowablePercent: 10 },
                     exceptions: { company: 'All', department: 'All', month: 'All', categorySearch: '' },
                     deptSummary: { company: 'All', department: 'All', viewMode: 'active' },
                     planning: { company: 'All', department: 'All', searchTerm: '' }
@@ -2649,131 +2195,57 @@
             };
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 6. AIService (GROQ)
+            // 6. AIService – SECURED via Supabase Edge Function
+            //    All key handling and rate‑limit logic is now on the server.
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             class AIService {
                 constructor() {
+                    this.edgeUrl = `https://mufvqitipaoixzrwoslo.supabase.co/functions/v1/ai-proxy`;
                     this.model = CONFIG.GROQ_MODEL;
-                    this.baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
-                    this.keyIndex = 0;
-                    this.keyCooldowns = {};
-                    this.apiKeys = this._loadKeys();
                 }
-                _loadKeys() {
-                    const fromList = Array.isArray(CONFIG.GROQ_API_KEYS) ? CONFIG.GROQ_API_KEYS : [];
-                    const legacy = CONFIG.GROQ_API_KEY ? [CONFIG.GROQ_API_KEY] : [];
-                    const cleaned = [...fromList, ...legacy]
-                        .map(k => String(k || '').replace(/[\u200B-\u200D\uFEFF]/g, '').trim())
-                        .filter(k => k && k !== 'gsk_...' && k.startsWith('gsk_') && k.length > 20);
-                    return [...new Set(cleaned)];
-                }
-                _keyLabel(index) { return `key #${index + 1}`; }
-                _isCooldownActive(key) { return !!(this.keyCooldowns[key] && this.keyCooldowns[key] > Date.now()); }
-                _markLimited(key, retryAfterSec) {
-                    const sec = Math.max(15, Number(retryAfterSec) || 45);
-                    this.keyCooldowns[key] = Date.now() + sec * 1000;
-                }
-                _isLimitError(status, errMsg) {
-                    const msg = String(errMsg || '').toLowerCase();
-                    return status === 429 ||
-                        msg.includes('rate limit') ||
-                        msg.includes('quota') ||
-                        msg.includes('too many requests') ||
-                        msg.includes('tokens per day') ||
-                        msg.includes('tpm') ||
-                        msg.includes('rpm') ||
-                        msg.includes('rpd') ||
-                        msg.includes('limit exceeded') ||
-                        msg.includes('over capacity');
-                }
-                _keysToTry() {
-                    this.apiKeys = this._loadKeys();
-                    if (!this.apiKeys.length) return [];
-                    if (this.keyIndex < 0 || this.keyIndex >= this.apiKeys.length) this.keyIndex = 0;
-                    const ordered = [];
-                    for (let i = 0; i < this.apiKeys.length; i++) {
-                        ordered.push({
-                            key: this.apiKeys[(this.keyIndex + i) % this.apiKeys.length],
-                            index: (this.keyIndex + i) % this.apiKeys.length
-                        });
-                    }
-                    const ready = ordered.filter(e => !this._isCooldownActive(e.key));
-                    const cooling = ordered.filter(e => this._isCooldownActive(e.key));
-                    return ready.length ? [...ready, ...cooling] : ordered;
-                }
-                async _requestWithKey(apiKey, payload) {
-                    const response = await fetch(this.baseUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${apiKey}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload)
-                    });
-                    const rawText = await response.text();
-                    let parsed = null;
-                    try { parsed = rawText ? JSON.parse(rawText) : null; } catch (_) { /* non-JSON */ }
-                    if (!response.ok) {
-                        const errMsg = parsed?.error?.message || rawText || response.statusText || 'Unknown error';
-                        const retryAfter = response.headers.get('retry-after');
-                        const err = new Error(errMsg);
-                        err.status = response.status;
-                        err.retryAfter = retryAfter;
-                        err.isLimit = this._isLimitError(response.status, errMsg);
-                        throw err;
-                    }
-                    return parsed || {};
-                }
+
+                // Public method: ask a question with a given context
                 async ask(question, contextData) {
-                    const entries = this._keysToTry();
-                    if (!entries.length) throw new Error('No GROQ API keys configured.');
                     const systemPrompt = this._buildSystemPrompt(contextData);
-                    const estTokens = (systemPrompt.length + question.length) / 4;
-                    const MAX_SAFE = 30000;
-                    if (estTokens > MAX_SAFE) {
-                        console.warn(`Estimated prompt tokens: ${estTokens}, may exceed limit.`);
-                    }
+
                     const payload = {
-                        model: this.model,
                         messages: [
                             { role: 'system', content: systemPrompt },
                             { role: 'user', content: question }
                         ],
+                        model: this.model,
                         temperature: 0.7,
                         max_tokens: 1500,
-                        top_p: 0.9,
                     };
-                    const failures = [];
-                    for (const { key: apiKey, index } of entries) {
-                        const label = this._keyLabel(index);
-                        try {
-                            const data = await this._requestWithKey(apiKey, payload);
-                            this.keyIndex = index;
-                            delete this.keyCooldowns[apiKey];
-                            console.info(`GROQ OK via ${label}`);
-                            return data.choices?.[0]?.message?.content ||
-                                'I could not generate a response. Please try again.';
-                        } catch (err) {
-                            const status = err.status || 'network';
-                            const msg = err.message || String(err);
-                            if (err.isLimit) this._markLimited(apiKey, err.retryAfter);
-                            this.keyIndex = (index + 1) % this.apiKeys.length;
-                            failures.push(`GROQ ${label} failed (${status}): ${msg}`);
-                            console.warn(`GROQ ${label} failed — trying next key…`);
-                            continue;
+
+                    try {
+                        const response = await fetch(this.edgeUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload),
+                        });
+
+                        const rawText = await response.text();
+                        let data;
+                        try { data = rawText ? JSON.parse(rawText) : {}; } catch (_) { data = {}; }
+
+                        if (!response.ok) {
+                            throw new Error(data?.error || `HTTP ${response.status}`);
                         }
+
+                        return data?.choices?.[0]?.message?.content ||
+                            'I could not generate a response. Please try again.';
+                    } catch (err) {
+                        console.error('AI proxy error:', err);
+                        throw new Error(err.message || 'Failed to get AI response');
                     }
-                    throw new Error(
-                        `All ${entries.length} GROQ API key(s) failed.\n${failures.map((f, i) => `${i + 1}. ${f}`).join('\n')}`
-                    );
                 }
 
+                // ─── All context‑building methods remain EXACTLY as original ───
                 _buildSystemPrompt(contextData) {
                     const { company, department, section, records, totals, variances, deptData, planningData,
-                        planningTotals, months, filters } = contextData || {};
-                    let prompt =
-                        `You are a budget planning and variance analysis assistant for Lakpue Drug Inc. ` +
+                            planningTotals, months, filters } = contextData || {};
+                    let prompt = `You are a budget planning and variance analysis assistant for Lakpue Drug Inc. ` +
                         `You have access to ALL budget, expense, and planning data. ` +
                         `Provide clear, concise, actionable insights. Use bullet points when helpful. Be professional but friendly.\n\n`;
 
@@ -2792,27 +2264,15 @@
                     if (filters && filters.searchTerm) prompt += `🔍 Search: "${filters.searchTerm}"\n`;
 
                     switch (section) {
-                        case 'dashboard':
-                            prompt += this._buildDashboardContext(contextData);
-                            break;
-                        case 'budgetVariance':
-                            prompt += this._buildBudgetVarianceContext(contextData);
-                            break;
-                        case 'exceptions':
-                            prompt += this._buildExceptionsContext(contextData);
-                            break;
-                        case 'deptSummary':
-                            prompt += this._buildDeptSummaryContext(contextData);
-                            break;
-                        case 'planning':
-                            prompt += this._buildPlanningContext(contextData);
-                            break;
-                        default:
-                            prompt += this._buildDefaultContext(contextData);
+                        case 'dashboard':      prompt += this._buildDashboardContext(contextData); break;
+                        case 'budgetVariance': prompt += this._buildBudgetVarianceContext(contextData); break;
+                        case 'exceptions':     prompt += this._buildExceptionsContext(contextData); break;
+                        case 'deptSummary':    prompt += this._buildDeptSummaryContext(contextData); break;
+                        case 'planning':       prompt += this._buildPlanningContext(contextData); break;
+                        default:               prompt += this._buildDefaultContext(contextData);
                     }
 
-                    prompt +=
-                        '\n\n💡 INSTRUCTIONS:\n' +
+                    prompt += '\n\n💡 INSTRUCTIONS:\n' +
                         '- Answer questions based on the data provided above. You have the full dataset.\n' +
                         '- Provide specific numbers and percentages when available.\n' +
                         '- If the user asks about a category not explicitly listed, you can still refer to its numbers if it appears in the data.\n' +
@@ -2849,8 +2309,7 @@
                         ctx += '\n🔍 TOP 10 VARIANCES (largest absolute):\n';
                         for (const v of top) {
                             const pct = v.variancePct !== undefined ? `(${v.variancePct.toFixed(1)}%)` : '';
-                            ctx +=
-                                `- ${v.category}: Budget ₱${v.budget?.toLocaleString() || 0}, Expense ₱${v.expense?.toLocaleString() || 0}, Variance ₱${v.variance?.toLocaleString() || 0} ${pct}\n`;
+                            ctx += `- ${v.category}: Budget ₱${v.budget?.toLocaleString() || 0}, Expense ₱${v.expense?.toLocaleString() || 0}, Variance ₱${v.variance?.toLocaleString() || 0} ${pct}\n`;
                         }
                     }
                     if (variances && variances.length) {
@@ -2887,15 +2346,13 @@
                         ctx += '\n🔍 TOP 10 VARIANCES (by absolute amount):\n';
                         for (const r of top) {
                             const v = calcMetrics(r.budget, r.expense);
-                            ctx +=
-                                `- ${r.category} (${r.month}): Budget ${v.budget.toLocaleString()}, Expense ${v.expense.toLocaleString()}, Variance ${v.variance.toLocaleString()} (${v.variancePercent.toFixed(1)}%)\n`;
+                            ctx += `- ${r.category} (${r.month}): Budget ${v.budget.toLocaleString()}, Expense ${v.expense.toLocaleString()}, Variance ${v.variance.toLocaleString()} (${v.variancePercent.toFixed(1)}%)\n`;
                         }
                         ctx += '\n📋 COMPLETE ROW LIST (Category|Month|Budget|Expense|Variance):\n';
                         for (const r of records) {
                             const v = calcMetrics(r.budget, r.expense);
                             const cat = r.category.replace(/\|/g, '');
-                            ctx +=
-                                `${cat}|${r.month}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}\n`;
+                            ctx += `${cat}|${r.month}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}\n`;
                         }
                     }
                     return ctx;
@@ -2916,8 +2373,7 @@
                             const v = calcMetrics(r.budget, r.expense);
                             const status = v.budget === 0 ? 'NoBudget' : (v.variance < 0 ? 'HighExpense' : 'Other');
                             const cat = r.category.replace(/\|/g, '');
-                            ctx +=
-                                `${cat}|${r.month}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}|${status}\n`;
+                            ctx += `${cat}|${r.month}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}|${status}\n`;
                         }
                     }
                     return ctx;
@@ -2936,8 +2392,7 @@
                         for (const d of deptData) {
                             const v = calcMetrics(d.budget, d.expense);
                             const dept = d.department.replace(/\|/g, '');
-                            ctx +=
-                                `${dept}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}|${v.variancePercent.toFixed(1)}%\n`;
+                            ctx += `${dept}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}|${v.variancePercent.toFixed(1)}%\n`;
                         }
                     }
                     return ctx;
@@ -2963,7 +2418,7 @@
                             const minIdx = months.indexOf(minMonth);
                             ctx += `- Highest month: ${CONFIG.MONTH_NAMES[maxIdx]} (₱${maxMonth.toLocaleString()})\n`;
                             ctx += `- Lowest month: ${CONFIG.MONTH_NAMES[minIdx]} (₱${minMonth.toLocaleString()})\n`;
-                            const avg = months.reduce((a, b) => a + b, 0) / 12;
+                            const avg = months.reduce((a,b) => a + b, 0) / 12;
                             ctx += `- Average monthly budget: ₱${avg.toLocaleString()}\n`;
                         }
                     }
@@ -2972,8 +2427,7 @@
                         ctx += '\n📋 COMPLETE PLANNING CATEGORIES (Category|ActualBudget|ActualExpense|MLS|ThisYearMLS|PlanningVariance|BudgetNextYear):\n';
                         for (const r of childRows) {
                             const cat = r.category.replace(/\|/g, '');
-                            ctx +=
-                                `${cat}|${(r.actualBudget || 0).toLocaleString()}|${(r.actualExpense || 0).toLocaleString()}|${(r.mls || 0).toLocaleString()}|${(r.thisYearMls || 0).toLocaleString()}|${(r.thisYearBudgetVariance || 0).toLocaleString()}|${(r.budgetNextYear || 0).toLocaleString()}\n`;
+                            ctx += `${cat}|${(r.actualBudget || 0).toLocaleString()}|${(r.actualExpense || 0).toLocaleString()}|${(r.mls || 0).toLocaleString()}|${(r.thisYearMls || 0).toLocaleString()}|${(r.thisYearBudgetVariance || 0).toLocaleString()}|${(r.budgetNextYear || 0).toLocaleString()}\n`;
                         }
                     }
                     return ctx;
@@ -2991,6 +2445,7 @@
                     return ctx;
                 }
 
+                // Static helper to build context for the current view
                 static buildContext(sectionHint) {
                     const section = sectionHint || store.currentSection || 'dashboard';
                     const filters = {};
@@ -3022,21 +2477,14 @@
                             months = getDisplayMonths(data);
                             const catMap = new Map();
                             for (const r of data) {
-                                if (!catMap.has(r.category)) catMap.set(r.category, { budget: 0, expense: 0,
-                                    category: r.category });
+                                if (!catMap.has(r.category)) catMap.set(r.category, { budget: 0, expense: 0, category: r.category });
                                 const e = catMap.get(r.category);
                                 e.budget += r.budget;
                                 e.expense += r.expense;
                             }
                             variances = Array.from(catMap.values()).map(e => {
                                 const m = calcMetrics(e.budget, e.expense);
-                                return {
-                                    category: e.category,
-                                    budget: e.budget,
-                                    expense: e.expense,
-                                    variance: m.variance,
-                                    variancePct: m.variancePercent
-                                };
+                                return { category: e.category, budget: e.budget, expense: e.expense, variance: m.variance, variancePct: m.variancePercent };
                             }).sort((a, b) => Math.abs(b.variance) - Math.abs(a.variance));
                             records = data;
                             break;
@@ -3052,16 +2500,14 @@
                                 (f.company === 'All' || r.company === f.company) &&
                                 (f.department === 'All' || r.department === f.department) &&
                                 (f.month === 'All' || r.month === f.month) &&
-                                (!f.categorySearch || r.category.toLowerCase().includes(f.categorySearch
-                                .toLowerCase()))
+                                (!f.categorySearch || r.category.toLowerCase().includes(f.categorySearch.toLowerCase()))
                             );
                             const agg = aggregateByKey(raw);
                             records = agg;
                             const totalBudget = agg.reduce((s, r) => s + r.budget, 0);
                             const totalExpense = agg.reduce((s, r) => s + r.expense, 0);
                             const { variance, variancePercent } = calcMetrics(totalBudget, totalExpense);
-                            totals = { budget: totalBudget, expense: totalExpense, variance,
-                            variancePct: variancePercent };
+                            totals = { budget: totalBudget, expense: totalExpense, variance, variancePct: variancePercent };
                             break;
                         }
                         case 'exceptions': {
@@ -3075,8 +2521,7 @@
                                 (f.company === 'All' || r.company === f.company) &&
                                 (f.department === 'All' || r.department === f.department) &&
                                 (f.month === 'All' || r.month === f.month) &&
-                                (!f.categorySearch || r.category.toLowerCase().includes(f.categorySearch
-                                .toLowerCase()))
+                                (!f.categorySearch || r.category.toLowerCase().includes(f.categorySearch.toLowerCase()))
                             );
                             const exRecords = [];
                             for (const r of raw) {
@@ -3088,8 +2533,7 @@
                             const totalBudget = records.reduce((s, r) => s + r.budget, 0);
                             const totalExpense = records.reduce((s, r) => s + r.expense, 0);
                             const { variance, variancePercent } = calcMetrics(totalBudget, totalExpense);
-                            totals = { budget: totalBudget, expense: totalExpense, variance,
-                            variancePct: variancePercent };
+                            totals = { budget: totalBudget, expense: totalExpense, variance, variancePct: variancePercent };
                             break;
                         }
                         case 'deptSummary': {
@@ -3105,8 +2549,7 @@
                             data = applyViewFilter(data, f.viewMode, store.ytdMonthCutoff);
                             const map = new Map();
                             for (const r of data) {
-                                const e = map.get(r.department) || { department: r.department, budget: 0,
-                                    expense: 0 };
+                                const e = map.get(r.department) || { department: r.department, budget: 0, expense: 0 };
                                 e.budget += r.budget;
                                 e.expense += r.expense;
                                 map.set(r.department, e);
@@ -3116,8 +2559,7 @@
                             const totalBudget = deptData.reduce((s, d) => s + d.budget, 0);
                             const totalExpense = deptData.reduce((s, d) => s + d.expense, 0);
                             const { variance, variancePercent } = calcMetrics(totalBudget, totalExpense);
-                            totals = { budget: totalBudget, expense: totalExpense, variance,
-                            variancePct: variancePercent };
+                            totals = { budget: totalBudget, expense: totalExpense, variance, variancePct: variancePercent };
                             break;
                         }
                         case 'planning': {
@@ -3150,9 +2592,7 @@
                                     }
                                     planningTotals = total;
                                     records = planningData;
-                                } catch (_) { planningData = [];
-                                    planningTotals = null;
-                                    records = []; }
+                                } catch (_) { planningData = []; planningTotals = null; records = []; }
                             }
                             break;
                         }
@@ -3180,12 +2620,12 @@
                 }
             }
 
+            // Instantiate the AI service (no keys in memory)
             const groqAI = new AIService();
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 7. Permissions
+            // 7. Permissions (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function isPlanningEditable(company, department) {
                 if (company === 'All' || department === 'All') return false;
                 const key = `${company}|${department}`;
@@ -3233,9 +2673,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 8. Paginator
+            // 8. Paginator (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             class Paginator {
                 constructor(containerId, renderFn, defaultPageSize = 25) {
                     this.el = document.getElementById(containerId);
@@ -3269,14 +2708,12 @@
                 }
                 render() {
                     if (!this.el || !this.totalRows) { if (this.el) this.el.innerHTML = ''; return; }
-                    const tp = this.totalPages,
-                        cp = this.page,
-                        ps = this.pageSize;
+                    const tp = this.totalPages, cp = this.page, ps = this.pageSize;
                     const start = ps === 'All' ? 1 : (cp - 1) * ps + 1;
                     const end = ps === 'All' ? this.totalRows : Math.min(cp * ps, this.totalRows);
                     const opts = CONFIG.PAGE_SIZE_OPTIONS.map(o =>
                         `<option value="${o}" ${String(ps) === String(o) ? 'selected' : ''}>${o === 'All' ? 'All' : o}</option>`
-                        ).join('');
+                    ).join('');
                     const btn = (p, label, active) =>
                         `<button class="page-btn${active ? ' active' : ''}" data-page="${p}">${label}</button>`;
                     const ell = `<span class="page-ellipsis">…</span>`;
@@ -3286,8 +2723,7 @@
                     } else {
                         pageBtns += btn(1, 1, cp === 1);
                         if (cp > 3) pageBtns += ell;
-                        const lo = Math.max(2, cp - 1),
-                            hi = Math.min(tp - 1, cp + 1);
+                        const lo = Math.max(2, cp - 1), hi = Math.min(tp - 1, cp + 1);
                         for (let i = lo; i <= hi; i++) pageBtns += btn(i, i, i === cp);
                         if (cp < tp - 2) pageBtns += ell;
                         pageBtns += btn(tp, tp, cp === tp);
@@ -3311,9 +2747,8 @@
             };
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 9. Data merging & access
+            // 9. Data merging & access (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function mergeData(budgets, expenses) {
                 const expMap = new Map();
                 for (const e of expenses) {
@@ -3334,8 +2769,7 @@
                 }
                 for (const [key, v] of expMap) {
                     const [company, department, category, month] = key.split('|');
-                    merged.push({ company, department, category, month, budget: 0, expense: v.expense, remarks: v.remarks
-                            .join(' | ') });
+                    merged.push({ company, department, category, month, budget: 0, expense: v.expense, remarks: v.remarks.join(' | ') });
                 }
                 return merged;
             }
@@ -3344,8 +2778,7 @@
                 const map = new Map();
                 for (const r of records) {
                     const k = `${r.company}|${r.department}|${r.month}|${r.category}`;
-                    if (!map.has(k)) map.set(k, { company: r.company, department: r.department, month: r.month,
-                        category: r.category, budget: 0, expense: 0 });
+                    if (!map.has(k)) map.set(k, { company: r.company, department: r.department, month: r.month, category: r.category, budget: 0, expense: 0 });
                     const e = map.get(k);
                     e.budget += r.budget;
                     e.expense += r.expense;
@@ -3363,8 +2796,7 @@
                 const viewAllCo = coList.some(isAllToken);
                 const viewAllDept = deptList.some(isAllToken);
                 const companies = viewAllCo ? [...new Set(all.map(r => r.company))] : coList.filter(c => !isAllToken(c));
-                const departments = viewAllDept ? [...new Set(all.map(r => r.department))] : deptList.filter(d => !isAllToken(
-                    d));
+                const departments = viewAllDept ? [...new Set(all.map(r => r.department))] : deptList.filter(d => !isAllToken(d));
                 const coSet = Object.fromEntries(companies.map(c => [c.toUpperCase(), true]));
                 const deptSet = Object.fromEntries(departments.map(d => [d.toUpperCase(), true]));
                 return { companies, departments, viewAllCo, viewAllDept, coSet, deptSet };
@@ -3409,17 +2841,13 @@
 
             function notesCell(co, dept, cat, month) {
                 const note = getNote(co, dept, cat, month);
-                const encCo = attrEncode(co),
-                    encDept = attrEncode(dept),
-                    encCat = attrEncode(cat),
-                    encMonth = attrEncode(month || '');
+                const encCo = attrEncode(co), encDept = attrEncode(dept), encCat = attrEncode(cat), encMonth = attrEncode(month || '');
                 return `<div class="notes-cell"><textarea class="form-control form-control-sm variance-note-input" rows="2" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}" placeholder="Notes...">${fmt.html(note)}</textarea><button type="button" class="btn btn-sm btn-outline-success mt-1 save-note-btn" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">Save note</button><span class="note-save-status text-muted ms-1"></span></div>`;
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 10. Sort rows
+            // 10. Sort rows (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function sortRows(rows, column, direction, isMatrix = false) {
                 if (!rows || rows.length === 0) return rows;
                 const dir = direction === 'asc' ? 1 : -1;
@@ -3428,8 +2856,7 @@
                 return [...rows].sort((a, b) => {
                     let aVal, bVal;
                     if (isMatrix) {
-                        if (column === 0) { aVal = a.category;
-                            bVal = b.category; } else {
+                        if (column === 0) { aVal = a.category; bVal = b.category; } else {
                             const keys = ['totalExp', 'totalBud', 'totalVar', 'totalVarPct'];
                             aVal = a.totals[keys[column - 1]];
                             bVal = b.totals[keys[column - 1]];
@@ -3486,8 +2913,7 @@
                     const col = parseInt(th.dataset.sortCol);
                     const indicator = th.querySelector('.sort-indicator');
                     if (indicator) {
-                        indicator.textContent = col === sortState.column ? (sortState.direction === 'asc' ? ' ▲' :
-                            ' ▼') : '';
+                        indicator.textContent = col === sortState.column ? (sortState.direction === 'asc' ? ' ▲' : ' ▼') : '';
                     }
                 });
             }
@@ -3512,8 +2938,7 @@
                 const metric = document.getElementById('metricSelect').value;
                 const isAll = metric === 'all';
                 const btns = document.querySelectorAll('#layoutToggle .toggle-option');
-                btns.forEach(b => { b.disabled = !isAll;
-                    b.classList.toggle('disabled', !isAll); });
+                btns.forEach(b => { b.disabled = !isAll; b.classList.toggle('disabled', !isAll); });
                 if (!isAll) {
                     store.filters.dashboard.layout = 'month';
                     btns.forEach(b => b.classList.toggle('active', b.dataset.layout === 'month'));
@@ -3521,9 +2946,7 @@
                 refreshDashboard();
             }
 
-            function refreshDashboard() { renderKPIs();
-                renderMatrixTable();
-                renderDeptSummary(); }
+            function refreshDashboard() { renderKPIs(); renderMatrixTable(); renderDeptSummary(); }
 
             function updateNavUserInfo() {
                 const session = Auth.getSession();
@@ -3569,9 +2992,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 11. Dashboard renderers
+            // 11. Dashboard renderers (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function renderKPIs() {
                 const filtered = getDashboardFiltered();
                 const budget = filtered.reduce((s, r) => s + r.budget, 0);
@@ -3630,8 +3052,7 @@
             }
 
             function computeTotalsForData(mData, months) {
-                let totalExp = 0,
-                    totalBud = 0;
+                let totalExp = 0, totalBud = 0;
                 for (const m of months) {
                     const d = mData[m] || { expense: 0, budget: 0 };
                     totalExp += d.expense;
@@ -3741,8 +3162,7 @@
                 const catMap = buildCategoryMonthData(filtered, months);
                 const monthTotals = {};
                 for (const m of months) {
-                    let budget = 0,
-                        expense = 0;
+                    let budget = 0, expense = 0;
                     for (const mData of catMap.values()) {
                         const d = mData[m] || { expense: 0, budget: 0 };
                         budget += d.budget;
@@ -3764,9 +3184,7 @@
                 th += `</tr>`;
                 if (head) head.innerHTML = th;
                 let tb = '';
-                let grandBud = 0,
-                    grandExp = 0,
-                    grandVar = 0;
+                let grandBud = 0, grandExp = 0, grandVar = 0;
                 for (const m of months) {
                     const mt = monthTotals[m];
                     grandBud += mt.budget;
@@ -3777,8 +3195,7 @@
                     if (sE) row += `<td class="text-end">${fmt.currency(mt.expense)}</td>`;
                     if (sV) {
                         const vc = varClass(mt.variance);
-                        row +=
-                            `<td class="text-end ${vc} fw-semibold">${fmt.currency(mt.variance)}</td><td class="text-end ${vc} fw-semibold">${fmt.percent(mt.variancePct)}</td>`;
+                        row += `<td class="text-end ${vc} fw-semibold">${fmt.currency(mt.variance)}</td><td class="text-end ${vc} fw-semibold">${fmt.percent(mt.variancePct)}</td>`;
                     }
                     tb += row + '</tr>';
                 }
@@ -3787,8 +3204,7 @@
                 let gRow = `<tr class="total-row"><td><strong>TOTAL</strong></td>`;
                 if (sB) gRow += `<td class="text-end fw-bold">${fmt.currency(grandBud)}</td>`;
                 if (sE) gRow += `<td class="text-end fw-bold">${fmt.currency(grandExp)}</td>`;
-                if (sV) gRow +=
-                    `<td class="text-end fw-bold ${gvc}">${fmt.currency(grandVar)}</td><td class="text-end fw-bold ${gvc}">${fmt.percent(gVarPct)}</td>`;
+                if (sV) gRow += `<td class="text-end fw-bold ${gvc}">${fmt.currency(grandVar)}</td><td class="text-end fw-bold ${gvc}">${fmt.percent(gVarPct)}</td>`;
                 gRow += '</tr>';
                 if (body) body.innerHTML = tb + gRow;
             }
@@ -3809,8 +3225,7 @@
 
                 let thead = '';
                 if (!isExpBudLayout()) {
-                    thead =
-                        `<tr><th class="sticky-col clickable-header" data-sort-table="matrix" data-sort-col="0" rowspan="2">Category <span class="sort-indicator">${indicator(0)}</span></th>`;
+                    thead = `<tr><th class="sticky-col clickable-header" data-sort-table="matrix" data-sort-col="0" rowspan="2">Category <span class="sort-indicator">${indicator(0)}</span></th>`;
                     for (const m of months) thead += `<th colspan="${cols}" class="text-center bg-light">${m}</th>`;
                     thead += `<th colspan="4" class="text-center bg-secondary text-white">TOTALS</th></tr><tr>`;
                     for (const m of months) {
@@ -3818,22 +3233,17 @@
                         if (sB) thead += `<th>Budget (₱)</th>`;
                         if (sV) thead += `<th>Variance (₱)</th><th>Var %</th>`;
                     }
-                    thead +=
-                        `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="1">Total Exp <span class="sort-indicator">${indicator(1)}</span></th>`;
-                    thead +=
-                        `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="2">Total Bud <span class="sort-indicator">${indicator(2)}</span></th>`;
-                    thead +=
-                        `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="3">Total Var <span class="sort-indicator">${indicator(3)}</span></th>`;
-                    thead +=
-                        `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="4">Total Var % <span class="sort-indicator">${indicator(4)}</span></th></tr>`;
+                    thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="1">Total Exp <span class="sort-indicator">${indicator(1)}</span></th>`;
+                    thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="2">Total Bud <span class="sort-indicator">${indicator(2)}</span></th>`;
+                    thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="3">Total Var <span class="sort-indicator">${indicator(3)}</span></th>`;
+                    thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="4">Total Var % <span class="sort-indicator">${indicator(4)}</span></th></tr>`;
                 } else {
                     const groups = [];
                     if (sE) groups.push({ name: 'EXPENSE (₱)', type: 'expense' });
                     if (sB) groups.push({ name: 'BUDGET (₱)', type: 'budget' });
                     if (sV) groups.push({ name: 'VARIANCE (₱)', type: 'variance' });
                     if (!groups.length) groups.push({ name: 'DATA', type: 'expense' });
-                    thead =
-                        `<tr><th class="sticky-col clickable-header" data-sort-table="matrix" data-sort-col="0" rowspan="2">Category <span class="sort-indicator">${indicator(0)}</span></th>`;
+                    thead = `<tr><th class="sticky-col clickable-header" data-sort-table="matrix" data-sort-col="0" rowspan="2">Category <span class="sort-indicator">${indicator(0)}</span></th>`;
                     for (const g of groups) {
                         const span = g.type === 'variance' ? months.length * 2 : months.length;
                         thead += `<th colspan="${span}" class="text-center bg-light">${g.name}</th>`;
@@ -3847,14 +3257,10 @@
                             for (const m of months) thead += `<th>${m}</th>`;
                         }
                     }
-                    thead +=
-                        `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="1">Total Exp <span class="sort-indicator">${indicator(1)}</span></th>`;
-                    thead +=
-                        `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="2">Total Bud <span class="sort-indicator">${indicator(2)}</span></th>`;
-                    thead +=
-                        `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="3">Total Var <span class="sort-indicator">${indicator(3)}</span></th>`;
-                    thead +=
-                        `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="4">Total Var % <span class="sort-indicator">${indicator(4)}</span></th></tr>`;
+                    thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="1">Total Exp <span class="sort-indicator">${indicator(1)}</span></th>`;
+                    thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="2">Total Bud <span class="sort-indicator">${indicator(2)}</span></th>`;
+                    thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="3">Total Var <span class="sort-indicator">${indicator(3)}</span></th>`;
+                    thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="4">Total Var % <span class="sort-indicator">${indicator(4)}</span></th></tr>`;
                 }
                 document.getElementById('dynamicTableHead').innerHTML = thead;
                 paginators.matrix._meta = { months, showExp: sE, showBud: sB, showVar: sV };
@@ -3868,13 +3274,11 @@
             }
 
             function renderMatrixPage() {
-                const { months, showExp, showBud, showVar } = paginators.matrix._meta || { months: [], showExp: true,
-                    showBud: false, showVar: false };
+                const { months, showExp, showBud, showVar } = paginators.matrix._meta || { months: [], showExp: true, showBud: false, showVar: false };
                 const pageRows = paginators.matrix.getSlice(matrixFlatRows);
                 const tbody = document.getElementById('dynamicTableBody');
                 if (!tbody) return;
-                if (!pageRows.length) { tbody.innerHTML =
-                        `<tr><td colspan="30" class="text-center p-4">No data</td></tr>`; return; }
+                if (!pageRows.length) { tbody.innerHTML = `<tr><td colspan="30" class="text-center p-4">No data</td></tr>`; return; }
 
                 let html = '';
                 for (const row of pageRows) {
@@ -3890,8 +3294,7 @@
                     if (isTotal) {
                         const isCollapsed = store.matrix.collapsedSections[divisionKey] || false;
                         const iconClass = isCollapsed ? 'fa-chevron-right' : 'fa-chevron-down';
-                        toggleHtml =
-                            `<button class="matrix-toggle" data-division="${divisionKey}" aria-label="Toggle visibility"><i class="fas ${iconClass}"></i></button>`;
+                        toggleHtml = `<button class="matrix-toggle" data-division="${divisionKey}" aria-label="Toggle visibility"><i class="fas ${iconClass}"></i></button>`;
                     } else {
                         const parentDiv = row.parentDiv || 'Uncategorized';
                         const isCollapsed = store.matrix.collapsedSections[parentDiv] || false;
@@ -3909,16 +3312,14 @@
                     let monthCells = '';
                     if (!isExpBudLayout()) {
                         for (const m of months) {
-                            const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0,
-                                utilizationPct: 0 };
+                            const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0, utilizationPct: 0 };
                             if (showExp) monthCells += `<td class="text-end">${fmt.currency(d.expense)}</td>`;
                             if (showBud) monthCells += `<td class="text-end">${fmt.currency(d.budget)}</td>`;
                             if (showVar) {
                                 const vc = varClass(d.variance);
                                 const fl = Math.min(100, d.utilizationPct);
                                 const bar = d.utilizationPct > 100 ? '#ef4444' : '#10b981';
-                                monthCells +=
-                                    `<td class="text-end ${vc} fw-semibold">${fmt.currency(d.variance)}</td><td class="text-end"><span class="${vc} fw-bold">${fmt.percent(d.variancePercent)}</span><div class="progress-threshold"><div class="progress-fill" style="width:${fl}%;background:${bar}"></div></div></td>`;
+                                monthCells += `<td class="text-end ${vc} fw-semibold">${fmt.currency(d.variance)}</td><td class="text-end"><span class="${vc} fw-bold">${fmt.percent(d.variancePercent)}</span><div class="progress-threshold"><div class="progress-fill" style="width:${fl}%;background:${bar}"></div></div></td>`;
                             }
                         }
                     } else {
@@ -3927,10 +3328,7 @@
                         if (showBud) groups.push('budget');
                         if (showVar) groups.push('variance');
                         if (!groups.length) groups.push('expense');
-                        const eV = [],
-                            bV = [],
-                            vV = [],
-                            vpV = [];
+                        const eV = [], bV = [], vV = [], vpV = [];
                         for (const m of months) {
                             const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0 };
                             eV.push(d.expense);
@@ -3944,17 +3342,13 @@
                             } else if (g === 'budget') {
                                 for (const v of bV) monthCells += `<td class="text-end">${fmt.currency(v)}</td>`;
                             } else if (g === 'variance') {
-                                for (const v of vV) monthCells +=
-                                    `<td class="text-end ${varClass(v)} fw-semibold">${fmt.currency(v)}</td>`;
-                                for (const p of vpV) monthCells +=
-                                    `<td class="text-end"><span class="${varClass(p)} fw-bold">${fmt.percent(p)}</span></td>`;
+                                for (const v of vV) monthCells += `<td class="text-end ${varClass(v)} fw-semibold">${fmt.currency(v)}</td>`;
+                                for (const p of vpV) monthCells += `<td class="text-end"><span class="${varClass(p)} fw-bold">${fmt.percent(p)}</span></td>`;
                             }
                         }
                     }
 
-                    const tv = totals.totalVar,
-                        tvp = totals.totalVarPct,
-                        tvc = varClass(tv);
+                    const tv = totals.totalVar, tvp = totals.totalVarPct, tvc = varClass(tv);
                     const totalCells =
                         `<td class="text-end fw-bold bg-light">${fmt.currency(totals.totalExp)}</td><td class="text-end fw-bold bg-light">${fmt.currency(totals.totalBud)}</td><td class="text-end fw-bold ${tvc} bg-light">${fmt.currency(tv)}</td><td class="text-end fw-bold ${tvc} bg-light">${fmt.percent(tvp)}</td>`;
 
@@ -4012,9 +3406,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 12. Budget Variance
+            // 12. Budget Variance (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function buildBvRows() {
                 if (store.hasError || !store.mergedRecords.length) return [];
                 const access = resolveAccess(store.authUser);
@@ -4030,13 +3423,10 @@
                 let rows = agg.map(item => {
                     const { variance: v, variancePercent: vp } = calcMetrics(item.budget, item.expense);
                     const vpDisp = (item.budget === 0 && item.expense > 0) ? 'N/A' : fmt.percent(vp);
-                    const vc = varClass(v),
-                        pc = varClass(vp);
+                    const vc = varClass(v), pc = varClass(vp);
                     const sb = statusBadge(v, vp, item.budget);
-                    const encCo = attrEncode(item.company),
-                        encDept = attrEncode(item.department),
-                        encCat = attrEncode(item.category),
-                        encMonth = attrEncode(item.month);
+                    const encCo = attrEncode(item.company), encDept = attrEncode(item.department),
+                          encCat = attrEncode(item.category), encMonth = attrEncode(item.month);
                     return [
                         fmt.html(item.company),
                         fmt.html(item.department),
@@ -4069,9 +3459,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 13. Exceptions
+            // 13. Exceptions (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function buildExRows() {
                 if (store.hasError || !store.mergedRecords.length) return [];
                 const access = resolveAccess(store.authUser);
@@ -4089,12 +3478,9 @@
                     const sb = statusBadge(variance, variancePct, r.budget);
                     if (isException(sb)) {
                         const vpDisp = (r.budget === 0 && r.expense > 0) ? 'N/A' : fmt.percent(variancePct);
-                        const vc = varClass(variance),
-                            pc = varClass(variancePct);
-                        const encCo = attrEncode(r.company),
-                            encDept = attrEncode(r.department),
-                            encCat = attrEncode(r.category),
-                            encMonth = attrEncode(r.month);
+                        const vc = varClass(variance), pc = varClass(variancePct);
+                        const encCo = attrEncode(r.company), encDept = attrEncode(r.department),
+                              encCat = attrEncode(r.category), encMonth = attrEncode(r.month);
                         exRows.push([
                             fmt.html(r.company),
                             fmt.html(r.department),
@@ -4127,9 +3513,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 14. Dept Summary
+            // 14. Dept Summary (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function buildDeptRows() {
                 if (store.hasError || !store.mergedRecords.length) return [];
                 const access = resolveAccess(store.authUser);
@@ -4180,9 +3565,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 15. Planning
+            // 15. Planning (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function getAdditionsSumForMonth(plan, month) {
                 if (!plan || !plan.additions) return 0;
                 return plan.additions
@@ -4309,8 +3693,7 @@
                 }
 
                 const sourceValues = {};
-                for (const srcName of Object.keys(CONFIG.FORMULA_CATEGORIES).flatMap(k => CONFIG.FORMULA_CATEGORIES[k]
-                        .sourceNames)) {
+                for (const srcName of Object.keys(CONFIG.FORMULA_CATEGORIES).flatMap(k => CONFIG.FORMULA_CATEGORIES[k].sourceNames)) {
                     const data = categoryData[srcName];
                     if (data) {
                         sourceValues[srcName] = {
@@ -4325,8 +3708,7 @@
                 const rows = [];
                 for (const cat of filteredCategories) {
                     const isFormula = isFormulaCategory(cat);
-                    let data = categoryData[cat] || { actualBudget: 0, actualExpense: 0, mls: 0, months: Array(12)
-                            .fill(0), budgetNextYear: 0 };
+                    let data = categoryData[cat] || { actualBudget: 0, actualExpense: 0, mls: 0, months: Array(12).fill(0), budgetNextYear: 0 };
 
                     if (isFormula) {
                         const computedMls = computeFormula(cat, 'mls', sourceValues, multipliers);
@@ -4381,13 +3763,7 @@
                     if (!children || children.length === 0) continue;
                     children.sort((a, b) => a.category.localeCompare(b.category));
 
-                    let divBud = 0,
-                        divExp = 0,
-                        divMls = 0,
-                        divThisYearMls = 0,
-                        divVar = 0,
-                        divNext = 0,
-                        divLast = 0;
+                    let divBud = 0, divExp = 0, divMls = 0, divThisYearMls = 0, divVar = 0, divNext = 0, divLast = 0;
                     const divMonths = Array(12).fill(0);
                     for (const child of children) {
                         divBud += child.actualBudget;
@@ -4506,8 +3882,7 @@
 
                 if (!store.planningTableExists) {
                     thead.innerHTML = '';
-                    tbody.innerHTML =
-                        `<tr><td colspan="20" class="text-center text-muted">Planning table not available.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="20" class="text-center text-muted">Planning table not available.</td></tr>`;
                     document.getElementById('planningFoot').innerHTML = '';
                     return;
                 }
@@ -4607,8 +3982,7 @@
                 const pageRows = paginators.planning.getSlice(planningFlatRows);
 
                 if (!pageRows.length) {
-                    tbody.innerHTML =
-                        `<tr><td colspan="20" class="text-center p-4 text-muted">No data for selected filters.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="20" class="text-center p-4 text-muted">No data for selected filters.</td></tr>`;
                     return;
                 }
 
@@ -4632,8 +4006,7 @@
                         const iconClass = isCollapsed ? 'fa-chevron-right' : 'fa-chevron-down';
                         let monthCells = '';
                         for (let i = 0; i < 12; i++) {
-                            monthCells +=
-                                `<td class="div-month-total month-col" data-month-idx="${i}">${fmt.currency(row.months[i])}</td>`;
+                            monthCells += `<td class="div-month-total month-col" data-month-idx="${i}">${fmt.currency(row.months[i])}</td>`;
                         }
                         html += `<tr class="${trClass}" data-total="true" data-key="${divisionKey}" data-division="${row.division}">
                             <td class="planning-sticky-col">
@@ -4655,35 +4028,24 @@
                         const rowEditable = isEditable && !row.isAggregated;
                         const mlsVal = row.mls || 0;
                         const monthVals = row.months || Array(12).fill(0);
-                        let mlsHtml,
-                            monthHtmls = [];
+                        let mlsHtml, monthHtmls = [];
                         if (rowEditable) {
-                            mlsHtml =
-                                `<input type="text" class="planning-input planning-mls editable" value="${fmt.number(mlsVal)}" data-editable="true" />`;
+                            mlsHtml = `<input type="text" class="planning-input planning-mls editable" value="${fmt.number(mlsVal)}" data-editable="true" />`;
                             for (let i = 0; i < 12; i++) {
                                 if (row.isFormula) {
-                                    monthHtmls.push(
-                                        `<td class="month-col"><span class="planning-input formula" style="background:#f0f4fa; border-color:#d0d8e0; color:#0d4a7a; font-weight:600; cursor:not-allowed; pointer-events:none;">${fmt.currency(monthVals[i])}</span></td>`
-                                        );
+                                    monthHtmls.push(`<td class="month-col"><span class="planning-input formula" style="background:#f0f4fa; border-color:#d0d8e0; color:#0d4a7a; font-weight:600; cursor:not-allowed; pointer-events:none;">${fmt.currency(monthVals[i])}</span></td>`);
                                 } else {
-                                    monthHtmls.push(
-                                        `<td class="month-col"><input type="text" class="planning-input planning-month editable" data-month="${i}" value="${fmt.number(monthVals[i])}" data-editable="true" /></td>`
-                                        );
+                                    monthHtmls.push(`<td class="month-col"><input type="text" class="planning-input planning-month editable" data-month="${i}" value="${fmt.number(monthVals[i])}" data-editable="true" /></td>`);
                                 }
                             }
                         } else {
                             const disabledClass = (!isEditable && !row.isFormula) ? ' disabled' : '';
-                            mlsHtml =
-                                `<span class="planning-input aggregated${disabledClass}">${fmt.currency(mlsVal)}</span>`;
+                            mlsHtml = `<span class="planning-input aggregated${disabledClass}">${fmt.currency(mlsVal)}</span>`;
                             for (let i = 0; i < 12; i++) {
                                 if (row.isFormula) {
-                                    monthHtmls.push(
-                                        `<td class="month-col"><span class="planning-input formula">${fmt.currency(monthVals[i])}</span></td>`
-                                        );
+                                    monthHtmls.push(`<td class="month-col"><span class="planning-input formula">${fmt.currency(monthVals[i])}</span></td>`);
                                 } else {
-                                    monthHtmls.push(
-                                        `<td class="month-col"><span class="planning-input aggregated${disabledClass}">${fmt.currency(monthVals[i])}</span></td>`
-                                        );
+                                    monthHtmls.push(`<td class="month-col"><span class="planning-input aggregated${disabledClass}">${fmt.currency(monthVals[i])}</span></td>`);
                                 }
                             }
                         }
@@ -4738,18 +4100,14 @@
                         input.addEventListener('blur', planningInputBlur);
                     });
 
-                    tbody.querySelectorAll('tr.planning-child-row[data-editable="true"][data-formula="false"]').forEach(
-                        row => {
-                            row.addEventListener('click', function(e) {
-                                if (e.target.closest('input') || e.target.closest('.planning-toggle') || e
-                                    .target.closest('.planning-category-name') || e.target.closest(
-                                        '.planning-edit-btn'))
-                                    return;
-                                const firstInput = this.querySelector('input.planning-input.editable');
-                                if (firstInput) { firstInput.focus();
-                                    firstInput.select(); }
-                            });
+                    tbody.querySelectorAll('tr.planning-child-row[data-editable="true"][data-formula="false"]').forEach(row => {
+                        row.addEventListener('click', function(e) {
+                            if (e.target.closest('input') || e.target.closest('.planning-toggle') || e.target.closest('.planning-category-name') || e.target.closest('.planning-edit-btn'))
+                                return;
+                            const firstInput = this.querySelector('input.planning-input.editable');
+                            if (firstInput) { firstInput.focus(); firstInput.select(); }
                         });
+                    });
                 }
 
                 updateGlobalToggleIcon();
@@ -4884,17 +4242,11 @@
                     totalTr.querySelector('.ty-next').textContent = fmt.currency(0);
                     totalTr.querySelectorAll('.div-month-total').forEach(el => el.textContent = fmt.currency(0));
                     const cells = totalTr.querySelectorAll('td');
-                    if (cells.length >= 4) { cells[2].textContent = fmt.currency(0);
-                        cells[3].textContent = fmt.currency(0); }
+                    if (cells.length >= 4) { cells[2].textContent = fmt.currency(0); cells[3].textContent = fmt.currency(0); }
                     return;
                 }
 
-                let sumMls = 0,
-                    sumTyMls = 0,
-                    sumTyVar = 0,
-                    sumNext = 0,
-                    sumActualBudget = 0,
-                    sumActualExpense = 0;
+                let sumMls = 0, sumTyMls = 0, sumTyVar = 0, sumNext = 0, sumActualBudget = 0, sumActualExpense = 0;
                 const sumMonths = Array(12).fill(0);
 
                 childRows.forEach(tr => {
@@ -4925,8 +4277,7 @@
                     if (!isNaN(idx) && idx >= 0 && idx < 12) el.textContent = fmt.currency(sumMonths[idx]);
                 });
                 const cells = totalTr.querySelectorAll('td');
-                if (cells.length >= 4) { cells[2].textContent = fmt.currency(sumActualBudget);
-                    cells[3].textContent = fmt.currency(sumActualExpense); }
+                if (cells.length >= 4) { cells[2].textContent = fmt.currency(sumActualBudget); cells[3].textContent = fmt.currency(sumActualExpense); }
                 renderPlanningFooter();
             }
 
@@ -4954,9 +4305,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 16. Planning Modal
+            // 16. Planning Modal (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             let planningModalInstance = null;
             let currentModalKey = null;
 
@@ -5211,8 +4561,7 @@
                         const row = this.closest('.addition-row');
                         if (row) {
                             row.remove();
-                            if (container.querySelectorAll('.addition-row').length === 0) document.getElementById(
-                                'noAdditionsMsg').style.display = 'block';
+                            if (container.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg').style.display = 'block';
                             updateModalTotals();
                         }
                     });
@@ -5254,8 +4603,7 @@
                 container.appendChild(row);
                 row.querySelector('.remove-addition-btn').addEventListener('click', function() {
                     row.remove();
-                    if (container.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg')
-                        .style.display = 'block';
+                    if (container.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg').style.display = 'block';
                     updateModalTotals();
                 });
                 const amountInput = row.querySelector('.addition-amount');
@@ -5318,9 +4666,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 17. Save Planning to DB
+            // 17. Save Planning (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             async function savePlanning() {
                 if (!store.planningTableExists) { alert('Planning table does not exist. Please create it first.'); return; }
                 const company = store.filters.planning.company;
@@ -5435,8 +4782,7 @@
                     if (entriesToInsert.length) {
                         const BATCH_SIZE = 100;
                         for (let i = 0; i < entriesToInsert.length; i += BATCH_SIZE) {
-                            await DataService.insert('planning_additions', entriesToInsert.slice(i, i + BATCH_SIZE),
-                                false);
+                            await DataService.insert('planning_additions', entriesToInsert.slice(i, i + BATCH_SIZE), false);
                         }
                     }
 
@@ -5456,17 +4802,15 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 18. Load Planning Data
+            // 18. Load Planning Data (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function loadPlanningData(additionRows) {
                 const currentYear = store.planning.year;
                 const data = {};
                 const grouped = {};
                 for (const add of additionRows) {
                     if (String(add.year) !== String(currentYear)) continue;
-                    const key =
-                        `${String(add.company).trim()}|${String(add.cor_dept).trim()}|${String(add.code_desc).trim()}`;
+                    const key = `${String(add.company).trim()}|${String(add.cor_dept).trim()}|${String(add.code_desc).trim()}`;
                     if (!grouped[key]) grouped[key] = [];
                     grouped[key].push(add);
                 }
@@ -5498,9 +4842,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 19. Export: Text File
+            // 19. Export: Text File (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function exportPlanningText() {
                 if (!store.planningTableExists) { alert('Planning table not available.'); return; }
                 const rows = buildPlanningRows();
@@ -5540,8 +4883,7 @@
                     const tyv = plain(row.thisYearBudgetVariance).padStart(18);
                     const bn = plain(row.budgetNextYear).padStart(18);
                     const monthVals = (row.months || Array(12).fill(0)).map(v => plain(v).padStart(12)).join(' | ');
-                    body +=
-                        `${catName} | ${ly} | ${ab} | ${ae} | ${mls} | ${tym} | ${tyv} | ${bn} | ${monthVals}\n`;
+                    body += `${catName} | ${ly} | ${ab} | ${ae} | ${mls} | ${tym} | ${tyv} | ${bn} | ${monthVals}\n`;
                 }
 
                 const totals = computeGrandTotals();
@@ -5639,9 +4981,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 20. Excel Export
+            // 20. Excel Export (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function exportPlanningExcel() {
                 if (!store.planningTableExists) { alert('Planning table not available.'); return; }
                 if (typeof XLSX === 'undefined') {
@@ -5697,8 +5038,7 @@
                     for (const column of formulaColumns) {
                         const period = column === 6 ? 'MLS' : CONFIG.MONTHS[column - 10];
                         const formula = row.isFormula ?
-                            buildFormulaCategoryExcelFormula(row.category, sourceRowByCategory, column,
-                                lastMultiplierRow) :
+                            buildFormulaCategoryExcelFormula(row.category, sourceRowByCategory, column, lastMultiplierRow) :
                             buildAdditionSumExcelFormula(row, excelRow, period, lastAdditionRow);
                         const calculatedValue = column === 6 ? row.mls : row.months[column - 10];
                         setExcelFormula(planningSheet, column, excelRow, formula, calculatedValue);
@@ -5706,11 +5046,9 @@
                     setExcelFormula(planningSheet, 7, excelRow,
                         `${excelCellAddress(5, excelRow)}+${excelCellAddress(6, excelRow)}`, row.thisYearMls);
                     setExcelFormula(planningSheet, 8, excelRow,
-                        `${excelCellAddress(4, excelRow)}-${excelCellAddress(7, excelRow)}`, row
-                        .thisYearBudgetVariance);
+                        `${excelCellAddress(4, excelRow)}-${excelCellAddress(7, excelRow)}`, row.thisYearBudgetVariance);
                     setExcelFormula(planningSheet, 9, excelRow,
-                        `SUM(${excelCellAddress(10, excelRow)}:${excelCellAddress(21, excelRow)})`, row
-                        .budgetNextYear);
+                        `SUM(${excelCellAddress(10, excelRow)}:${excelCellAddress(21, excelRow)})`, row.budgetNextYear);
                 });
                 parentRows.forEach(parent => {
                     for (let column = 3; column <= 21; column++) {
@@ -5718,8 +5056,7 @@
                             `SUM(${excelCellAddress(column, parent.firstChildRow)}:${excelCellAddress(column, parent.lastChildRow)})` :
                             '0';
                         const values = [
-                            parent.row.lastYearExpense, parent.row.actualBudget, parent.row.actualExpense, parent.row
-                            .mls,
+                            parent.row.lastYearExpense, parent.row.actualBudget, parent.row.actualExpense, parent.row.mls,
                             parent.row.thisYearMls, parent.row.thisYearBudgetVariance, parent.row.budgetNextYear,
                             ...parent.row.months
                         ];
@@ -5742,10 +5079,8 @@
                 for (let rowNumber = 2; rowNumber <= grandTotalRow; rowNumber++) {
                     for (let column = 3; column <= 21; column++) setExcelNumberFormat(planningSheet, column, rowNumber);
                 }
-                for (let rowNumber = 2; rowNumber <= lastAdditionRow; rowNumber++) setExcelNumberFormat(additionsSheet, 6,
-                    rowNumber);
-                for (let rowNumber = 2; rowNumber <= lastMultiplierRow; rowNumber++) setExcelNumberFormat(multiplierSheet, 1,
-                    rowNumber);
+                for (let rowNumber = 2; rowNumber <= lastAdditionRow; rowNumber++) setExcelNumberFormat(additionsSheet, 6, rowNumber);
+                for (let rowNumber = 2; rowNumber <= lastMultiplierRow; rowNumber++) setExcelNumberFormat(multiplierSheet, 1, rowNumber);
                 planningSheet['!cols'] = [
                     { wch: 18 }, { wch: 18 }, { wch: 34 }, ...Array.from({ length: 19 }, () => ({ wch: 18 }))
                 ];
@@ -5821,9 +5156,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 21. Notes & CSV Import
+            // 21. Notes & CSV Import (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             async function saveNote(co, dept, cat, month, notes, statusEl) {
                 const session = Auth.getSession();
                 if (!session?.user) throw new Error('Please sign in to save notes.');
@@ -5847,8 +5181,7 @@
                     updated_by: n.updated_by || 'user',
                     updated_at: new Date().toISOString()
                 }));
-                const url =
-                    `${CONFIG.SUPABASE_URL}/rest/v1/notes?on_conflict=company,cor_dept,code_desc,month`;
+                const url = `${CONFIG.SUPABASE_URL}/rest/v1/notes?on_conflict=company,cor_dept,code_desc,month`;
                 const res = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -5860,8 +5193,7 @@
                     },
                     body: JSON.stringify(body)
                 });
-                if (!res.ok) { const errText = await res.text(); throw new Error(
-                        `Supabase UPSERT notes: ${res.status} ${errText}`); }
+                if (!res.ok) { const errText = await res.text(); throw new Error(`Supabase UPSERT notes: ${res.status} ${errText}`); }
                 for (const n of body) store.notesMap[noteKey(n.company, n.cor_dept, n.code_desc, n.month)] = n.notes;
                 return true;
             }
@@ -5876,24 +5208,21 @@
                 const allStatuses = container.querySelectorAll('.note-save-status');
                 const allBtns = container.querySelectorAll('.save-note-btn');
                 allBtns.forEach(b => b.disabled = true);
-                allStatuses.forEach(el => { el.textContent = 'Saving...';
-                    el.className = 'note-save-status text-muted ms-1'; });
+                allStatuses.forEach(el => { el.textContent = 'Saving...'; el.className = 'note-save-status text-muted ms-1'; });
                 try {
                     const notesArray = [];
                     cells.forEach(cell => {
                         const ta = cell.querySelector('.variance-note-input');
                         if (!ta) return;
-                        notesArray.push({ company: attrDecode(ta.dataset.company), cor_dept: attrDecode(ta.dataset
-                                .dept), code_desc: attrDecode(ta.dataset.cat), month: attrDecode(ta.dataset
-                                .month || ''), notes: ta.value, updated_by: session.user.username });
+                        notesArray.push({ company: attrDecode(ta.dataset.company), cor_dept: attrDecode(ta.dataset.dept),
+                            code_desc: attrDecode(ta.dataset.cat), month: attrDecode(ta.dataset.month || ''),
+                            notes: ta.value, updated_by: session.user.username });
                     });
                     await saveNotesBatch(notesArray);
-                    allStatuses.forEach(el => { el.textContent = 'Saved all';
-                        el.className = 'note-save-status text-success ms-1';
+                    allStatuses.forEach(el => { el.textContent = 'Saved all'; el.className = 'note-save-status text-success ms-1';
                         setTimeout(() => el.textContent = '', 3000); });
                 } catch (err) {
-                    allStatuses.forEach(el => { el.textContent = err.message || 'Failed';
-                        el.className = 'note-save-status text-danger ms-1'; });
+                    allStatuses.forEach(el => { el.textContent = err.message || 'Failed'; el.className = 'note-save-status text-danger ms-1'; });
                 } finally { allBtns.forEach(b => b.disabled = false); }
             }
 
@@ -5902,17 +5231,15 @@
                 if (lines.length < 2) throw new Error('CSV must have a header row and at least one data row.');
                 const parseRow = row => {
                     const r = [];
-                    let cur = '',
-                        inQ = false;
+                    let cur = '', inQ = false;
                     for (let i = 0; i < row.length; i++) {
                         const ch = row[i];
                         if (inQ) {
-                            if (ch === '"' && i + 1 < row.length && row[i + 1] === '"') { cur += '"';
-                                i++; } else if (ch === '"') { inQ = false; } else cur += ch;
+                            if (ch === '"' && i + 1 < row.length && row[i + 1] === '"') { cur += '"'; i++; }
+                            else if (ch === '"') { inQ = false; } else cur += ch;
                         } else {
                             if (ch === '"') inQ = true;
-                            else if (ch === ',') { r.push(cur);
-                                cur = ''; } else cur += ch;
+                            else if (ch === ',') { r.push(cur); cur = ''; } else cur += ch;
                         }
                     }
                     r.push(cur);
@@ -5938,11 +5265,8 @@
                     const row = parseRow(line);
                     const obj = {};
                     headers.forEach((h, i) => obj[h] = (row[i] || '').trim());
-                    const co = obj[companyCol],
-                        dept = obj[deptCol],
-                        cat = obj[catCol],
-                        notes = obj[notesCol],
-                        month = monthCol ? obj[monthCol] : '';
+                    const co = obj[companyCol], dept = obj[deptCol], cat = obj[catCol], notes = obj[notesCol],
+                          month = monthCol ? obj[monthCol] : '';
                     if (!co || !dept || !cat) return null;
                     return { company: co, department: dept, category: cat, month, notes };
                 }).filter(Boolean);
@@ -5984,12 +5308,10 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 22. CSV Export
+            // 22. CSV Export (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function downloadCSV(headers, rows, filename) {
-                const csv = [headers.map(h => `"${h}"`).join(','), ...rows.map(r => r.map(c => `"${csvEscape(c)}"`).join(
-                    ','))].join('\n');
+                const csv = [headers.map(h => `"${h}"`).join(','), ...rows.map(r => r.map(c => `"${csvEscape(c)}"`).join(','))].join('\n');
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' }));
                 a.download = filename;
@@ -5997,8 +5319,7 @@
                 URL.revokeObjectURL(a.href);
             }
 
-            const csvEscape = t => String(t).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(
-                /[🔴🟢⚠️✅❌]/g, '').trim();
+            const csvEscape = t => String(t).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/[🔴🟢⚠️✅❌]/g, '').trim();
 
             function exportMatrixCSV() {
                 const filtered = getDashboardFiltered();
@@ -6011,8 +5332,7 @@
                     for (const m of months) {
                         if (sE) headers.push(`${m} Expense`);
                         if (sB) headers.push(`${m} Budget`);
-                        if (sV) { headers.push(`${m} Variance`);
-                            headers.push(`${m} Var %`); }
+                        if (sV) { headers.push(`${m} Variance`); headers.push(`${m} Var %`); }
                     }
                     headers.push('Total Exp', 'Total Bud', 'Total Var', 'Total Var %');
                 } else {
@@ -6035,16 +5355,12 @@
                             const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0 };
                             if (sE) rowData.push(d.expense.toFixed(2));
                             if (sB) rowData.push(d.budget.toFixed(2));
-                            if (sV) { rowData.push(d.variance.toFixed(2));
-                                rowData.push(d.variancePercent.toFixed(2)); }
+                            if (sV) { rowData.push(d.variance.toFixed(2)); rowData.push(d.variancePercent.toFixed(2)); }
                         }
                         rowData.push(totals.totalExp.toFixed(2), totals.totalBud.toFixed(2), totals.totalVar.toFixed(2),
                             totals.totalVarPct.toFixed(2));
                     } else {
-                        const eV = [],
-                            bV = [],
-                            vV = [],
-                            vpV = [];
+                        const eV = [], bV = [], vV = [], vpV = [];
                         for (const m of months) {
                             const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0 };
                             eV.push(d.expense);
@@ -6109,8 +5425,8 @@
                 ];
                 const rows = records.map(r => {
                     const note = getNote(r.company, r.department, r.category, r.month);
-                    return [r.company, r.department, r.category, r.month, r.budget.toFixed(2), r.expense.toFixed(
-                        2), r.variance.toFixed(2), r.variancePct.toFixed(2), extractPlainText(r.status).trim(),
+                    return [r.company, r.department, r.category, r.month, r.budget.toFixed(2), r.expense.toFixed(2),
+                        r.variance.toFixed(2), r.variancePct.toFixed(2), extractPlainText(r.status).trim(),
                         note
                     ];
                 });
@@ -6118,9 +5434,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 23. Expense Detail Modal
+            // 23. Expense Detail Modal (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function showExpenseDetails(co, dept, cat, monthFilter) {
                 const exps = store.expenses.filter(e =>
                     e.COMPANY === co && e.COR_DEPT === dept && e.CODE_DESC === cat &&
@@ -6132,8 +5447,8 @@
                 ).reduce((s, r) => s + r.budget, 0);
                 const expTotal = exps.reduce((s, e) => s + toNum(e.TOTAL), 0);
                 const variance = budgetTotal - expTotal,
-                    vp = budgetTotal ? (variance / budgetTotal) * 100 : 0,
-                    vc = varClass(variance);
+                      vp = budgetTotal ? (variance / budgetTotal) * 100 : 0,
+                      vc = varClass(variance);
                 let html =
                     `<p><strong>Budget Total:</strong> ${fmt.currency(budgetTotal)}</p><p><strong>Expense Total:</strong> ${fmt.currency(expTotal)}</p><p><strong>Variance:</strong> <span class="${vc} fw-semibold">${fmt.currency(variance)} (${fmt.percent(vp)})</span></p><p><em>Showing data for ${monthFilter !== 'All' ? 'month: '+monthFilter : 'all months'}</em></p>`;
                 html += exps.length ?
@@ -6146,9 +5461,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 24. Populate Filters
+            // 24. Populate Filters (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function populateFilters() {
                 if (store.hasError || !store.authUser) return;
                 const user = store.authUser;
@@ -6223,9 +5537,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 25. AI Chat
+            // 25. AI Chat (unchanged logic, uses secured groqAI)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function renderAllAIMessages() {
                 renderAIPanelMessages();
                 renderFloatingMessages();
@@ -6313,8 +5626,7 @@
                     }
                 } finally {
                     store.ai.isProcessing = false;
-                    if (inputEl) { inputEl.disabled = false;
-                        inputEl.value = ''; }
+                    if (inputEl) { inputEl.disabled = false; inputEl.value = ''; }
                     if (sendBtn) sendBtn.disabled = false;
                     renderAllAIMessages();
                     if (inputEl) inputEl.focus();
@@ -6352,8 +5664,7 @@
                         const filtered = getDashboardFiltered();
                         const totalBudget = filtered.reduce((s, r) => s + r.budget, 0);
                         const totalExpense = filtered.reduce((s, r) => s + r.expense, 0);
-                        const { variance: totalVar, variancePercent: totalVarPct } = calcMetrics(totalBudget,
-                        totalExpense);
+                        const { variance: totalVar, variancePercent: totalVarPct } = calcMetrics(totalBudget, totalExpense);
                         question =
                             `Analyze the current dashboard view. Overall totals: Budget ₱${totalBudget.toLocaleString()}, Expense ₱${totalExpense.toLocaleString()}, Variance ₱${totalVar.toLocaleString()} (${totalVarPct.toFixed(1)}%). What are the key takeaways and what should management focus on?`;
                         break;
@@ -6382,9 +5693,8 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 26. Modal AI Analysis
+            // 26. Modal AI Analysis (unchanged, uses groqAI)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             async function analyzeModalCategory() {
                 const btn = document.getElementById('modalAiAnalyzeBtn');
                 const container = document.getElementById('modalAiResponseContainer');
@@ -6416,8 +5726,7 @@
                         const addList = [];
                         additionRows.forEach(row => {
                             const month = row.querySelector('.addition-month')?.value || '?';
-                            const amount = parseFormattedNumber(row.querySelector('.addition-amount')?.value ||
-                            '0');
+                            const amount = parseFormattedNumber(row.querySelector('.addition-amount')?.value || '0');
                             const remarks = row.querySelector('.addition-remarks')?.value || '';
                             if (amount !== 0 || remarks) {
                                 addList.push(`- ${month}: ₱${amount.toFixed(2)} (${remarks || 'No remarks'})`);
@@ -6427,8 +5736,7 @@
                     }
 
                     const key = currentModalKey;
-                    let actualBudget = 0,
-                        actualExpense = 0;
+                    let actualBudget = 0, actualExpense = 0;
                     if (key) {
                         const row = document.querySelector(`tr.planning-child-row[data-key="${key}"]`);
                         if (row) {
@@ -6488,9 +5796,8 @@ Keep the response concise, professional, and use bullet points where appropriate
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 27. Fetch Data
+            // 27. Fetch Data (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             async function fetchData({ silent = false, forceRefresh = false } = {}) {
                 const reloadBtn = document.getElementById('reloadSheetsBtn');
                 let savedHtml = null;
@@ -6510,8 +5817,7 @@ Keep the response concise, professional, and use bullet points where appropriate
                         overlay.style.opacity = '1';
                     }
                     if (loadText) loadText.textContent = 'Connecting to Database...';
-                    if (loadSub) loadSub.textContent =
-                    'Fetching budget, expense, division, planning, and multiplier data...';
+                    if (loadSub) loadSub.textContent = 'Fetching budget, expense, division, planning, and multiplier data...';
 
                     let budgetRows, expenseRows, notesRows, closeRows, divisionRows, additionRows, lyRows, multiplierRows,
                         permissionRows;
@@ -6584,8 +5890,7 @@ Keep the response concise, professional, and use bullet points where appropriate
                         CODE_DESC: String(r.code_desc || ''), TOTAL: toNum(r.total) }));
                     store.expenses = expenseRows.map(r => ({ COMPANY: String(r.company || ''),
                         COR_DEPT: String(r.cor_dept || ''), DATE: String(r.date || ''),
-                        CODE_DESC: String(r.code_desc || ''), TOTAL: toNum(r.total), REMARKS: String(r.remarks ||
-                            '') }));
+                        CODE_DESC: String(r.code_desc || ''), TOTAL: toNum(r.total), REMARKS: String(r.remarks || '') }));
                     store.lyExpenses = lyRows.map(r => ({
                         company: String(r.company || ''),
                         cor_dept: String(r.cor_dept || ''),
@@ -6596,8 +5901,7 @@ Keep the response concise, professional, and use bullet points where appropriate
                     store.notesMap = {};
                     for (const n of notesRows) {
                         if (!n.company || !n.cor_dept || !n.code_desc) continue;
-                        store.notesMap[noteKey(n.company, n.cor_dept, n.code_desc, n.month || '')] = String(n.notes ||
-                            '');
+                        store.notesMap[noteKey(n.company, n.cor_dept, n.code_desc, n.month || '')] = String(n.notes || '');
                     }
 
                     store.divisionMap = {};
@@ -6660,9 +5964,8 @@ Keep the response concise, professional, and use bullet points where appropriate
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 28. Init UI
+            // 28. Init UI (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function initUI() {
                 populateFilters();
                 refreshDashboard();
@@ -6677,9 +5980,8 @@ Keep the response concise, professional, and use bullet points where appropriate
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 29. AI Panel Collapse
+            // 29. AI Panel Collapse (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             const AI_PANEL_COLLAPSE_KEY = 'bvAiPanelCollapsed';
 
             function applyAIPanelCollapsed(collapsed) {
@@ -6702,9 +6004,8 @@ Keep the response concise, professional, and use bullet points where appropriate
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 30. Filter sync
+            // 30. Filter sync (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function syncFiltersToSection(section) {
                 const dashCompany = store.filters.dashboard.company;
                 const dashDept = store.filters.dashboard.department;
@@ -6734,15 +6035,13 @@ Keep the response concise, professional, and use bullet points where appropriate
                         document.getElementById('planCompanyFilter').value = dashCompany;
                         document.getElementById('planDeptFilter').value = dashDept;
                         break;
-                    default:
-                        break;
+                    default: break;
                 }
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 31. Event Binding
+            // 31. Event Binding (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function bindEvents() {
                 // Login
                 document.getElementById('loginForm').addEventListener('submit', async e => {
@@ -6818,8 +6117,7 @@ Keep the response concise, professional, and use bullet points where appropriate
                 document.getElementById('companyFilter').addEventListener('change', applyDashFilters);
                 document.getElementById('deptFilter').addEventListener('change', applyDashFilters);
                 document.getElementById('globalSearch').addEventListener('input', debounce(applyDashFilters, 350));
-                document.getElementById('reloadSheetsBtn').addEventListener('click', () => fetchData({ silent: true,
-                    forceRefresh: true }));
+                document.getElementById('reloadSheetsBtn').addEventListener('click', () => fetchData({ silent: true, forceRefresh: true }));
 
                 document.getElementById('resetFilters').addEventListener('click', () => {
                     const f = store.filters.dashboard;
@@ -6842,29 +6140,23 @@ Keep the response concise, professional, and use bullet points where appropriate
                     f.metric = 'all';
                     f.viewMode = 'active';
                     document.getElementById('metricSelect').value = 'all';
-                    document.querySelectorAll('#layoutToggle .toggle-option').forEach(el => el.classList.toggle(
-                        'active', el.dataset.layout === 'month'));
-                    document.querySelectorAll('#viewToggle .toggle-option').forEach(el => el.classList.toggle(
-                        'active', el.dataset.view === 'active'));
+                    document.querySelectorAll('#layoutToggle .toggle-option').forEach(el => el.classList.toggle('active', el.dataset.layout === 'month'));
+                    document.querySelectorAll('#viewToggle .toggle-option').forEach(el => el.classList.toggle('active', el.dataset.view === 'active'));
                     applyDashFilters();
                 });
 
-                document.querySelectorAll('#layoutToggle .toggle-option').forEach(btn => btn.addEventListener(
-                    'click', function() {
-                        this.parentNode.querySelectorAll('.toggle-option').forEach(b => b.classList.remove(
-                            'active'));
-                        this.classList.add('active');
-                        store.filters.dashboard.layout = this.dataset.layout;
-                        refreshDashboard();
-                    }));
-                document.querySelectorAll('#viewToggle .toggle-option').forEach(btn => btn.addEventListener(
-                    'click', function() {
-                        this.parentNode.querySelectorAll('.toggle-option').forEach(b => b.classList.remove(
-                            'active'));
-                        this.classList.add('active');
-                        store.filters.dashboard.viewMode = this.dataset.view;
-                        refreshDashboard();
-                    }));
+                document.querySelectorAll('#layoutToggle .toggle-option').forEach(btn => btn.addEventListener('click', function() {
+                    this.parentNode.querySelectorAll('.toggle-option').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    store.filters.dashboard.layout = this.dataset.layout;
+                    refreshDashboard();
+                }));
+                document.querySelectorAll('#viewToggle .toggle-option').forEach(btn => btn.addEventListener('click', function() {
+                    this.parentNode.querySelectorAll('.toggle-option').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    store.filters.dashboard.viewMode = this.dataset.view;
+                    refreshDashboard();
+                }));
                 document.getElementById('metricSelect').addEventListener('change', function() {
                     store.filters.dashboard.metric = this.value;
                     updateLayoutToggleState();
@@ -6968,8 +6260,7 @@ Keep the response concise, professional, and use bullet points where appropriate
                 });
                 document.querySelectorAll('#deptViewToggle .toggle-option').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        this.parentNode.querySelectorAll('.toggle-option').forEach(b => b.classList.remove(
-                            'active'));
+                        this.parentNode.querySelectorAll('.toggle-option').forEach(b => b.classList.remove('active'));
                         this.classList.add('active');
                         store.filters.deptSummary.viewMode = this.dataset.view;
                         renderDeptSummary();
@@ -7027,9 +6318,7 @@ Keep the response concise, professional, and use bullet points where appropriate
 
                 document.getElementById('savePlanningBtn').addEventListener('click', savePlanning);
                 document.getElementById('resetPlanningBtn').addEventListener('click', function() {
-                    if (confirm(
-                            'Reset all planning inputs (base only) to zero for the current company/department? This will not delete additions from the database.'
-                            )) {
+                    if (confirm('Reset all planning inputs (base only) to zero for the current company/department? This will not delete additions from the database.')) {
                         const f = store.filters.planning;
                         const keys = Object.keys(store.planning.data);
                         for (const key of keys) {
@@ -7065,8 +6354,7 @@ Keep the response concise, professional, and use bullet points where appropriate
                         const row = e.target.closest('.addition-row');
                         if (row) {
                             row.remove();
-                            if (this.querySelectorAll('.addition-row').length === 0) document.getElementById(
-                                'noAdditionsMsg').style.display = 'block';
+                            if (this.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg').style.display = 'block';
                             updateModalTotals();
                         }
                     }
@@ -7084,10 +6372,8 @@ Keep the response concise, professional, and use bullet points where appropriate
                 document.getElementById('exportExTableBtn').addEventListener('click', () =>
                     exportDetailTableCSV(store.tableData.exceptions, 'explanation_list.csv'));
 
-                document.getElementById('saveAllBvNotes').addEventListener('click', () => saveAllNotes(
-                    '#budgetVarianceSection .table-container'));
-                document.getElementById('saveAllExNotes').addEventListener('click', () => saveAllNotes(
-                    '#exceptionsSection .table-container'));
+                document.getElementById('saveAllBvNotes').addEventListener('click', () => saveAllNotes('#budgetVarianceSection .table-container'));
+                document.getElementById('saveAllExNotes').addEventListener('click', () => saveAllNotes('#exceptionsSection .table-container'));
 
                 const TITLES = {
                     dashboard: 'Budget Variance Dashboard',
@@ -7098,37 +6384,32 @@ Keep the response concise, professional, and use bullet points where appropriate
                     files: 'File Management'
                 };
 
-                // Sidebar navigation with filter sync
-                document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click',
-                    function() {
-                        document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
-                        this.classList.add('active');
-                        const section = this.dataset.section;
+                document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click', function() {
+                    document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    const section = this.dataset.section;
 
-                        if (section !== 'files') {
-                            syncFiltersToSection(section);
-                        }
+                    if (section !== 'files') {
+                        syncFiltersToSection(section);
+                    }
 
-                        document.querySelectorAll('.section-content').forEach(el => el.classList.remove(
-                            'active-section'));
-                        const target = document.getElementById(section + 'Section');
-                        if (target) target.classList.add('active-section');
-                        document.getElementById('pageTitle').textContent = TITLES[section] || section;
-                        store.currentSection = section;
+                    document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active-section'));
+                    const target = document.getElementById(section + 'Section');
+                    if (target) target.classList.add('active-section');
+                    document.getElementById('pageTitle').textContent = TITLES[section] || section;
+                    store.currentSection = section;
 
-                        if (section === 'budgetVariance') renderBudgetVariance();
-                        if (section === 'exceptions') renderExceptions();
-                        if (section === 'deptSummary') renderDeptSummary();
-                        if (section === 'planning') renderPlanning();
-                    }));
+                    if (section === 'budgetVariance') renderBudgetVariance();
+                    if (section === 'exceptions') renderExceptions();
+                    if (section === 'deptSummary') renderDeptSummary();
+                    if (section === 'planning') renderPlanning();
+                }));
 
                 document.addEventListener('click', async e => {
                     const btn = e.target.closest('.save-note-btn');
                     if (!btn) return;
-                    const co = attrDecode(btn.dataset.company),
-                        dept = attrDecode(btn.dataset.dept),
-                        cat = attrDecode(btn.dataset.cat),
-                        month = attrDecode(btn.dataset.month || '');
+                    const co = attrDecode(btn.dataset.company), dept = attrDecode(btn.dataset.dept),
+                          cat = attrDecode(btn.dataset.cat), month = attrDecode(btn.dataset.month || '');
                     const cell = btn.closest('.notes-cell');
                     const notes = cell.querySelector('.variance-note-input').value;
                     const statusEl = cell.querySelector('.note-save-status');
@@ -7144,8 +6425,7 @@ Keep the response concise, professional, and use bullet points where appropriate
                 document.addEventListener('click', e => {
                     const el = e.target.closest('.view-details-btn, .view-exception-details');
                     if (!el) return;
-                    showExpenseDetails(attrDecode(el.dataset.company), attrDecode(el.dataset.dept), attrDecode(el
-                        .dataset.cat), attrDecode(el.dataset.month || 'All'));
+                    showExpenseDetails(attrDecode(el.dataset.company), attrDecode(el.dataset.dept), attrDecode(el.dataset.cat), attrDecode(el.dataset.month || 'All'));
                 });
 
                 document.getElementById('togglePassword').addEventListener('click', function() {
@@ -7277,10 +6557,8 @@ Keep the response concise, professional, and use bullet points where appropriate
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             // 32. Boot
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
             function boot() {
-                if (CONFIG.SUPABASE_URL.includes('YOUR_PROJECT_ID') || CONFIG.SUPABASE_ANON_KEY.includes(
-                        'YOUR_ANON_KEY')) {
+                if (CONFIG.SUPABASE_URL.includes('YOUR_PROJECT_ID') || CONFIG.SUPABASE_ANON_KEY.includes('YOUR_ANON_KEY')) {
                     document.getElementById('loadingOverlay').innerHTML =
                         `<div class="text-center px-3"><i class="fas fa-cog fa-3x text-warning mb-3"></i><h5 class="text-warning">Setup Required</h5><p class="text-muted">Open <strong>index.html</strong> and replace<br><code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code><br>with your Supabase project values.</p><p class="small text-muted">Find them in: Supabase Dashboard → Project Settings → API</p></div>`;
                     document.getElementById('loadingOverlay').style.display = 'flex';
