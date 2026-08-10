@@ -30,8 +30,14 @@
             --text-muted: #6c757d;
             --scroll-max-height: 480px;
         }
-        * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
-        body { background: var(--gray-bg); overflow-x: hidden; }
+        * {
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            background: var(--gray-bg);
+            overflow-x: hidden;
+        }
 
         .sidebar {
             background: var(--blue-secondary);
@@ -42,9 +48,11 @@
             z-index: 1030;
             display: flex;
             flex-direction: column;
-            box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
         }
-        .sidebar.collapsed { margin-left: -260px; }
+        .sidebar.collapsed {
+            margin-left: -260px;
+        }
         .sidebar .nav-link {
             color: #c0d9ec;
             padding: 12px 20px;
@@ -79,7 +87,7 @@
             background: #fff;
             border-radius: 24px;
             transition: transform .2s, background .2s;
-            box-shadow: 0 4px 12px rgba(0,0,0,.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .02);
             border: 1px solid #eef2f6;
         }
         .table-container {
@@ -99,7 +107,9 @@
             background: #ffffff !important;
             z-index: 5;
         }
-        thead .sticky-col { z-index: 12; }
+        thead .sticky-col {
+            z-index: 12;
+        }
 
         .matrix-scroll {
             overflow: auto;
@@ -108,10 +118,21 @@
             border-radius: 12px;
             border: 1px solid #eef2f6;
         }
-        .matrix-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
-        .matrix-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 6px; }
-        .matrix-scroll::-webkit-scrollbar-thumb { background: #c1c7cd; border-radius: 6px; }
-        .matrix-scroll::-webkit-scrollbar-thumb:hover { background: #a0a7ae; }
+        .matrix-scroll::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .matrix-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 6px;
+        }
+        .matrix-scroll::-webkit-scrollbar-thumb {
+            background: #c1c7cd;
+            border-radius: 6px;
+        }
+        .matrix-scroll::-webkit-scrollbar-thumb:hover {
+            background: #a0a7ae;
+        }
         .matrix-scroll table {
             border-collapse: separate;
             border-spacing: 0;
@@ -161,7 +182,9 @@
             min-width: 180px;
             max-width: 220px;
         }
-        .matrix-scroll tbody tr.matrix-total-row td:first-child { background: var(--planning-stripe); }
+        .matrix-scroll tbody tr.matrix-total-row td:first-child {
+            background: var(--planning-stripe);
+        }
         .matrix-scroll tbody tr.matrix-total-row {
             background: var(--planning-stripe);
             font-weight: 600;
@@ -170,9 +193,15 @@
             border-top: 2px solid #d0d5dc;
             border-bottom: 2px solid #d0d5dc;
         }
-        .matrix-scroll tbody tr.matrix-child-row td:first-child { padding-left: 2.2rem; }
-        .matrix-scroll tbody tr:hover td:first-child { background: var(--blue-bg); }
-        .matrix-scroll tbody tr:hover td { background: var(--blue-bg); }
+        .matrix-scroll tbody tr.matrix-child-row td:first-child {
+            padding-left: 2.2rem;
+        }
+        .matrix-scroll tbody tr:hover td:first-child {
+            background: var(--blue-bg);
+        }
+        .matrix-scroll tbody tr:hover td {
+            background: var(--blue-bg);
+        }
         .matrix-scroll .progress-threshold {
             width: 60px;
             height: 4px;
@@ -189,7 +218,9 @@
             transition: width .3s;
         }
 
-        .detail-table-scroll { overflow: visible; }
+        .detail-table-scroll {
+            overflow: visible;
+        }
         .detail-table-scroll .table-scroll-wrapper {
             max-height: var(--scroll-max-height);
             overflow: auto;
@@ -197,10 +228,21 @@
             border: 1px solid #eef2f6;
             margin-top: 0.5rem;
         }
-        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar { width: 10px; height: 10px; }
-        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 6px; }
-        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb { background: #c1c7cd; border-radius: 6px; }
-        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb:hover { background: #a0a7ae; }
+        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 6px;
+        }
+        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: #c1c7cd;
+            border-radius: 6px;
+        }
+        .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #a0a7ae;
+        }
         .detail-table-scroll .table-scroll-wrapper table {
             border-collapse: separate;
             border-spacing: 0;
@@ -230,22 +272,32 @@
             vertical-align: middle;
             text-align: left;
         }
-        .detail-table-scroll .table-scroll-wrapper table thead th.text-end { text-align: right; }
+        .detail-table-scroll .table-scroll-wrapper table thead th.text-end {
+            text-align: right;
+        }
         .detail-table-scroll .table-scroll-wrapper table tbody td {
             padding: 4px 6px;
             border-bottom: 1px solid var(--border-light);
             vertical-align: middle;
             background: #fff;
         }
-        .detail-table-scroll .table-scroll-wrapper table tbody tr:hover td { background: var(--blue-bg); }
+        .detail-table-scroll .table-scroll-wrapper table tbody tr:hover td {
+            background: var(--blue-bg);
+        }
 
         .notes-cell {
             min-width: 200px;
             max-width: 280px;
         }
 
-        .text-negative { color: var(--soft-red) !important; font-weight: 600; }
-        .text-positive { color: var(--emerald) !important; font-weight: 600; }
+        .text-negative {
+            color: var(--soft-red) !important;
+            font-weight: 600;
+        }
+        .text-positive {
+            color: var(--emerald) !important;
+            font-weight: 600;
+        }
 
         .planning-input {
             width: 108px;
@@ -260,7 +312,7 @@
         .planning-input:focus {
             border-color: var(--blue-primary);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(13,74,122,0.25);
+            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.25);
         }
         .planning-input.aggregated {
             border: none;
@@ -296,10 +348,21 @@
             max-height: var(--scroll-max-height);
             scroll-behavior: smooth;
         }
-        .planning-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
-        .planning-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 6px; }
-        .planning-scroll::-webkit-scrollbar-thumb { background: #c1c7cd; border-radius: 6px; }
-        .planning-scroll::-webkit-scrollbar-thumb:hover { background: #a0a7ae; }
+        .planning-scroll::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .planning-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 6px;
+        }
+        .planning-scroll::-webkit-scrollbar-thumb {
+            background: #c1c7cd;
+            border-radius: 6px;
+        }
+        .planning-scroll::-webkit-scrollbar-thumb:hover {
+            background: #a0a7ae;
+        }
         .planning-scroll table {
             border-collapse: separate;
             border-spacing: 0;
@@ -342,7 +405,9 @@
             min-width: 200px;
             max-width: 260px;
         }
-        .planning-scroll tbody tr.planning-total-row td:first-child { background: var(--planning-stripe); }
+        .planning-scroll tbody tr.planning-total-row td:first-child {
+            background: var(--planning-stripe);
+        }
         .planning-scroll tbody tr.planning-total-row {
             background: var(--planning-stripe);
             font-weight: 600;
@@ -351,9 +416,15 @@
             border-top: 2px solid #d0d5dc;
             border-bottom: 2px solid #d0d5dc;
         }
-        .planning-scroll tbody tr.planning-child-row td:first-child { padding-left: 2.2rem; }
-        .planning-scroll tbody tr:hover td:first-child { background: var(--blue-bg); }
-        .planning-scroll tbody tr:hover td { background: var(--blue-bg); }
+        .planning-scroll tbody tr.planning-child-row td:first-child {
+            padding-left: 2.2rem;
+        }
+        .planning-scroll tbody tr:hover td:first-child {
+            background: var(--blue-bg);
+        }
+        .planning-scroll tbody tr:hover td {
+            background: var(--blue-bg);
+        }
         .planning-scroll .planning-input {
             width: 100%;
             min-width: 80px;
@@ -372,7 +443,7 @@
         .planning-scroll .planning-input:focus {
             border-color: var(--blue-primary);
             background: #fff;
-            box-shadow: 0 0 0 2px rgba(13,74,122,0.15);
+            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
         }
         .planning-scroll .planning-input.aggregated {
             border: none;
@@ -385,10 +456,12 @@
             background: #fff;
             border-color: #d0d5dc;
         }
-        .planning-scroll .planning-input.editable:hover { border-color: #9aa3af; }
+        .planning-scroll .planning-input.editable:hover {
+            border-color: #9aa3af;
+        }
         .planning-scroll .planning-input.editable:focus {
             border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13,74,122,0.2);
+            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.2);
         }
         .planning-scroll .planning-input.formula {
             background: #f0f4fa;
@@ -429,7 +502,9 @@
             font-size: 0.8rem;
             letter-spacing: 0.05em;
         }
-        .hide-month-cols .month-col { display: none !important; }
+        .hide-month-cols .month-col {
+            display: none !important;
+        }
 
         .pagination-bar {
             display: flex;
@@ -460,7 +535,10 @@
             border-color: var(--blue-primary);
             font-weight: 600;
         }
-        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         .toggle-group {
             background: #f1f5f9;
@@ -497,8 +575,13 @@
             cursor: pointer;
             user-select: none;
         }
-        .clickable-header:hover { background-color: rgba(0,0,0,0.05); }
-        .sort-indicator { margin-left: 6px; font-size: 0.7rem; }
+        .clickable-header:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        .sort-indicator {
+            margin-left: 6px;
+            font-size: 0.7rem;
+        }
 
         .permission-toggle {
             display: inline-flex;
@@ -512,7 +595,9 @@
             cursor: pointer;
             transition: background .2s;
         }
-        .permission-toggle:hover { background: #e9edf2; }
+        .permission-toggle:hover {
+            background: #e9edf2;
+        }
         .permission-toggle .toggle-indicator {
             width: 44px;
             height: 24px;
@@ -532,10 +617,14 @@
             background: #fff;
             border-radius: 50%;
             transition: transform .2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
-        .permission-toggle.enabled .toggle-indicator { background: var(--emerald); }
-        .permission-toggle.enabled .toggle-indicator::after { transform: translateX(20px); }
+        .permission-toggle.enabled .toggle-indicator {
+            background: var(--emerald);
+        }
+        .permission-toggle.enabled .toggle-indicator::after {
+            transform: translateX(20px);
+        }
         .permission-toggle .status-label {
             font-weight: 500;
             min-width: 60px;
@@ -553,7 +642,7 @@
         .planning-modal-input:focus {
             border-color: var(--blue-primary);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(13,74,122,0.25);
+            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.25);
         }
         .planning-modal-input[readonly] {
             background: #f8f9fa;
@@ -567,6 +656,13 @@
             border-radius: 6px;
             padding: 4px 0;
             margin-bottom: 4px;
+        }
+        .addition-group-row {
+            background: #e9edf2;
+            border-radius: 6px;
+            padding: 6px 0;
+            margin-bottom: 6px;
+            font-weight: 600;
         }
         .help-text {
             font-size: 0.8rem;
@@ -602,7 +698,9 @@
             margin-bottom: 12px;
             animation: fadeIn 0.3s ease;
         }
-        .ai-message.user { justify-content: flex-end; }
+        .ai-message.user {
+            justify-content: flex-end;
+        }
         .ai-message .bubble {
             max-width: 80%;
             padding: 10px 16px;
@@ -631,15 +729,31 @@
             font-size: 1.4rem;
             line-height: 1;
         }
-        .ai-message .bubble .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .ai-message .bubble .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        .ai-message .bubble .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .ai-message .bubble .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
         @keyframes dotPulse {
-            0%,80%,100% { opacity: 0.2; }
-            40% { opacity: 1; }
+            0%,
+            80%,
+            100% {
+                opacity: 0.2;
+            }
+            40% {
+                opacity: 1;
+            }
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .ai-chat-input-row {
             display: flex;
@@ -660,7 +774,7 @@
         }
         .ai-chat-input-row input:focus {
             border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13,74,122,0.15);
+            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
         }
         .ai-chat-input-row button {
             border-radius: 50%;
@@ -676,8 +790,13 @@
             transition: background .2s;
             flex-shrink: 0;
         }
-        .ai-chat-input-row button:hover { background: var(--blue-secondary); }
-        .ai-chat-input-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .ai-chat-input-row button:hover {
+            background: var(--blue-secondary);
+        }
+        .ai-chat-input-row button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         .ai-suggestions {
             display: flex;
@@ -698,12 +817,26 @@
             transition: background .2s;
             white-space: nowrap;
         }
-        .ai-suggestions .suggestion-chip:hover { background: #d0dce8; }
-        .ai-assistant-panel.collapsed .ai-assistant-body { display: none; }
-        .ai-assistant-panel .ai-header-actions { display: flex; align-items: center; gap: 6px; }
-        .ai-assistant-panel #aiTogglePanelBtn .ai-toggle-label-show { display: none; }
-        .ai-assistant-panel.collapsed #aiTogglePanelBtn .ai-toggle-label-hide { display: none; }
-        .ai-assistant-panel.collapsed #aiTogglePanelBtn .ai-toggle-label-show { display: inline; }
+        .ai-suggestions .suggestion-chip:hover {
+            background: #d0dce8;
+        }
+        .ai-assistant-panel.collapsed .ai-assistant-body {
+            display: none;
+        }
+        .ai-assistant-panel .ai-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ai-assistant-panel #aiTogglePanelBtn .ai-toggle-label-show {
+            display: none;
+        }
+        .ai-assistant-panel.collapsed #aiTogglePanelBtn .ai-toggle-label-hide {
+            display: none;
+        }
+        .ai-assistant-panel.collapsed #aiTogglePanelBtn .ai-toggle-label-show {
+            display: inline;
+        }
         .ai-error {
             color: var(--soft-red);
             font-size: 0.8rem;
@@ -724,7 +857,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s, background 0.2s;
         }
         #floatingAiButton:hover {
@@ -739,7 +872,7 @@
             max-height: 500px;
             background: #fff;
             border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             display: none;
             flex-direction: column;
             z-index: 9998;
@@ -747,7 +880,9 @@
             border: 1px solid #e2e8f0;
             transition: opacity 0.2s;
         }
-        #floatingAiChat.open { display: flex; }
+        #floatingAiChat.open {
+            display: flex;
+        }
         .floating-header {
             padding: 12px 16px;
             background: var(--blue-primary);
@@ -764,7 +899,9 @@
             cursor: pointer;
             padding: 0 4px;
         }
-        .floating-header button:hover { opacity: 0.8; }
+        .floating-header button:hover {
+            opacity: 0.8;
+        }
         #floatingChatMessages {
             flex: 1;
             overflow-y: auto;
@@ -778,7 +915,9 @@
             margin-bottom: 12px;
             animation: fadeIn 0.3s ease;
         }
-        .floating-message.user { justify-content: flex-end; }
+        .floating-message.user {
+            justify-content: flex-end;
+        }
         .floating-message .bubble {
             max-width: 80%;
             padding: 8px 14px;
@@ -817,7 +956,7 @@
         }
         .floating-input-row input:focus {
             border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13,74,122,0.15);
+            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
         }
         .floating-input-row button {
             background: var(--blue-primary);
@@ -833,8 +972,13 @@
             transition: background 0.2s;
             flex-shrink: 0;
         }
-        .floating-input-row button:hover { background: var(--blue-secondary); }
-        .floating-input-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .floating-input-row button:hover {
+            background: var(--blue-secondary);
+        }
+        .floating-input-row button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .floating-loading-dots {
             display: inline-flex;
             gap: 4px;
@@ -844,8 +988,12 @@
             font-size: 1.4rem;
             line-height: 1;
         }
-        .floating-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .floating-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        .floating-loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .floating-loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
 
         .files-grid {
             display: grid;
@@ -868,7 +1016,7 @@
         }
         .file-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
         .file-card .icon-wrapper {
             width: 80px;
@@ -888,13 +1036,18 @@
             background: #e3f2fd;
             color: #0d47a1;
         }
-        .file-card h5 { font-weight: 600; margin-bottom: 0.5rem; }
+        .file-card h5 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
         .file-card p {
             color: var(--text-muted);
             font-size: 0.9rem;
             margin-bottom: 1rem;
         }
-        .file-card .btn { min-width: 140px; }
+        .file-card .btn {
+            min-width: 140px;
+        }
 
         .upload-area {
             border: 2px dashed #cbd5e1;
@@ -939,7 +1092,7 @@
             padding: 2.5rem;
             width: 100%;
             max-width: 420px;
-            box-shadow: 0 25px 50px rgba(0,0,0,.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, .3);
         }
         .login-card .brand {
             color: var(--blue-primary);
@@ -951,13 +1104,17 @@
             width: auto;
             margin-bottom: 8px;
         }
-        #appShell { display: none; }
-        #appShell.authenticated { display: block; }
+        #appShell {
+            display: none;
+        }
+        #appShell.authenticated {
+            display: block;
+        }
 
         .loading-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(255,255,255,.95);
+            background: rgba(255, 255, 255, .95);
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -974,10 +1131,18 @@
             animation: spin 1s linear infinite;
             margin-bottom: 20px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-        .section-content { display: none; }
-        .section-content.active-section { display: block; }
+        .section-content {
+            display: none;
+        }
+        .section-content.active-section {
+            display: block;
+        }
 
         body.dark-mode {
             background: var(--blue-dark-bg);
@@ -994,7 +1159,9 @@
         .dark-mode .planning-sticky-col {
             background: var(--blue-dark-mode) !important;
         }
-        .dark-mode .planning-total-row { background-color: var(--blue-dark-bg); }
+        .dark-mode .planning-total-row {
+            background-color: var(--blue-dark-bg);
+        }
         .dark-mode .planning-input {
             background: #1e3a5a;
             color: #e2e8f0;
@@ -1005,59 +1172,110 @@
             border: none;
             color: #e2e8f0;
         }
-        .dark-mode .planning-scroll::-webkit-scrollbar-track { background: #1a2a3a; }
-        .dark-mode .planning-scroll::-webkit-scrollbar-thumb { background: #3a4a5a; }
+        .dark-mode .planning-scroll::-webkit-scrollbar-track {
+            background: #1a2a3a;
+        }
+        .dark-mode .planning-scroll::-webkit-scrollbar-thumb {
+            background: #3a4a5a;
+        }
         .dark-mode .planning-scroll thead th {
             background: #1a2a3a;
             color: #d0d5dc;
             border-bottom-color: #3a4a5a;
         }
-        .dark-mode .planning-scroll thead th.planning-sticky-col { background: #1a2a3a; }
-        .dark-mode .planning-scroll tbody td:first-child { background: var(--blue-dark-mode); }
-        .dark-mode .planning-scroll tbody tr.planning-total-row td:first-child { background: var(--blue-dark-bg); }
-        .dark-mode .planning-scroll tbody tr.planning-total-row { background: var(--blue-dark-bg); }
-        .dark-mode .planning-scroll tbody tr:hover td:first-child { background: #1e3a5a; }
-        .dark-mode .planning-scroll tbody tr:hover td { background: #1e3a5a; }
+        .dark-mode .planning-scroll thead th.planning-sticky-col {
+            background: #1a2a3a;
+        }
+        .dark-mode .planning-scroll tbody td:first-child {
+            background: var(--blue-dark-mode);
+        }
+        .dark-mode .planning-scroll tbody tr.planning-total-row td:first-child {
+            background: var(--blue-dark-bg);
+        }
+        .dark-mode .planning-scroll tbody tr.planning-total-row {
+            background: var(--blue-dark-bg);
+        }
+        .dark-mode .planning-scroll tbody tr:hover td:first-child {
+            background: #1e3a5a;
+        }
+        .dark-mode .planning-scroll tbody tr:hover td {
+            background: #1e3a5a;
+        }
         .dark-mode .planning-scroll .planning-input.editable {
             background: #1e3a5a;
             border-color: #3a4a5a;
             color: #e2e8f0;
         }
-        .dark-mode .planning-scroll .planning-input.editable:hover { border-color: #5a7a9a; }
+        .dark-mode .planning-scroll .planning-input.editable:hover {
+            border-color: #5a7a9a;
+        }
         .dark-mode .planning-scroll .planning-input.editable:focus {
             border-color: var(--blue-light);
-            box-shadow: 0 0 0 2px rgba(26,107,176,0.3);
+            box-shadow: 0 0 0 2px rgba(26, 107, 176, 0.3);
         }
         .dark-mode .planning-scroll .planning-input.formula {
             background: #1e3a5a;
             border-color: #3a4a5a;
             color: #b0c8e0;
         }
-        .dark-mode .month-label { color: #adb5bd; }
-        .dark-mode .help-text { color: #adb5bd; }
-        .dark-mode .addition-row { background: #1e3a5a; }
+        .dark-mode .month-label {
+            color: #adb5bd;
+        }
+        .dark-mode .help-text {
+            color: #adb5bd;
+        }
+        .dark-mode .addition-row {
+            background: #1e3a5a;
+        }
+        .dark-mode .addition-group-row {
+            background: #2a3a4a;
+        }
         .dark-mode .planning-modal-input {
             background: #1e3a5a;
             color: #e2e8f0;
             border-color: #2a4a6a;
         }
-        .dark-mode .matrix-scroll::-webkit-scrollbar-track { background: #1a2a3a; }
-        .dark-mode .matrix-scroll::-webkit-scrollbar-thumb { background: #3a4a5a; }
-        .dark-mode .matrix-scroll thead { background: #1a2a3a; }
+        .dark-mode .matrix-scroll::-webkit-scrollbar-track {
+            background: #1a2a3a;
+        }
+        .dark-mode .matrix-scroll::-webkit-scrollbar-thumb {
+            background: #3a4a5a;
+        }
+        .dark-mode .matrix-scroll thead {
+            background: #1a2a3a;
+        }
         .dark-mode .matrix-scroll thead th {
             background: #1a2a3a;
             color: #d0d5dc;
             border-bottom-color: #3a4a5a;
         }
-        .dark-mode .matrix-scroll thead th.sticky-col { background: #1a2a3a; }
-        .dark-mode .matrix-scroll tbody td:first-child { background: var(--blue-dark-mode); }
-        .dark-mode .matrix-scroll tbody tr.matrix-total-row td:first-child { background: var(--blue-dark-bg); }
-        .dark-mode .matrix-scroll tbody tr.matrix-total-row { background: var(--blue-dark-bg); }
-        .dark-mode .matrix-scroll tbody tr:hover td:first-child { background: #1e3a5a; }
-        .dark-mode .matrix-scroll tbody tr:hover td { background: #1e3a5a; }
-        .dark-mode .matrix-scroll .progress-threshold { background: #2a3a4a; }
-        .dark-mode .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-track { background: #1a2a3a; }
-        .dark-mode .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb { background: #3a4a5a; }
+        .dark-mode .matrix-scroll thead th.sticky-col {
+            background: #1a2a3a;
+        }
+        .dark-mode .matrix-scroll tbody td:first-child {
+            background: var(--blue-dark-mode);
+        }
+        .dark-mode .matrix-scroll tbody tr.matrix-total-row td:first-child {
+            background: var(--blue-dark-bg);
+        }
+        .dark-mode .matrix-scroll tbody tr.matrix-total-row {
+            background: var(--blue-dark-bg);
+        }
+        .dark-mode .matrix-scroll tbody tr:hover td:first-child {
+            background: #1e3a5a;
+        }
+        .dark-mode .matrix-scroll tbody tr:hover td {
+            background: #1e3a5a;
+        }
+        .dark-mode .matrix-scroll .progress-threshold {
+            background: #2a3a4a;
+        }
+        .dark-mode .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-track {
+            background: #1a2a3a;
+        }
+        .dark-mode .detail-table-scroll .table-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: #3a4a5a;
+        }
         .dark-mode .detail-table-scroll .table-scroll-wrapper table thead th {
             background: #1a2a3a;
             color: #d0d5dc;
@@ -1067,7 +1285,9 @@
             background: var(--blue-dark-mode);
             border-bottom-color: #1e3a5a;
         }
-        .dark-mode .detail-table-scroll .table-scroll-wrapper table tbody tr:hover td { background: #1e3a5a; }
+        .dark-mode .detail-table-scroll .table-scroll-wrapper table tbody tr:hover td {
+            background: #1e3a5a;
+        }
         .dark-mode .file-card {
             background: var(--blue-dark-mode);
             border-color: #1e3a5a;
@@ -1087,13 +1307,15 @@
         }
         .dark-mode .detail-table-scroll .table-scroll-wrapper table tbody td .notes-cell textarea:focus {
             border-color: var(--blue-light);
-            box-shadow: 0 0 0 2px rgba(26,107,176,0.2);
+            box-shadow: 0 0 0 2px rgba(26, 107, 176, 0.2);
         }
         .dark-mode .ai-assistant-panel {
             background: var(--blue-dark-mode);
             border-color: #1e3a5a;
         }
-        .dark-mode .ai-chat-messages { background: #0f1e2e; }
+        .dark-mode .ai-chat-messages {
+            background: #0f1e2e;
+        }
         .dark-mode .ai-message.assistant .bubble {
             background: #1e3a5a;
             color: #e2e8f0;
@@ -1109,7 +1331,7 @@
         }
         .dark-mode .ai-chat-input-row input:focus {
             border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13,74,122,0.15);
+            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
         }
         .dark-mode .ai-suggestions {
             background: #0f1e2e;
@@ -1119,12 +1341,16 @@
             background: #1e3a5a;
             color: #8bb9e0;
         }
-        .dark-mode .ai-suggestions .suggestion-chip:hover { background: #2a4a6a; }
+        .dark-mode .ai-suggestions .suggestion-chip:hover {
+            background: #2a4a6a;
+        }
         .dark-mode #floatingAiChat {
             background: var(--blue-dark-mode);
             border-color: #1e3a5a;
         }
-        .dark-mode #floatingChatMessages { background: #0f1e2e; }
+        .dark-mode #floatingChatMessages {
+            background: #0f1e2e;
+        }
         .dark-mode .floating-message.assistant .bubble {
             background: #1e3a5a;
             color: #e2e8f0;
@@ -1140,14 +1366,18 @@
         }
         .dark-mode .floating-input-row input:focus {
             border-color: var(--blue-primary);
-            box-shadow: 0 0 0 2px rgba(13,74,122,0.15);
+            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
         }
         .dark-mode .permission-toggle {
             background: #1e3a5a;
             border-color: #2a4a6a;
         }
-        .dark-mode .permission-toggle .status-label { color: #e2e8f0; }
-        .dark-mode .permission-toggle:hover { background: #2a4a6a; }
+        .dark-mode .permission-toggle .status-label {
+            color: #e2e8f0;
+        }
+        .dark-mode .permission-toggle:hover {
+            background: #2a4a6a;
+        }
         .dark-mode .planning-modal-input[readonly] {
             background: #1e3a5a;
             color: #b0c8e0;
@@ -1160,10 +1390,14 @@
         }
         .dark-mode .planning-modal-input:focus {
             border-color: var(--blue-light);
-            box-shadow: 0 0 0 2px rgba(26,107,176,0.3);
+            box-shadow: 0 0 0 2px rgba(26, 107, 176, 0.3);
         }
-        .dark-mode .toggle-group { background: #1a2a3a; }
-        .dark-mode .toggle-group .toggle-option { color: #e2e8f0; }
+        .dark-mode .toggle-group {
+            background: #1a2a3a;
+        }
+        .dark-mode .toggle-group .toggle-option {
+            color: #e2e8f0;
+        }
         .dark-mode .toggle-group .toggle-option.active {
             background: var(--blue-primary);
             color: #fff;
@@ -1184,14 +1418,18 @@
             background: #4a5a6a;
             color: #e2e8f0;
         }
-        .dark-mode .planning-toolbar .text-file-export-btn:hover { background: #5a6a7a; }
+        .dark-mode .planning-toolbar .text-file-export-btn:hover {
+            background: #5a6a7a;
+        }
 
         @media (max-width: 768px) {
             .toggle-group .toggle-option {
                 font-size: .75rem;
                 padding: 4px 10px;
             }
-            .month-label { font-size: 0.5rem; }
+            .month-label {
+                font-size: 0.5rem;
+            }
             .planning-scroll table {
                 min-width: 1200px;
                 font-size: 0.75rem;
@@ -1213,8 +1451,12 @@
                 width: 16px;
                 height: 16px;
             }
-            .permission-toggle.enabled .toggle-indicator::after { transform: translateX(16px); }
-            .matrix-scroll { max-height: 320px; }
+            .permission-toggle.enabled .toggle-indicator::after {
+                transform: translateX(16px);
+            }
+            .matrix-scroll {
+                max-height: 320px;
+            }
             .matrix-scroll table {
                 min-width: 700px;
                 font-size: 0.7rem;
@@ -1223,7 +1465,9 @@
                 min-width: 120px;
                 max-width: 150px;
             }
-            .detail-table-scroll .table-scroll-wrapper { max-height: 320px; }
+            .detail-table-scroll .table-scroll-wrapper {
+                max-height: 320px;
+            }
             .detail-table-scroll .table-scroll-wrapper table {
                 min-width: 1000px;
                 font-size: 0.7rem;
@@ -1248,7 +1492,9 @@
             gap: 8px;
             align-items: center;
         }
-        .planning-toolbar .btn { white-space: nowrap; }
+        .planning-toolbar .btn {
+            white-space: nowrap;
+        }
         .text-file-export-btn {
             background: #6c757d;
             color: #fff;
@@ -1258,7 +1504,9 @@
             background: #5a6268;
             color: #fff;
         }
-        .planning-excluded-division { display: none !important; }
+        .planning-excluded-division {
+            display: none !important;
+        }
         .matrix-toggle {
             background: none;
             border: none;
@@ -1268,15 +1516,25 @@
             color: inherit;
             margin-right: 4px;
         }
-        .matrix-toggle .fa-chevron-right { color: #6c757d; }
-        .matrix-toggle .fa-chevron-down { color: #0d4a7a; }
+        .matrix-toggle .fa-chevron-right {
+            color: #6c757d;
+        }
+        .matrix-toggle .fa-chevron-down {
+            color: #0d4a7a;
+        }
         .matrix-total-row {
             background-color: #f8fafc;
             font-weight: 600;
         }
-        .matrix-total-row td { border-top: 2px solid #dee2e6; }
-        .matrix-child-row td:first-child { padding-left: 2rem; }
-        .matrix-child-row:hover { background: var(--blue-bg) !important; }
+        .matrix-total-row td {
+            border-top: 2px solid #dee2e6;
+        }
+        .matrix-child-row td:first-child {
+            padding-left: 2rem;
+        }
+        .matrix-child-row:hover {
+            background: var(--blue-bg) !important;
+        }
         .matrix-total-row td:first-child {
             position: sticky;
             left: 0;
@@ -1289,14 +1547,20 @@
             background: #ffffff !important;
             z-index: 2;
         }
-        .dark-mode .matrix-total-row td:first-child { background: var(--blue-dark-bg) !important; }
-        .dark-mode .matrix-child-row td:first-child { background: var(--blue-dark-mode) !important; }
+        .dark-mode .matrix-total-row td:first-child {
+            background: var(--blue-dark-bg) !important;
+        }
+        .dark-mode .matrix-child-row td:first-child {
+            background: var(--blue-dark-mode) !important;
+        }
         .planning-search-row {
             margin-top: 12px;
             padding-top: 12px;
             border-top: 1px solid var(--border-light);
         }
-        .dark-mode .planning-search-row { border-top-color: #1e3a5a; }
+        .dark-mode .planning-search-row {
+            border-top-color: #1e3a5a;
+        }
         .planning-edit-btn {
             margin-left: 6px;
             font-size: 0.8rem;
@@ -1305,7 +1569,9 @@
             opacity: 0.6;
             transition: opacity .2s;
         }
-        .planning-edit-btn:hover { opacity: 1; }
+        .planning-edit-btn:hover {
+            opacity: 1;
+        }
         .planning-toggle {
             background: none;
             border: none;
@@ -1315,8 +1581,12 @@
             color: inherit;
             margin-right: 4px;
         }
-        .planning-toggle .fa-chevron-right { color: #6c757d; }
-        .planning-toggle .fa-chevron-down { color: #0d4a7a; }
+        .planning-toggle .fa-chevron-right {
+            color: #6c757d;
+        }
+        .planning-toggle .fa-chevron-down {
+            color: #0d4a7a;
+        }
         .planning-category-name {
             cursor: pointer;
             display: inline-block;
@@ -1324,7 +1594,9 @@
             border-radius: 4px;
             transition: background .2s;
         }
-        .planning-category-name:hover { background: rgba(13,74,122,0.1); }
+        .planning-category-name:hover {
+            background: rgba(13, 74, 122, 0.1);
+        }
         .planning-total-row td:first-child {
             position: sticky;
             left: 0;
@@ -1337,8 +1609,12 @@
             background: #ffffff !important;
             z-index: 2;
         }
-        .dark-mode .planning-total-row td:first-child { background: var(--blue-dark-bg) !important; }
-        .dark-mode .planning-child-row td:first-child { background: var(--blue-dark-mode) !important; }
+        .dark-mode .planning-total-row td:first-child {
+            background: var(--blue-dark-bg) !important;
+        }
+        .dark-mode .planning-child-row td:first-child {
+            background: var(--blue-dark-mode) !important;
+        }
         .section-ai-btn {
             background: var(--blue-primary);
             color: #fff;
@@ -1354,7 +1630,9 @@
             transition: background .2s;
             margin-left: 8px;
         }
-        .section-ai-btn:hover { background: var(--blue-secondary); }
+        .section-ai-btn:hover {
+            background: var(--blue-secondary);
+        }
         #modalAiResponseContainer {
             background: #f8fafc;
             border-radius: 8px;
@@ -1370,13 +1648,227 @@
             border-radius: 6px;
             padding: 12px;
         }
-        .login-error { display: none; }
+        .login-error {
+            display: none;
+        }
         .total-row {
             font-weight: 700;
             background: #f8fafc !important;
             border-top: 2px solid #0d4a7a;
         }
-        .dark-mode .total-row { background: #0f1e2e !important; }
+        .dark-mode .total-row {
+            background: #0f1e2e !important;
+        }
+
+        /* ── NEW: Bulk add panel styles ── */
+        .bulk-add-panel {
+            background: #f0f4fa;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            border: 1px solid #d0d8e0;
+            display: none;
+        }
+        .bulk-add-panel.open {
+            display: block;
+        }
+        .bulk-add-panel .bulk-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .bulk-add-panel .bulk-row .bulk-field {
+            flex: 1 1 160px;
+            min-width: 120px;
+        }
+        .bulk-add-panel .bulk-row .bulk-field label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #495057;
+            margin-bottom: 2px;
+            display: block;
+        }
+        .bulk-add-panel .bulk-row .bulk-field input {
+            width: 100%;
+            padding: 4px 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .bulk-add-panel .bulk-row .bulk-field input:focus {
+            border-color: var(--blue-primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(13, 74, 122, 0.15);
+        }
+        .bulk-add-panel .bulk-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .bulk-add-panel .bulk-actions .btn {
+            padding: 4px 14px;
+            font-size: 0.8rem;
+        }
+        .bulk-add-panel .bulk-actions .btn-bulk-add {
+            background: var(--blue-primary);
+            color: #fff;
+            border: none;
+        }
+        .bulk-add-panel .bulk-actions .btn-bulk-add:hover {
+            background: var(--blue-secondary);
+        }
+        .bulk-add-panel .bulk-actions .btn-bulk-cancel {
+            background: #e9edf2;
+            border: none;
+            color: #333;
+        }
+        .bulk-add-panel .bulk-actions .btn-bulk-cancel:hover {
+            background: #d5dae2;
+        }
+        .bulk-add-panel .bulk-hint {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 6px;
+        }
+        .dark-mode .bulk-add-panel {
+            background: #1e3a5a;
+            border-color: #2a4a6a;
+        }
+        .dark-mode .bulk-add-panel .bulk-field label {
+            color: #adb5bd;
+        }
+        .dark-mode .bulk-add-panel .bulk-field input {
+            background: #1a2a3a;
+            color: #e2e8f0;
+            border-color: #2a4a6a;
+        }
+        .dark-mode .bulk-add-panel .bulk-field input:focus {
+            border-color: var(--blue-light);
+            box-shadow: 0 0 0 2px rgba(26, 107, 176, 0.2);
+        }
+        .dark-mode .bulk-add-panel .bulk-actions .btn-bulk-cancel {
+            background: #2a3a4a;
+            color: #d0d5dc;
+        }
+        .dark-mode .bulk-add-panel .bulk-actions .btn-bulk-cancel:hover {
+            background: #3a4a5a;
+        }
+        .dark-mode .bulk-add-panel .bulk-hint {
+            color: #adb5bd;
+        }
+
+        .duplicate-entry-btn {
+            background: none;
+            border: none;
+            color: #0d4a7a;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            transition: color .2s;
+        }
+        .duplicate-entry-btn:hover {
+            color: #1a6bb0;
+        }
+        .dark-mode .duplicate-entry-btn {
+            color: #8bb9e0;
+        }
+        .dark-mode .duplicate-entry-btn:hover {
+            color: #b0d4f0;
+        }
+        .remove-addition-btn {
+            background: none;
+            border: none;
+            color: var(--soft-red);
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+        }
+        .remove-addition-btn:hover {
+            color: #b91c1c;
+        }
+        .addition-row .addition-actions {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .addition-actions .btn-sm {
+            padding: 2px 8px;
+            font-size: 0.7rem;
+        }
+        .bulk-toggle-btn {
+            background: none;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            color: #333;
+            transition: background .2s;
+        }
+        .bulk-toggle-btn:hover {
+            background: #e9edf2;
+        }
+        .dark-mode .bulk-toggle-btn {
+            color: #d0d5dc;
+            border-color: #2a4a6a;
+        }
+        .dark-mode .bulk-toggle-btn:hover {
+            background: #1e3a5a;
+        }
+
+        /* ── Group by Remarks toggle ── */
+        .group-toggle-btn {
+            background: none;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            color: #333;
+            transition: background .2s;
+        }
+        .group-toggle-btn.active {
+            background: var(--blue-primary);
+            color: #fff;
+            border-color: var(--blue-primary);
+        }
+        .group-toggle-btn:hover:not(.active) {
+            background: #e9edf2;
+        }
+        .dark-mode .group-toggle-btn {
+            color: #d0d5dc;
+            border-color: #2a4a6a;
+        }
+        .dark-mode .group-toggle-btn.active {
+            background: var(--blue-primary);
+            color: #fff;
+            border-color: var(--blue-primary);
+        }
+        .dark-mode .group-toggle-btn:hover:not(.active) {
+            background: #1e3a5a;
+        }
+        .addition-group-row .group-total-amount {
+            font-weight: 700;
+            color: var(--blue-primary);
+        }
+        .dark-mode .addition-group-row .group-total-amount {
+            color: #8bb9e0;
+        }
+        .addition-group-row .group-remarks {
+            font-weight: 600;
+        }
+        .addition-group-row .group-count {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        .dark-mode .addition-group-row .group-count {
+            color: #adb5bd;
+        }
     </style>
 </head>
 <body>
@@ -1817,9 +2309,33 @@
                             </div>
                         </div>
                         <div class="border-top pt-3 mt-2">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
                                 <h6 class="mb-0"><i class="fas fa-plus-circle me-1"></i>Additional Entries</h6>
-                                <button type="button" class="btn btn-sm btn-primary-blue" id="addAdditionBtn"><i class="fas fa-plus me-1"></i> Add Entry</button>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <button type="button" class="btn btn-sm btn-primary-blue" id="addAdditionBtn"><i class="fas fa-plus me-1"></i> Add Entry</button>
+                                    <button type="button" class="btn btn-sm btn-success" id="bulkAddToggleBtn"><i class="fas fa-layer-group me-1"></i> Bulk Add</button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" id="clearAllAdditionsBtn"><i class="fas fa-trash me-1"></i> Clear All</button>
+                                    <!-- ── NEW: Group by Remarks toggle ── -->
+                                    <button type="button" class="btn btn-sm btn-outline-secondary group-toggle-btn" id="groupRemarksToggle"><i class="fas fa-object-group me-1"></i> Group by Remarks</button>
+                                </div>
+                            </div>
+                            <!-- Bulk Add Panel -->
+                            <div class="bulk-add-panel" id="bulkAddPanel">
+                                <div class="bulk-row">
+                                    <div class="bulk-field">
+                                        <label for="bulkAmount">Amount (₱)</label>
+                                        <input type="text" id="bulkAmount" placeholder="0.00" />
+                                    </div>
+                                    <div class="bulk-field">
+                                        <label for="bulkRemarks">Remarks</label>
+                                        <input type="text" id="bulkRemarks" placeholder="e.g. BARANGAY SEMINAR" />
+                                    </div>
+                                    <div class="bulk-actions">
+                                        <button type="button" class="btn btn-bulk-add" id="bulkAddExecuteBtn"><i class="fas fa-check me-1"></i> Add to All Months</button>
+                                        <button type="button" class="btn btn-bulk-cancel" id="bulkAddCancelBtn">Cancel</button>
+                                    </div>
+                                </div>
+                                <div class="bulk-hint"><i class="fas fa-info-circle me-1"></i> This will create one entry for each month (Jan–Dec) with the same amount and remarks.</div>
                             </div>
                             <div id="additionsContainer"></div>
                             <div id="noAdditionsMsg" class="text-muted small mt-2">No additional entries yet.</div>
@@ -1896,8 +2412,10 @@
 
     <!-- ============================================================ -->
     <!-- SCRIPTS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
+    </script>
 
     <script>
         /**
@@ -1905,14 +2423,19 @@
          * LAKPUE DRUG INC. — Budget Variance Dashboard
          *
          * REWRITE SUMMARY:
-         * 1. Explanation table now excludes categories where division.exem = TRUE.
-         * 2. Additionally, "No Budget" items with expense < ₱5,000 are excluded.
-         * 3. All existing features, calculations, and output behavior are
-         *    preserved exactly as in the original.
-         * 4. Code organization improved: utilities, data service, auth,
-         *    store, AI service, paginator, and renderers are clearly separated.
-         * 5. Performance optimizations: debounced search, batched DOM updates.
-         * 6. Capex is visible in planning but excluded from the Grand Total row.
+         * 1. All existing features preserved exactly.
+         * 2. Explanation table excludes categories where division.exem = TRUE.
+         * 3. "No Budget" items with expense < ₱5,000 excluded.
+         * 4. Capex visible in planning but excluded from Grand Total.
+         * 5. NEW: "Group by Remarks" toggle in Additional Entries panel.
+         *    - When active, entries are grouped by remarks, showing total amount per remark.
+         *    - Each group shows the total amount and the number of months included.
+         *    - The view is read-only; to edit individual entries, toggle off grouping.
+         *    - This makes it easy to see totals for recurring remarks without scrolling.
+         * 6. Bulk Add, Duplicate, Clear All features preserved.
+         * 7. Performance: debounced search, batched DOM updates preserved.
+         * 8. Code organization: utilities, data service, auth, store, AI,
+         *    paginator, renderers clearly separated.
          * ================================================================
          */
         (function() {
@@ -2100,7 +2623,6 @@
                     const key = String(monthStr).trim().toLowerCase().slice(0, 3);
                     return map.hasOwnProperty(key) ? map[key] : -1;
                 },
-                // ─── Capex helpers ───
                 isCapex: (cat) => String(cat || '').trim().toLowerCase() === 'capex',
                 ensureCapexIncluded: (categories) => {
                     const hasCapex = categories.some(c => H.isCapex(c));
@@ -2207,8 +2729,8 @@
                 lyExpenses: [],
                 mergedRecords: [],
                 notesMap: {},
-                divisionMap: {},       // category -> division name
-                exemMap: {},           // category -> true/false (from division table)
+                divisionMap: {},
+                exemMap: {},
                 excludedCategories: new Set(),
                 excludedDivisions: new Set(),
                 authUser: null,
@@ -2240,7 +2762,10 @@
                 },
                 matrix: { collapsedSections: {} },
                 tableData: { matrix: [], bv: [], exceptions: [], dept: [] },
-                modal: { hideMonthlyBase: false },
+                modal: {
+                    hideMonthlyBase: false,
+                    groupByRemarks: false // NEW: grouping state
+                },
                 ai: {
                     messages: [],
                     isProcessing: false,
@@ -2253,7 +2778,7 @@
             };
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 6. AIService (unchanged, but exception context respects exem)
+            // 6. AIService (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             class AIService {
                 constructor() {
@@ -2430,7 +2955,6 @@
                         ctx += `- Department: ${filters.department || 'All'}\n`;
                         if (filters.month && filters.month !== 'All') ctx += `- Month: ${filters.month}\n`;
                     }
-                    // Apply same exem + low‑value filters as in buildExRows
                     const filteredRecords = (records || []).filter(r => {
                         const exem = store.exemMap[r.category] || false;
                         if (exem) return false;
@@ -2605,7 +3129,6 @@
                             for (const r of raw) {
                                 const { variance, variancePercent } = calcMetrics(r.budget, r.expense);
                                 const sb = statusBadge(variance, variancePercent, r.budget);
-                                // exem & low‑value filters
                                 const exem = store.exemMap[r.category] || false;
                                 if (exem) continue;
                                 if (r.budget === 0 && Math.abs(r.expense) < 5000) continue;
@@ -3608,10 +4131,8 @@
                 for (const r of records) {
                     const { variance, variancePercent: variancePct } = calcMetrics(r.budget, r.expense);
                     const sb = statusBadge(variance, variancePct, r.budget);
-                    // ----- FIX: Exclude categories with exem = TRUE -----
                     const exem = store.exemMap[r.category] || false;
                     if (exem) continue;
-                    // ----- Also exclude No Budget with expense < 5000 -----
                     if (r.budget === 0 && Math.abs(r.expense) < 5000) {
                         continue;
                     }
@@ -3760,7 +4281,6 @@
                 const multipliers = store.multipliers || {};
                 const excludedDivs = store.excludedDivisions || new Set();
 
-                // ── 1. Build master category list, ensuring Capex is always included ──
                 const allCategories = [...new Set(store.mergedRecords.map(r => r.category))];
                 for (const cat of Object.keys(store.divisionMap)) {
                     if (!allCategories.includes(cat)) allCategories.push(cat);
@@ -3768,22 +4288,19 @@
 
                 let filteredCategories = allCategories.filter(cat => {
                     const trimmed = cat.trim();
-                    if (isCapex(trimmed)) return true; // Capex always included
+                    if (isCapex(trimmed)) return true;
                     return !store.excludedCategories.has(cat);
                 });
-                // Ensure Capex is in the list (case-insensitive)
                 filteredCategories = ensureCapexIncluded(filteredCategories);
 
                 if (searchTerm) {
                     filteredCategories = filteredCategories.filter(cat => cat.toLowerCase().includes(searchTerm));
                 }
 
-                // ── 2. Filter records by company/department ──
                 let records = store.mergedRecords.filter(r => hasAccess(r.company, r.department, access));
                 if (companyFilter !== 'All') records = records.filter(r => r.company === companyFilter);
                 if (deptFilter !== 'All') records = records.filter(r => r.department === deptFilter);
 
-                // ── 3. Aggregate actual budget and expense per category ──
                 const categoryData = {};
                 for (const r of records) {
                     const cat = r.category;
@@ -3807,7 +4324,6 @@
                     categoryData[cat].actualExpense = ytdExpense;
                 }
 
-                // ── 4. Load planning data (MLS + monthly bases + additions) ──
                 const planKeys = Object.keys(store.planning.data);
                 for (const cat of filteredCategories) {
                     let sumMls = 0;
@@ -3838,7 +4354,6 @@
                     categoryData[cat].budgetNextYear = sumMonths.reduce((a, b) => a + b, 0);
                 }
 
-                // ── 5. Last year expense data ──
                 let lyData = store.lyExpenses || [];
                 if (companyFilter !== 'All') lyData = lyData.filter(r => r.company === companyFilter);
                 if (deptFilter !== 'All') lyData = lyData.filter(r => r.cor_dept === deptFilter);
@@ -3849,7 +4364,6 @@
                     lyMap.set(cat, (lyMap.get(cat) || 0) + total);
                 }
 
-                // ── 6. Formula categories: compute from source values ──
                 const sourceValues = {};
                 for (const srcName of Object.keys(CONFIG.FORMULA_CATEGORIES).flatMap(k => CONFIG.FORMULA_CATEGORIES[k]
                     .sourceNames)) {
@@ -3864,7 +4378,6 @@
                     }
                 }
 
-                // ── 7. Build raw rows (one per category) ──
                 const rows = [];
                 for (const cat of filteredCategories) {
                     const isFormula = isFormulaCategory(cat);
@@ -3908,7 +4421,6 @@
                     });
                 }
 
-                // ── 8. Group by division, excluding excluded divisions (but keep Capex) ──
                 const groups = {};
                 for (const row of rows) {
                     const div = row.division;
@@ -3920,7 +4432,6 @@
                 const visibleDivs = new Set(Object.keys(groups));
                 const sortedDivisions = Array.from(visibleDivs).sort(compareDivisions);
 
-                // ── 9. Build hierarchical structure: division totals + child rows ──
                 const hierarchical = [];
                 for (const div of sortedDivisions) {
                     const children = groups[div];
@@ -3965,7 +4476,6 @@
                     for (const child of children) hierarchical.push({ ...child, isTotal: false });
                 }
 
-                // ── 10. Ensure Capex is present in hierarchical (if missing, add it) ──
                 const capexPresent = hierarchical.some(row =>
                     row.category && isCapex(row.category)
                 );
@@ -4009,7 +4519,6 @@
                             isAggregated: true,
                             isFormula: false
                         };
-                        // Insert in correct division order
                         let pos = hierarchical.length;
                         for (let i = 0; i < hierarchical.length; i++) {
                             if (hierarchical[i].isTotal && compareDivisions(hierarchical[i].division, div) > 0) {
@@ -4032,10 +4541,8 @@
                 return flat;
             }
 
-            // ─── Exclude Capex from Grand Total ───
             function computeGrandTotals() {
                 const allRows = buildPlanningRows();
-                // Exclude Capex from grand total
                 const childRows = allRows.filter(r => !r.isTotal && !isCapex(r.category));
                 const totals = {
                     lastYearExpense: 0,
@@ -4343,17 +4850,17 @@
                     });
 
                     tbody.querySelectorAll('tr.planning-child-row[data-editable="true"][data-formula="false"]')
-                    .forEach(row => {
-                        row.addEventListener('click', function(e) {
-                            if (e.target.closest('input') || e.target.closest('.planning-toggle') ||
-                                e.target.closest('.planning-category-name') || e.target.closest(
-                                    '.planning-edit-btn'))
-                                return;
-                            const firstInput = this.querySelector('input.planning-input.editable');
-                            if (firstInput) { firstInput.focus();
-                                firstInput.select(); }
+                        .forEach(row => {
+                            row.addEventListener('click', function(e) {
+                                if (e.target.closest('input') || e.target.closest('.planning-toggle') ||
+                                    e.target.closest('.planning-category-name') || e.target.closest(
+                                        '.planning-edit-btn'))
+                                    return;
+                                const firstInput = this.querySelector('input.planning-input.editable');
+                                if (firstInput) { firstInput.focus();
+                                    firstInput.select(); }
+                            });
                         });
-                    });
                 }
 
                 updateGlobalToggleIcon();
@@ -4559,7 +5066,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 16. Planning Modal (unchanged)
+            // 16. Planning Modal (with Group by Remarks)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             let planningModalInstance = null;
             let currentModalKey = null;
@@ -4658,6 +5165,394 @@
                 }
             }
 
+            // ── Group by Remarks toggle ──
+            function toggleGroupRemarks() {
+                store.modal.groupByRemarks = !store.modal.groupByRemarks;
+                const btn = document.getElementById('groupRemarksToggle');
+                if (btn) {
+                    btn.classList.toggle('active', store.modal.groupByRemarks);
+                    btn.innerHTML = store.modal.groupByRemarks ?
+                        '<i class="fas fa-object-ungroup me-1"></i> Ungroup' :
+                        '<i class="fas fa-object-group me-1"></i> Group by Remarks';
+                }
+                // Re-render additions with current plan
+                if (currentModalKey) {
+                    const plan = store.planning.data[currentModalKey] || defaultPlan();
+                    renderAdditions(plan.additions || []);
+                    attachAdditionListeners();
+                }
+                updateModalTotals();
+            }
+
+            function renderAdditions(additions) {
+                const container = document.getElementById('additionsContainer');
+                const msg = document.getElementById('noAdditionsMsg');
+                container.innerHTML = '';
+
+                if (!additions || additions.length === 0) {
+                    msg.style.display = 'block';
+                    return;
+                }
+                msg.style.display = 'none';
+
+                const isGrouped = store.modal.groupByRemarks;
+
+                if (isGrouped) {
+                    // Group by remarks (trimmed, case-insensitive)
+                    const groups = new Map();
+                    for (const add of additions) {
+                        const key = (add.remarks || '').trim().toUpperCase();
+                        if (!groups.has(key)) {
+                            groups.set(key, { remarks: add.remarks || '', items: [], total: 0 });
+                        }
+                        const g = groups.get(key);
+                        g.items.push(add);
+                        g.total += toNum(add.amount);
+                    }
+
+                    // Sort groups by remarks
+                    const sortedGroups = Array.from(groups.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+
+                    for (const [_, group] of sortedGroups) {
+                        const row = document.createElement('div');
+                        row.className = 'row g-2 addition-group-row align-items-center';
+                        row.innerHTML = `
+                            <div class="col-md-4"><span class="group-remarks"><i class="fas fa-tag me-1"></i> ${fmt.html(group.remarks || '(No remarks)')}</span></div>
+                            <div class="col-md-4"><span class="group-total-amount">${fmt.currency(group.total)}</span></div>
+                            <div class="col-md-4 text-muted small group-count">${group.items.length} month(s)</div>
+                        `;
+                        container.appendChild(row);
+                    }
+                    // Add a note that this is a grouped view
+                    const note = document.createElement('div');
+                    note.className = 'text-muted small mt-2';
+                    note.innerHTML = '<i class="fas fa-info-circle me-1"></i> Grouped by remarks. Toggle off to edit individual entries.';
+                    container.appendChild(note);
+
+                } else {
+                    // Detailed per-month entries
+                    for (const add of additions) {
+                        const row = document.createElement('div');
+                        row.className = 'row g-2 addition-row align-items-center';
+                        row.innerHTML = `
+                            <div class="col-md-3"><select class="form-select form-select-sm addition-month">${CONFIG.MONTHS.map(m => `<option value="${m}" ${m === add.month ? 'selected' : ''}>${m}</option>`).join('')}</select></div>
+                            <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="${fmt.number(add.amount || 0)}" placeholder="Amount" /></div>
+                            <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" value="${fmt.html(add.remarks || '')}" placeholder="Remarks" /></div>
+                            <div class="col-md-2"><div class="addition-actions">
+                                <button type="button" class="duplicate-addition-btn" title="Duplicate this entry"><i class="fas fa-copy"></i></button>
+                                <button type="button" class="remove-addition-btn" title="Remove this entry"><i class="fas fa-trash"></i></button>
+                            </div></div>
+                        `;
+                        container.appendChild(row);
+                    }
+                    // Attach listeners for edit mode
+                    container.querySelectorAll('.remove-addition-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const r = this.closest('.addition-row');
+                            if (r) {
+                                r.remove();
+                                if (container.querySelectorAll('.addition-row').length === 0) document
+                                    .getElementById('noAdditionsMsg').style.display = 'block';
+                                updateModalTotals();
+                            }
+                        });
+                    });
+                    container.querySelectorAll('.duplicate-addition-btn').forEach(btn => {
+                        btn.addEventListener('click', handleDuplicateAddition);
+                    });
+                    container.querySelectorAll('.addition-amount').forEach(inp => {
+                        inp.addEventListener('blur', function() {
+                            this.value = fmt.number(parseFormattedNumber(this.value));
+                            updateModalTotals();
+                        });
+                        inp.addEventListener('input', updateModalTotals);
+                    });
+                    attachAdditionListeners();
+                }
+
+                // Update toggle button state
+                const btn = document.getElementById('groupRemarksToggle');
+                if (btn) {
+                    btn.classList.toggle('active', isGrouped);
+                    btn.innerHTML = isGrouped ?
+                        '<i class="fas fa-object-ungroup me-1"></i> Ungroup' :
+                        '<i class="fas fa-object-group me-1"></i> Group by Remarks';
+                }
+            }
+
+            function attachAdditionListeners() {
+                // Only needed for detailed view; grouping view is read-only
+                if (store.modal.groupByRemarks) return;
+                document.querySelectorAll('#additionsContainer .addition-amount').forEach(inp => {
+                    inp.removeEventListener('input', updateModalTotals);
+                    inp.addEventListener('input', updateModalTotals);
+                    inp.removeEventListener('blur', function() {
+                        this.value = fmt.number(parseFormattedNumber(this.value));
+                        updateModalTotals();
+                    });
+                    inp.addEventListener('blur', function() {
+                        this.value = fmt.number(parseFormattedNumber(this.value));
+                        updateModalTotals();
+                    });
+                });
+                document.querySelectorAll('#additionsContainer .remove-addition-btn').forEach(btn => {
+                    btn.removeEventListener('click', updateModalTotals);
+                    btn.addEventListener('click', function() {
+                        setTimeout(updateModalTotals, 50);
+                    });
+                });
+                document.querySelectorAll('#additionsContainer .duplicate-addition-btn').forEach(btn => {
+                    btn.removeEventListener('click', handleDuplicateAddition);
+                    btn.addEventListener('click', handleDuplicateAddition);
+                });
+            }
+
+            function handleDuplicateAddition(e) {
+                if (store.modal.groupByRemarks) return; // No duplicating in grouped view
+                const btn = e.currentTarget;
+                const row = btn.closest('.addition-row');
+                if (!row) return;
+                const month = row.querySelector('.addition-month').value;
+                const amount = row.querySelector('.addition-amount').value;
+                const remarks = row.querySelector('.addition-remarks').value;
+                const container = document.getElementById('additionsContainer');
+                const msg = document.getElementById('noAdditionsMsg');
+                msg.style.display = 'none';
+
+                const newRow = document.createElement('div');
+                newRow.className = 'row g-2 addition-row align-items-center';
+                newRow.innerHTML = `
+                    <div class="col-md-3"><select class="form-select form-select-sm addition-month">${CONFIG.MONTHS.map(m => `<option value="${m}" ${m === month ? 'selected' : ''}>${m}</option>`).join('')}</select></div>
+                    <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="${amount}" placeholder="Amount" /></div>
+                    <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" value="${fmt.html(remarks)}" placeholder="Remarks" /></div>
+                    <div class="col-md-2"><div class="addition-actions">
+                        <button type="button" class="duplicate-addition-btn" title="Duplicate this entry"><i class="fas fa-copy"></i></button>
+                        <button type="button" class="remove-addition-btn" title="Remove this entry"><i class="fas fa-trash"></i></button>
+                    </div></div>
+                `;
+                container.appendChild(newRow);
+                newRow.querySelector('.remove-addition-btn').addEventListener('click', function() {
+                    const r = this.closest('.addition-row');
+                    if (r) {
+                        r.remove();
+                        if (container.querySelectorAll('.addition-row').length === 0) document.getElementById(
+                            'noAdditionsMsg').style.display = 'block';
+                        updateModalTotals();
+                    }
+                });
+                newRow.querySelector('.duplicate-addition-btn').addEventListener('click', handleDuplicateAddition);
+                const amtInput = newRow.querySelector('.addition-amount');
+                amtInput.addEventListener('blur', function() {
+                    this.value = fmt.number(parseFormattedNumber(this.value));
+                    updateModalTotals();
+                });
+                amtInput.addEventListener('input', updateModalTotals);
+                updateModalTotals();
+            }
+
+            function executeBulkAdd() {
+                if (store.modal.groupByRemarks) {
+                    alert('Please ungroup entries before using Bulk Add.');
+                    return;
+                }
+                const amountEl = document.getElementById('bulkAmount');
+                const remarksEl = document.getElementById('bulkRemarks');
+                const amount = parseFormattedNumber(amountEl.value);
+                const remarks = remarksEl.value.trim();
+
+                if (isNaN(amount) || amount === 0) {
+                    alert('Please enter a valid amount (non-zero).');
+                    return;
+                }
+                if (!remarks) {
+                    alert('Please enter remarks for the bulk entries.');
+                    return;
+                }
+
+                const container = document.getElementById('additionsContainer');
+                const msg = document.getElementById('noAdditionsMsg');
+                msg.style.display = 'none';
+
+                for (const month of CONFIG.MONTHS) {
+                    const row = document.createElement('div');
+                    row.className = 'row g-2 addition-row align-items-center';
+                    row.innerHTML = `
+                        <div class="col-md-3"><select class="form-select form-select-sm addition-month">${CONFIG.MONTHS.map(m => `<option value="${m}" ${m === month ? 'selected' : ''}>${m}</option>`).join('')}</select></div>
+                        <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="${fmt.number(amount)}" placeholder="Amount" /></div>
+                        <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" value="${fmt.html(remarks)}" placeholder="Remarks" /></div>
+                        <div class="col-md-2"><div class="addition-actions">
+                            <button type="button" class="duplicate-addition-btn" title="Duplicate this entry"><i class="fas fa-copy"></i></button>
+                            <button type="button" class="remove-addition-btn" title="Remove this entry"><i class="fas fa-trash"></i></button>
+                        </div></div>
+                    `;
+                    container.appendChild(row);
+                }
+
+                container.querySelectorAll('.remove-addition-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const r = this.closest('.addition-row');
+                        if (r) {
+                            r.remove();
+                            if (container.querySelectorAll('.addition-row').length === 0) document
+                                .getElementById('noAdditionsMsg').style.display = 'block';
+                            updateModalTotals();
+                        }
+                    });
+                });
+                container.querySelectorAll('.duplicate-addition-btn').forEach(btn => {
+                    btn.addEventListener('click', handleDuplicateAddition);
+                });
+                container.querySelectorAll('.addition-amount').forEach(inp => {
+                    inp.addEventListener('blur', function() {
+                        this.value = fmt.number(parseFormattedNumber(this.value));
+                        updateModalTotals();
+                    });
+                    inp.addEventListener('input', updateModalTotals);
+                });
+                attachAdditionListeners();
+                updateModalTotals();
+
+                document.getElementById('bulkAmount').value = '';
+                document.getElementById('bulkRemarks').value = '';
+                document.getElementById('bulkAddPanel').classList.remove('open');
+
+                const status = document.getElementById('planningSaveStatus');
+                if (status) {
+                    status.textContent = `✅ Added entries for all 12 months.`;
+                    status.className = 'small text-success';
+                    setTimeout(() => { status.textContent = ''; }, 3000);
+                }
+            }
+
+            function clearAllAdditions() {
+                if (store.modal.groupByRemarks) {
+                    alert('Please ungroup entries before clearing.');
+                    return;
+                }
+                if (!confirm('Remove all additional entries for this category? This cannot be undone.')) return;
+                const container = document.getElementById('additionsContainer');
+                container.innerHTML = '';
+                document.getElementById('noAdditionsMsg').style.display = 'block';
+                updateModalTotals();
+            }
+
+            function toggleBulkAddPanel() {
+                if (store.modal.groupByRemarks) {
+                    alert('Please ungroup entries before using Bulk Add.');
+                    return;
+                }
+                const panel = document.getElementById('bulkAddPanel');
+                panel.classList.toggle('open');
+                if (panel.classList.contains('open')) {
+                    document.getElementById('bulkAmount').focus();
+                }
+            }
+
+            function getAdditionsFromUI() {
+                if (store.modal.groupByRemarks) {
+                    // In grouped view, we cannot edit, so return current plan additions
+                    if (currentModalKey) {
+                        return store.planning.data[currentModalKey]?.additions || [];
+                    }
+                    return [];
+                }
+                const rows = document.querySelectorAll('#additionsContainer .addition-row');
+                const additions = [];
+                rows.forEach(row => {
+                    const month = row.querySelector('.addition-month').value;
+                    const amount = parseFormattedNumber(row.querySelector('.addition-amount').value);
+                    const remarks = row.querySelector('.addition-remarks').value.trim();
+                    if (amount !== 0 || remarks) additions.push({ month, amount, remarks });
+                });
+                return additions;
+            }
+
+            function addAdditionRow() {
+                if (store.modal.groupByRemarks) {
+                    alert('Please ungroup entries before adding new ones.');
+                    return;
+                }
+                const container = document.getElementById('additionsContainer');
+                const msg = document.getElementById('noAdditionsMsg');
+                msg.style.display = 'none';
+                const row = document.createElement('div');
+                row.className = 'row g-2 addition-row align-items-center';
+                row.innerHTML = `
+                    <div class="col-md-3"><select class="form-select form-select-sm addition-month">${CONFIG.MONTHS.map(m => `<option value="${m}">${m}</option>`).join('')}</select></div>
+                    <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="0.00" placeholder="Amount" /></div>
+                    <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" placeholder="Remarks" /></div>
+                    <div class="col-md-2"><div class="addition-actions">
+                        <button type="button" class="duplicate-addition-btn" title="Duplicate this entry"><i class="fas fa-copy"></i></button>
+                        <button type="button" class="remove-addition-btn" title="Remove this entry"><i class="fas fa-trash"></i></button>
+                    </div></div>
+                `;
+                container.appendChild(row);
+                row.querySelector('.remove-addition-btn').addEventListener('click', function() {
+                    row.remove();
+                    if (container.querySelectorAll('.addition-row').length === 0) document.getElementById(
+                        'noAdditionsMsg').style.display = 'block';
+                    updateModalTotals();
+                });
+                row.querySelector('.duplicate-addition-btn').addEventListener('click', handleDuplicateAddition);
+                const amountInput = row.querySelector('.addition-amount');
+                amountInput.addEventListener('blur', function() {
+                    this.value = fmt.number(parseFormattedNumber(this.value));
+                    updateModalTotals();
+                });
+                amountInput.addEventListener('input', updateModalTotals);
+                updateModalTotals();
+            }
+
+            function savePlanningModal() {
+                if (!currentModalKey) return;
+                const key = currentModalKey;
+                const [company, department, category] = key.split('|');
+                if (!isPlanningEditable(company, department)) {
+                    alert('Editing is disabled for this company/department.');
+                    return;
+                }
+                if (isFormulaCategory(category)) {
+                    alert('Formula categories are read-only and cannot be edited.');
+                    if (planningModalInstance) planningModalInstance.hide();
+                    return;
+                }
+                const base = { mls: parseFormattedNumber(document.getElementById('modalMls').value) };
+                document.querySelectorAll('#monthlyBaseContainer .modal-month-base').forEach(el => {
+                    const idx = parseInt(el.dataset.month);
+                    base[CONFIG.MONTH_KEYS[idx]] = parseFormattedNumber(el.value);
+                });
+                const additions = getAdditionsFromUI();
+                store.planning.data[key] = { base, additions };
+                const tbody = document.getElementById('planningBody');
+                const row = tbody.querySelector(`tr.planning-child-row[data-key="${key}"]`);
+                if (row) {
+                    const mls = base.mls || 0;
+                    const months = CONFIG.MONTH_KEYS.map(k => base[k] || 0);
+                    for (const add of additions) {
+                        const idx = CONFIG.MONTHS.indexOf(add.month);
+                        if (idx !== -1) months[idx] += toNum(add.amount);
+                    }
+                    const actualBudget = toNum(row.dataset.actualBudget);
+                    const actualExpense = toNum(row.dataset.actualExpense);
+                    const derived = computeRowDerived(actualBudget, actualExpense, mls, months);
+                    const mlsInput = row.querySelector('.planning-mls');
+                    if (mlsInput) mlsInput.value = fmt.number(mls);
+                    const monthInputs = row.querySelectorAll('.planning-month');
+                    monthInputs.forEach((inp, idx) => inp.value = fmt.number(months[idx]));
+                    row.querySelector('.ty-mls').textContent = fmt.currency(derived.thisYearMls);
+                    const varEl = row.querySelector('.ty-var');
+                    varEl.textContent = fmt.currency(derived.thisYearBudgetVariance);
+                    varEl.className = 'ty-var fw-semibold ' + varClass(derived.thisYearBudgetVariance);
+                    row.querySelector('.ty-next').textContent = fmt.currency(derived.budgetNextYear);
+                    const division = row.dataset.division;
+                    if (division) {
+                        const divisionKey = `${company}|${department}|${division}`;
+                        recomputeDivisionTotal(divisionKey);
+                    }
+                }
+                if (planningModalInstance) planningModalInstance.hide();
+            }
+
             function openPlanningModal(key) {
                 if (!key) return;
                 const [company, department, category] = key.split('|');
@@ -4750,15 +5645,34 @@
                 }
 
                 document.getElementById('addAdditionBtn').disabled = isFormula || !editable;
+                document.getElementById('bulkAddToggleBtn').disabled = isFormula || !editable;
+                document.getElementById('clearAllAdditionsBtn').disabled = isFormula || !editable;
+                document.getElementById('groupRemarksToggle').disabled = isFormula || !editable;
+
+                // Reset grouping state when opening modal
+                store.modal.groupByRemarks = false;
+                const groupBtn = document.getElementById('groupRemarksToggle');
+                if (groupBtn) {
+                    groupBtn.classList.remove('active');
+                    groupBtn.innerHTML = '<i class="fas fa-object-group me-1"></i> Group by Remarks';
+                }
+
                 if (isFormula || !editable) {
                     document.getElementById('additionsContainer').innerHTML =
                         '<div class="text-muted small">' + (isFormula ? 'Formula categories cannot have additional entries.' :
                             'Editing is disabled for this company/department.') + '</div>';
                     document.getElementById('noAdditionsMsg').style.display = 'none';
+                    document.getElementById('bulkAddPanel').classList.remove('open');
                 } else {
                     renderAdditions(plan.additions || []);
                     attachAdditionListeners();
                     document.getElementById('addAdditionBtn').disabled = false;
+                    document.getElementById('bulkAddToggleBtn').disabled = false;
+                    document.getElementById('clearAllAdditionsBtn').disabled = false;
+                    document.getElementById('groupRemarksToggle').disabled = false;
+                    document.getElementById('bulkAddPanel').classList.remove('open');
+                    document.getElementById('bulkAmount').value = '';
+                    document.getElementById('bulkRemarks').value = '';
                 }
 
                 updateModalTotals();
@@ -4770,155 +5684,6 @@
                     planningModalInstance = new bootstrap.Modal(document.getElementById('planningModal'));
                 }
                 planningModalInstance.show();
-            }
-
-            function attachAdditionListeners() {
-                document.querySelectorAll('#additionsContainer .addition-amount').forEach(inp => {
-                    inp.removeEventListener('input', updateModalTotals);
-                    inp.addEventListener('input', updateModalTotals);
-                    inp.removeEventListener('blur', function() {
-                        this.value = fmt.number(parseFormattedNumber(this.value));
-                        updateModalTotals();
-                    });
-                    inp.addEventListener('blur', function() {
-                        this.value = fmt.number(parseFormattedNumber(this.value));
-                        updateModalTotals();
-                    });
-                });
-                document.querySelectorAll('#additionsContainer .remove-addition-btn').forEach(btn => {
-                    btn.removeEventListener('click', updateModalTotals);
-                    btn.addEventListener('click', function() {
-                        setTimeout(updateModalTotals, 50);
-                    });
-                });
-            }
-
-            function renderAdditions(additions) {
-                const container = document.getElementById('additionsContainer');
-                const msg = document.getElementById('noAdditionsMsg');
-                container.innerHTML = '';
-                if (!additions || additions.length === 0) { msg.style.display = 'block'; return; }
-                msg.style.display = 'none';
-                additions.forEach((add) => {
-                    const row = document.createElement('div');
-                    row.className = 'row g-2 addition-row align-items-center';
-                    row.innerHTML = `
-                        <div class="col-md-3"><select class="form-select form-select-sm addition-month">${CONFIG.MONTHS.map(m => `<option value="${m}" ${m === add.month ? 'selected' : ''}>${m}</option>`).join('')}</select></div>
-                        <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="${fmt.number(add.amount || 0)}" placeholder="Amount" /></div>
-                        <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" value="${fmt.html(add.remarks || '')}" placeholder="Remarks" /></div>
-                        <div class="col-md-2"><button type="button" class="btn btn-sm btn-outline-danger remove-addition-btn"><i class="fas fa-trash"></i></button></div>
-                    `;
-                    container.appendChild(row);
-                });
-                container.querySelectorAll('.remove-addition-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const row = this.closest('.addition-row');
-                        if (row) {
-                            row.remove();
-                            if (container.querySelectorAll('.addition-row').length === 0) document
-                                .getElementById('noAdditionsMsg').style.display = 'block';
-                            updateModalTotals();
-                        }
-                    });
-                });
-                container.querySelectorAll('.addition-amount').forEach(inp => {
-                    inp.addEventListener('blur', function() {
-                        this.value = fmt.number(parseFormattedNumber(this.value));
-                        updateModalTotals();
-                    });
-                    inp.addEventListener('input', updateModalTotals);
-                });
-                attachAdditionListeners();
-            }
-
-            function getAdditionsFromUI() {
-                const rows = document.querySelectorAll('#additionsContainer .addition-row');
-                const additions = [];
-                rows.forEach(row => {
-                    const month = row.querySelector('.addition-month').value;
-                    const amount = parseFormattedNumber(row.querySelector('.addition-amount').value);
-                    const remarks = row.querySelector('.addition-remarks').value.trim();
-                    if (amount !== 0 || remarks) additions.push({ month, amount, remarks });
-                });
-                return additions;
-            }
-
-            function addAdditionRow() {
-                const container = document.getElementById('additionsContainer');
-                const msg = document.getElementById('noAdditionsMsg');
-                msg.style.display = 'none';
-                const row = document.createElement('div');
-                row.className = 'row g-2 addition-row align-items-center';
-                row.innerHTML = `
-                    <div class="col-md-3"><select class="form-select form-select-sm addition-month">${CONFIG.MONTHS.map(m => `<option value="${m}">${m}</option>`).join('')}</select></div>
-                    <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="0.00" placeholder="Amount" /></div>
-                    <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" placeholder="Remarks" /></div>
-                    <div class="col-md-2"><button type="button" class="btn btn-sm btn-outline-danger remove-addition-btn"><i class="fas fa-trash"></i></button></div>
-                `;
-                container.appendChild(row);
-                row.querySelector('.remove-addition-btn').addEventListener('click', function() {
-                    row.remove();
-                    if (container.querySelectorAll('.addition-row').length === 0) document.getElementById(
-                        'noAdditionsMsg').style.display = 'block';
-                    updateModalTotals();
-                });
-                const amountInput = row.querySelector('.addition-amount');
-                amountInput.addEventListener('blur', function() {
-                    this.value = fmt.number(parseFormattedNumber(this.value));
-                    updateModalTotals();
-                });
-                amountInput.addEventListener('input', updateModalTotals);
-                updateModalTotals();
-            }
-
-            function savePlanningModal() {
-                if (!currentModalKey) return;
-                const key = currentModalKey;
-                const [company, department, category] = key.split('|');
-                if (!isPlanningEditable(company, department)) {
-                    alert('Editing is disabled for this company/department.');
-                    return;
-                }
-                if (isFormulaCategory(category)) {
-                    alert('Formula categories are read-only and cannot be edited.');
-                    if (planningModalInstance) planningModalInstance.hide();
-                    return;
-                }
-                const base = { mls: parseFormattedNumber(document.getElementById('modalMls').value) };
-                document.querySelectorAll('#monthlyBaseContainer .modal-month-base').forEach(el => {
-                    const idx = parseInt(el.dataset.month);
-                    base[CONFIG.MONTH_KEYS[idx]] = parseFormattedNumber(el.value);
-                });
-                const additions = getAdditionsFromUI();
-                store.planning.data[key] = { base, additions };
-                const tbody = document.getElementById('planningBody');
-                const row = tbody.querySelector(`tr.planning-child-row[data-key="${key}"]`);
-                if (row) {
-                    const mls = base.mls || 0;
-                    const months = CONFIG.MONTH_KEYS.map(k => base[k] || 0);
-                    for (const add of additions) {
-                        const idx = CONFIG.MONTHS.indexOf(add.month);
-                        if (idx !== -1) months[idx] += toNum(add.amount);
-                    }
-                    const actualBudget = toNum(row.dataset.actualBudget);
-                    const actualExpense = toNum(row.dataset.actualExpense);
-                    const derived = computeRowDerived(actualBudget, actualExpense, mls, months);
-                    const mlsInput = row.querySelector('.planning-mls');
-                    if (mlsInput) mlsInput.value = fmt.number(mls);
-                    const monthInputs = row.querySelectorAll('.planning-month');
-                    monthInputs.forEach((inp, idx) => inp.value = fmt.number(months[idx]));
-                    row.querySelector('.ty-mls').textContent = fmt.currency(derived.thisYearMls);
-                    const varEl = row.querySelector('.ty-var');
-                    varEl.textContent = fmt.currency(derived.thisYearBudgetVariance);
-                    varEl.className = 'ty-var fw-semibold ' + varClass(derived.thisYearBudgetVariance);
-                    row.querySelector('.ty-next').textContent = fmt.currency(derived.budgetNextYear);
-                    const division = row.dataset.division;
-                    if (division) {
-                        const divisionKey = `${company}|${department}|${division}`;
-                        recomputeDivisionTotal(divisionKey);
-                    }
-                }
-                if (planningModalInstance) planningModalInstance.hide();
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -5069,7 +5834,7 @@
                 for (const add of additionRows) {
                     if (String(add.year) !== String(currentYear)) continue;
                     const key =
-                    `${String(add.company).trim()}|${String(add.cor_dept).trim()}|${String(add.code_desc).trim()}`;
+                        `${String(add.company).trim()}|${String(add.cor_dept).trim()}|${String(add.code_desc).trim()}`;
                     if (!grouped[key]) grouped[key] = [];
                     grouped[key].push(add);
                 }
@@ -5590,7 +6355,7 @@
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 22. CSV Export (unchanged, but exceptions export now respects exem)
+            // 22. CSV Export (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             function downloadCSV(headers, rows, filename) {
                 const csv = [headers.map(h => `"${h}"`).join(','), ...rows.map(r => r.map(c => `"${csvEscape(c)}"`).join(
@@ -5687,7 +6452,6 @@
                     for (const r of filtered) {
                         const { variance, variancePercent: variancePct } = calcMetrics(r.budget, r.expense);
                         const sb = statusBadge(variance, variancePct, r.budget);
-                        // exem + low‑value filters
                         const exem = store.exemMap[r.category] || false;
                         if (exem) continue;
                         if (r.budget === 0 && Math.abs(r.expense) < 5000) continue;
@@ -5821,7 +6585,6 @@
                 new bootstrap.Modal(document.getElementById('expenseDetailModal')).show();
             }
 
-            // ─── AI Analysis for Expense Detail Modal ───
             async function analyzeExpenseDetails() {
                 const data = store.expenseModalData;
                 if (!data) {
@@ -6092,7 +6855,7 @@
                         const totalBudget = filtered.reduce((s, r) => s + r.budget, 0);
                         const totalExpense = filtered.reduce((s, r) => s + r.expense, 0);
                         const { variance: totalVar, variancePercent: totalVarPct } = calcMetrics(totalBudget,
-                        totalExpense);
+                            totalExpense);
                         question =
                             `Analyze the current dashboard view. Overall totals: Budget ₱${totalBudget.toLocaleString()}, Expense ₱${totalExpense.toLocaleString()}, Variance ₱${totalVar.toLocaleString()} (${totalVarPct.toFixed(1)}%). What are the key takeaways and what should management focus on?`;
                         break;
@@ -6155,7 +6918,7 @@
                         additionRows.forEach(row => {
                             const month = row.querySelector('.addition-month')?.value || '?';
                             const amount = parseFormattedNumber(row.querySelector('.addition-amount')
-                            ?.value || '0');
+                                ?.value || '0');
                             const remarks = row.querySelector('.addition-remarks')?.value || '';
                             if (amount !== 0 || remarks) {
                                 addList.push(`- ${month}: ₱${amount.toFixed(2)} (${remarks || 'No remarks'})`);
@@ -6226,7 +6989,7 @@ Keep the response concise, professional, and use bullet points where appropriate
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 27. Fetch Data (now captures exem from division table)
+            // 27. Fetch Data (unchanged)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             async function fetchData({ silent = false, forceRefresh = false } = {}) {
                 const reloadBtn = document.getElementById('reloadSheetsBtn');
@@ -6334,10 +7097,9 @@ Keep the response concise, professional, and use bullet points where appropriate
                     for (const n of notesRows) {
                         if (!n.company || !n.cor_dept || !n.code_desc) continue;
                         store.notesMap[noteKey(n.company, n.cor_dept, n.code_desc, n.month || '')] = String(n
-                        .notes || '');
+                            .notes || '');
                     }
 
-                    // ── Process division table: store division and exem ──
                     store.divisionMap = {};
                     store.exemMap = {};
                     const excludedDivs = new Set();
@@ -6472,7 +7234,7 @@ Keep the response concise, professional, and use bullet points where appropriate
             }
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 31. Event Binding (unchanged)
+            // 31. Event Binding (updated for Group by Remarks)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             function bindEvents() {
                 // Login
@@ -6787,12 +7549,46 @@ Keep the response concise, professional, and use bullet points where appropriate
 
                 document.getElementById('modalSaveBtn').addEventListener('click', savePlanningModal);
                 document.getElementById('addAdditionBtn').addEventListener('click', addAdditionRow);
+
+                // ── Bulk Add panel events ──
+                document.getElementById('bulkAddToggleBtn').addEventListener('click', toggleBulkAddPanel);
+                document.getElementById('bulkAddCancelBtn').addEventListener('click', function() {
+                    document.getElementById('bulkAddPanel').classList.remove('open');
+                });
+                document.getElementById('bulkAddExecuteBtn').addEventListener('click', executeBulkAdd);
+                document.getElementById('bulkAmount').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') { e.preventDefault();
+                        executeBulkAdd(); }
+                });
+                document.getElementById('bulkRemarks').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') { e.preventDefault();
+                        executeBulkAdd(); }
+                });
+
+                // ── Clear All additions ──
+                document.getElementById('clearAllAdditionsBtn').addEventListener('click', clearAllAdditions);
+
+                // ── NEW: Group by Remarks toggle ──
+                document.getElementById('groupRemarksToggle').addEventListener('click', toggleGroupRemarks);
+
                 document.getElementById('planningModal').addEventListener('hidden.bs.modal', function() {
                     currentModalKey = null;
                     clearModalAI();
+                    document.getElementById('bulkAddPanel').classList.remove('open');
+                    // Reset grouping state on close
+                    store.modal.groupByRemarks = false;
+                    const groupBtn = document.getElementById('groupRemarksToggle');
+                    if (groupBtn) {
+                        groupBtn.classList.remove('active');
+                        groupBtn.innerHTML = '<i class="fas fa-object-group me-1"></i> Group by Remarks';
+                    }
                 });
                 document.getElementById('additionsContainer').addEventListener('click', function(e) {
                     if (e.target.closest('.remove-addition-btn')) {
+                        if (store.modal.groupByRemarks) {
+                            alert('Please ungroup entries before removing.');
+                            return;
+                        }
                         const row = e.target.closest('.addition-row');
                         if (row) {
                             row.remove();
@@ -6830,28 +7626,28 @@ Keep the response concise, professional, and use bullet points where appropriate
                 };
 
                 document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click',
-                function() {
-                    document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove(
-                    'active'));
-                    this.classList.add('active');
-                    const section = this.dataset.section;
+                    function() {
+                        document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove(
+                            'active'));
+                        this.classList.add('active');
+                        const section = this.dataset.section;
 
-                    if (section !== 'files') {
-                        syncFiltersToSection(section);
-                    }
+                        if (section !== 'files') {
+                            syncFiltersToSection(section);
+                        }
 
-                    document.querySelectorAll('.section-content').forEach(el => el.classList.remove(
-                        'active-section'));
-                    const target = document.getElementById(section + 'Section');
-                    if (target) target.classList.add('active-section');
-                    document.getElementById('pageTitle').textContent = TITLES[section] || section;
-                    store.currentSection = section;
+                        document.querySelectorAll('.section-content').forEach(el => el.classList.remove(
+                            'active-section'));
+                        const target = document.getElementById(section + 'Section');
+                        if (target) target.classList.add('active-section');
+                        document.getElementById('pageTitle').textContent = TITLES[section] || section;
+                        store.currentSection = section;
 
-                    if (section === 'budgetVariance') renderBudgetVariance();
-                    if (section === 'exceptions') renderExceptions();
-                    if (section === 'deptSummary') renderDeptSummary();
-                    if (section === 'planning') renderPlanning();
-                }));
+                        if (section === 'budgetVariance') renderBudgetVariance();
+                        if (section === 'exceptions') renderExceptions();
+                        if (section === 'deptSummary') renderDeptSummary();
+                        if (section === 'planning') renderPlanning();
+                    }));
 
                 document.addEventListener('click', async e => {
                     const btn = e.target.closest('.save-note-btn');
