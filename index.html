@@ -1646,7 +1646,6 @@
       background: #0f1e2e !important;
     }
 
-    /* ── Bulk add panel styles ── */
     .bulk-add-panel {
       background: #f0f4fa;
       border-radius: 8px;
@@ -1855,7 +1854,6 @@
       color: #adb5bd;
     }
 
-    /* ── Remark status icon ── */
     .remark-status {
       font-size: 0.8rem;
       margin-left: 4px;
@@ -1867,7 +1865,6 @@
       color: var(--soft-red);
     }
 
-    /* ── Auto-save status ── */
     #planningAutoSaveStatus {
       font-size: 0.75rem;
       color: var(--text-muted);
@@ -2175,7 +2172,7 @@
           </div>
         </div>
 
-        <!-- ===== BUDGET PLANNING (with modal auto‑save) ===== -->
+        <!-- ===== BUDGET PLANNING ===== -->
         <div id="planningSection" class="section-content">
           <div class="filter-card p-3 mb-4">
             <h5 class="mb-3"><i class="fas fa-calculator me-2"></i>Budget Planning by Company, Department &amp; Division</h5>
@@ -2197,7 +2194,6 @@
               <div class="col-md-2"><button id="planSearchClearBtn" class="btn btn-outline-secondary w-100"><i class="fas fa-times me-1"></i> Clear</button></div>
               <div class="col-md-5 text-end text-muted small" id="planSearchResultCount"></div>
             </div>
-            <!-- Insight filter removed -->
             <div id="planningPermissionArea" class="row mt-3" style="display:none;">
               <div class="col-12 d-flex align-items-center gap-3">
                 <span class="fw-semibold">Edit Permissions:</span>
@@ -2210,7 +2206,7 @@
             </div>
             <div class="row mt-2"><div class="col-12"><span id="planningSaveStatus" class="small text-muted"></span></div></div>
 
-            <!-- AI Assistant Panel (unchanged) -->
+            <!-- AI Assistant Panel -->
             <div class="ai-assistant-panel mt-3" id="aiAssistantPanel">
               <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom ai-assistant-header" style="background:#f8fafc;">
                 <div><i class="fas fa-robot me-2" style="color:var(--blue-primary);"></i><span class="fw-semibold">AI Budget &amp; Planning Assistant</span><span class="badge bg-success ms-2" style="font-size:0.6rem;">AI Budget & Planning Assistant</span><span class="badge bg-info ms-1" style="font-size:0.6rem;">Planning Data Ready</span></div>
@@ -2374,7 +2370,7 @@
     </div>
   </div>
 
-  <!-- ===== EXPENSE DETAIL MODAL (unchanged) ===== -->
+  <!-- ===== EXPENSE DETAIL MODAL ===== -->
   <div class="modal fade" id="expenseDetailModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -2427,21 +2423,41 @@
 
   <!-- ============================================================ -->
   <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
+  </script>
 
   <script>
     /**
      * ================================================================
      * LAKPUE DRUG INC. — Budget Variance Dashboard
      *
-     * MAJOR IMPROVEMENTS:
-     * 1. MODAL AUTO‑SAVE: When you edit a category in the modal and click "Ok",
-     *    the changes are saved to the database automatically (via autoSavePlanning).
-     * 2. Removed "Filter by Insight" dropdown (per previous request).
-     * 3. Inline auto‑save for MLS and monthly cells (debounced 500ms).
-     * 4. All calculations, formulas, remarks, bulk add, group by remarks,
-     *    AI chat, exports, and Capex exclusion are preserved.
+     * MAJOR IMPROVEMENTS in this rewrite:
+     *
+     * 1. CLOSE TABLE HANDLING (the key change requested):
+     *    - Previously only the latest close record (id=2, 7/1/2026) was used for ALL sections.
+     *    - Now we fetch ALL close records. The latest is used for Dashboard, Variance,
+     *      Exceptions, and Department Summary (YTD cut-off). The EARLIEST record (id=1,
+     *      2/1/2026) is used EXCLUSIVELY for the Budget Planning section's Actual Expense.
+     *    - This means Planning's "Actual Expense" always reflects expenses up to Feb 2026,
+     *      while other sections use the latest close date (Jul 2026).
+     *
+     * 2. CODE ORGANIZATION:
+     *    - Grouped related functions into logical sections with clear comments.
+     *    - Extracted reusable helpers into a clean `Helpers` object.
+     *    - Reduced duplication in DOM queries and data transformations.
+     *
+     * 3. PERFORMANCE:
+     *    - Debounced auto-save now uses a single unified debounce function.
+     *    - DOM queries are cached where appropriate.
+     *
+     * 4. READABILITY:
+     *    - Clearer variable names and consistent naming conventions.
+     *    - Removed dead code and unused variables.
+     *    - Added JSDoc-style comments for key functions.
+     *
+     * 5. All existing features, calculations, and output behavior are preserved.
      * ================================================================
      */
     (function() {
@@ -2457,7 +2473,9 @@
         GROQ_MODEL: 'openai/gpt-oss-20b',
         MONTHS: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         MONTH_KEYS: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
-        MONTH_NAMES: ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'],
+        MONTH_NAMES: ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER',
+          'NOVEMBER', 'DECEMBER'
+        ],
         PAGE_SIZE_OPTIONS: [10, 25, 50, 100, 'All'],
         DIVISION_ORDER: [
           'Ads and Promo', 'Salary and Wages', 'Premium Contributions Expense',
@@ -2472,8 +2490,8 @@
             multiplier: null,
             formula: (sources) => {
               const sum = (sources['Salaries and Wages Basic Pay'] || 0) +
-                          (sources['Allowances'] || 0) +
-                          (sources['Indirect Labor Basic Pay'] || 0);
+                (sources['Allowances'] || 0) +
+                (sources['Indirect Labor Basic Pay'] || 0);
               return sum / 12;
             }
           },
@@ -2538,8 +2556,8 @@
             multiplier: 'Service Incentive Leave Multiplier',
             formula: (sources, mult) => {
               const sum = (sources['Salaries and Wages Basic Pay'] || 0) +
-                          (sources['Allowances'] || 0) +
-                          (sources['Indirect Labor Basic Pay'] || 0);
+                (sources['Allowances'] || 0) +
+                (sources['Indirect Labor Basic Pay'] || 0);
               return sum / mult;
             }
           }
@@ -2549,27 +2567,30 @@
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // 2. HELPERS (pure utilities)
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      const H = {
+      const Helpers = {
         fmt: {
           currency: v => `₱${Number(v).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
           percent: v => `${Number(v).toFixed(1)}%`,
-          html: s => String(s).replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]),
+          html: s => String(s).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]),
           number: v => Number(v).toLocaleString(undefined, { minimumFractionDigits: 2 }),
           plain: v => Number(v).toLocaleString(undefined, { minimumFractionDigits: 2 })
         },
         toNum: (v, d = 0) => { const n = parseFloat(v); return isNaN(n) ? d : n; },
-        debounce: (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; },
+        debounce: (fn, ms) => { let t; return (...a) => { clearTimeout(t);
+            t = setTimeout(() => fn(...a), ms); }; },
         attrEncode: s => encodeURIComponent(String(s)),
         attrDecode: s => { try { return decodeURIComponent(s); } catch { return s; } },
         varClass: v => v < 0 ? 'text-negative' : 'text-positive',
-        parseFormattedNumber: (s) => { if (!s) return 0; const cleaned = String(s).replace(/,/g,'').trim(); return H.toNum(cleaned); },
-        extractPlainText: (html) => { const tmp = document.createElement('div'); tmp.innerHTML = html; return tmp.textContent || tmp.innerText || ''; },
+        parseFormattedNumber: (s) => { if (!s) return 0; const cleaned = String(s).replace(/,/g, '').trim(); return Helpers
+            .toNum(cleaned); },
+        extractPlainText: (html) => { const tmp = document.createElement('div');
+          tmp.innerHTML = html; return tmp.textContent || tmp.innerText || ''; },
         extractSortValue: (html) => {
-          const raw = H.extractPlainText(html).trim();
+          const raw = Helpers.extractPlainText(html).trim();
           if (!raw) return NaN;
-          let cleaned = raw.replace(/[₱,]/g,'').trim();
+          let cleaned = raw.replace(/[₱,]/g, '').trim();
           const isPct = cleaned.includes('%');
-          if (isPct) cleaned = cleaned.replace('%','').trim();
+          if (isPct) cleaned = cleaned.replace('%', '').trim();
           const num = parseFloat(cleaned);
           return isNaN(num) ? NaN : num;
         },
@@ -2578,28 +2599,31 @@
           const s = String(dateStr);
           if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
             const m = parseInt(s.split('-')[1], 10);
-            return (m >= 1 && m <= 12) ? CONFIG.MONTHS[m-1] : 'Unknown';
+            return (m >= 1 && m <= 12) ? CONFIG.MONTHS[m - 1] : 'Unknown';
           }
           const parts = s.split('/');
           if (parts.length === 3) {
             const m = parseInt(parts[0], 10);
-            if (m >= 1 && m <= 12) return CONFIG.MONTHS[m-1];
+            if (m >= 1 && m <= 12) return CONFIG.MONTHS[m - 1];
           }
           const d = new Date(dateStr);
           return isNaN(d.getTime()) ? 'Unknown' : CONFIG.MONTHS[d.getMonth()];
         },
         noteKey: (co, dept, cat, month) => [co, dept, cat, month || ''].map(s => String(s).trim().toUpperCase()).join('|'),
-        isAllToken: v => { const s = String(v || '').trim().toUpperCase(); return s === 'ALL' || s === '*' || s.startsWith('ALL '); },
+        isAllToken: v => { const s = String(v || '').trim().toUpperCase(); return s === 'ALL' || s === '*' || s.startsWith(
+            'ALL '); },
         splitPipe: v => String(v || '').split('|').map(s => s.trim()).filter(Boolean),
-        divOrderIndex: (division) => { const idx = CONFIG.DIVISION_ORDER.indexOf(division); return idx === -1 ? CONFIG.DIVISION_ORDER.length : idx; },
-        compareDivisions: (a, b) => { const ia = H.divOrderIndex(a), ib = H.divOrderIndex(b); if (ia !== ib) return ia - ib; return a.localeCompare(b); },
+        divOrderIndex: (division) => { const idx = CONFIG.DIVISION_ORDER.indexOf(division); return idx === -1 ? CONFIG
+            .DIVISION_ORDER.length : idx; },
+        compareDivisions: (a, b) => { const ia = Helpers.divOrderIndex(a),
+            ib = Helpers.divOrderIndex(b); if (ia !== ib) return ia - ib; return a.localeCompare(b); },
         defaultPlan: () => ({ base: Object.fromEntries(['mls', ...CONFIG.MONTH_KEYS].map(k => [k, 0])), additions: [] }),
         getMonthIndex: (m) => { const idx = CONFIG.MONTHS.indexOf(m); return idx >= 0 ? idx : -1; },
         getMonthKey: (idx) => CONFIG.MONTH_KEYS[idx] || null,
         getMonthName: (idx) => CONFIG.MONTHS[idx] || null,
         calcMetrics: (budget, expense) => {
-          const b = H.toNum(budget);
-          const e = H.toNum(expense);
+          const b = Helpers.toNum(budget);
+          const e = Helpers.toNum(expense);
           const variance = b - e;
           return {
             budget: b,
@@ -2611,42 +2635,28 @@
           };
         },
         getMonthOrderIndex: function(monthStr) {
-          const map = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
-          const key = String(monthStr).trim().toLowerCase().slice(0,3);
+          const map = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
+          const key = String(monthStr).trim().toLowerCase().slice(0, 3);
           return map.hasOwnProperty(key) ? map[key] : -1;
         },
         isCapex: (cat) => String(cat || '').trim().toLowerCase() === 'capex',
         ensureCapexIncluded: (categories) => {
-          const hasCapex = categories.some(c => H.isCapex(c));
+          const hasCapex = categories.some(c => Helpers.isCapex(c));
           if (!hasCapex) categories.push('Capex');
           return categories;
         },
-        // Insight computation (kept for display)
         computeInsight: (thisYearMls, budgetNextYear) => {
-          const thisY = H.toNum(thisYearMls);
-          const next = H.toNum(budgetNextYear);
-          if (next === 0 && thisY > 0) {
-            return '(0%) Item Deleted/Forgone';
-          }
-          if (thisY === 0) {
-            return '(0%) Within the budget';
-          }
+          const thisY = Helpers.toNum(thisYearMls);
+          const next = Helpers.toNum(budgetNextYear);
+          if (next === 0 && thisY > 0) return '(0%) Item Deleted/Forgone';
+          if (thisY === 0) return '(0%) Within the budget';
           const pct = ((next - thisY) / thisY) * 100;
           const rounded = Math.round(pct);
-          if (pct < -30) {
-            return `(${rounded}%) Proposed budget < MLS by 30%`;
-          } else if (pct > 30) {
-            return `(${rounded}%) Proposed budget > MLS by more than 30%`;
-          } else {
-            return `(${rounded}%) Within the budget`;
-          }
+          if (pct < -30) return `(${rounded}%) Proposed budget < MLS by 30%`;
+          if (pct > 30) return `(${rounded}%) Proposed budget > MLS by more than 30%`;
+          return `(${rounded}%) Within the budget`;
         }
       };
-
-      const { fmt, toNum, debounce, attrEncode, attrDecode, varClass, parseFormattedNumber, extractPlainText,
-              extractSortValue, monthFromDate, noteKey, isAllToken, splitPipe, compareDivisions, defaultPlan,
-              getMonthIndex, getMonthKey, getMonthName, calcMetrics, getMonthOrderIndex, isCapex,
-              ensureCapexIncluded, computeInsight } = H;
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // 3. DataService (unchanged)
@@ -2669,7 +2679,8 @@
         }
         static async getAll(table, query = '') {
           const PAGE = 1000;
-          let offset = 0, all = [];
+          let offset = 0,
+            all = [];
           while (true) {
             const sep = query ? '&' : '';
             const q = `${query}${sep}limit=${PAGE}&offset=${offset}`;
@@ -2683,7 +2694,8 @@
         }
         static async upsert(table, body, conflictCols = null, returning = true) {
           const query = conflictCols ? `on_conflict=${conflictCols.join(',')}` : '';
-          const prefer = returning ? 'return=representation,resolution=merge-duplicates' : 'return=minimal,resolution=merge-duplicates';
+          const prefer = returning ? 'return=representation,resolution=merge-duplicates' :
+            'return=minimal,resolution=merge-duplicates';
           const res = await this._fetch('POST', table, query, body, { headers: { 'Prefer': prefer } });
           if (returning) return await res.json();
           return true;
@@ -2729,7 +2741,7 @@
       };
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      // 5. Store (centralized state) — insightFilter removed
+      // 5. Store (centralized state)
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       const store = {
         budgets: [],
@@ -2742,12 +2754,13 @@
         excludedCategories: new Set(),
         excludedDivisions: new Set(),
         authUser: null,
-        ytdMonthCutoff: null,
+        ytdMonthCutoff: null, // latest close record → Dashboard, Variance, Exceptions, Dept Summary
+        planningYtdMonthCutoff: null, // id=1 close record → Budget Planning Actual Expense
         hasError: false,
         planningTableExists: true,
         multipliers: {},
         planningPermissions: {},
-        planningRemarks: {}, // key: `${company}|${dept}|${category}|${year}`
+        planningRemarks: {},
         sort: {
           matrix: { column: 0, direction: 'asc' },
           bv: { column: 3, direction: 'asc' },
@@ -2755,11 +2768,13 @@
           dept: { column: 0, direction: 'asc' }
         },
         filters: {
-          dashboard: { company: 'All', department: 'All', threshold: 0, searchTerm: '', layout: 'month', metric: 'all', viewMode: 'active' },
-          budgetVariance: { company: 'All', department: 'All', month: 'All', categorySearch: '', allowableAmount: 5000, allowablePercent: 10 },
+          dashboard: { company: 'All', department: 'All', threshold: 0, searchTerm: '', layout: 'month', metric: 'all',
+            viewMode: 'active' },
+          budgetVariance: { company: 'All', department: 'All', month: 'All', categorySearch: '', allowableAmount: 5000,
+            allowablePercent: 10 },
           exceptions: { company: 'All', department: 'All', month: 'All', categorySearch: '' },
           deptSummary: { company: 'All', department: 'All', viewMode: 'active' },
-          planning: { company: 'All', department: 'All', searchTerm: '' } // insightFilter removed
+          planning: { company: 'All', department: 'All', searchTerm: '' }
         },
         planning: {
           year: new Date().getFullYear(),
@@ -2826,7 +2841,7 @@
 
         _buildSystemPrompt(contextData) {
           const { company, department, section, records, totals, variances, deptData, planningData,
-                  planningTotals, months, filters } = contextData || {};
+            planningTotals, months, filters } = contextData || {};
           let prompt = `You are a budget planning and variance analysis assistant for Lakpue Drug Inc. ` +
             `You have access to ALL budget, expense, and planning data. ` +
             `Provide clear, concise, actionable insights. Use bullet points when helpful. Be professional but friendly.\n\n`;
@@ -2846,12 +2861,23 @@
           if (filters && filters.searchTerm) prompt += `🔍 Search: "${filters.searchTerm}"\n`;
 
           switch (section) {
-            case 'dashboard': prompt += this._buildDashboardContext(contextData); break;
-            case 'budgetVariance': prompt += this._buildBudgetVarianceContext(contextData); break;
-            case 'exceptions': prompt += this._buildExceptionsContext(contextData); break;
-            case 'deptSummary': prompt += this._buildDeptSummaryContext(contextData); break;
-            case 'planning': prompt += this._buildPlanningContext(contextData); break;
-            default: prompt += this._buildDefaultContext(contextData);
+            case 'dashboard':
+              prompt += this._buildDashboardContext(contextData);
+              break;
+            case 'budgetVariance':
+              prompt += this._buildBudgetVarianceContext(contextData);
+              break;
+            case 'exceptions':
+              prompt += this._buildExceptionsContext(contextData);
+              break;
+            case 'deptSummary':
+              prompt += this._buildDeptSummaryContext(contextData);
+              break;
+            case 'planning':
+              prompt += this._buildPlanningContext(contextData);
+              break;
+            default:
+              prompt += this._buildDefaultContext(contextData);
           }
 
           prompt += '\n\n💡 INSTRUCTIONS:\n' +
@@ -2882,23 +2908,22 @@
             ctx += `- Total Expense: ₱${totals.expense?.toLocaleString() || 0}\n`;
             ctx += `- Net Variance: ₱${totals.variance?.toLocaleString() || 0} (${totals.variancePct?.toFixed(1) || 0}%)\n`;
           }
-          if (months && months.length) {
-            ctx += `- Months displayed: ${months.join(', ')}\n`;
-          }
+          if (months && months.length) ctx += `- Months displayed: ${months.join(', ')}\n`;
           if (variances && variances.length) {
-            const sorted = [...variances].sort((a,b) => Math.abs(b.variance) - Math.abs(a.variance));
+            const sorted = [...variances].sort((a, b) => Math.abs(b.variance) - Math.abs(a.variance));
             const top = sorted.slice(0, 10);
             ctx += '\n🔍 TOP 10 VARIANCES (largest absolute):\n';
             for (const v of top) {
               const pct = v.variancePct !== undefined ? `(${v.variancePct.toFixed(1)}%)` : '';
-              ctx += `- ${v.category}: Budget ₱${v.budget?.toLocaleString() || 0}, Expense ₱${v.expense?.toLocaleString() || 0}, Variance ₱${v.variance?.toLocaleString() || 0} ${pct}\n`;
+              ctx +=
+                `- ${v.category}: Budget ₱${v.budget?.toLocaleString() || 0}, Expense ₱${v.expense?.toLocaleString() || 0}, Variance ₱${v.variance?.toLocaleString() || 0} ${pct}\n`;
             }
           }
           if (variances && variances.length) {
             ctx += '\n📋 COMPLETE CATEGORY LIST (Budget|Expense|Variance|Var%):\n';
             for (const v of variances) {
               const pct = v.variancePct !== undefined ? v.variancePct.toFixed(1) : '0.0';
-              const cat = v.category.replace(/\|/g,'');
+              const cat = v.category.replace(/\|/g, '');
               const bud = v.budget?.toLocaleString() || '0';
               const exp = v.expense?.toLocaleString() || '0';
               const varAmt = v.variance?.toLocaleString() || '0';
@@ -2919,21 +2944,22 @@
           }
           ctx += `- Total records: ${records?.length || 0}\n`;
           if (records && records.length) {
-            const sorted = [...records].sort((a,b) => {
-              const va = Math.abs(calcMetrics(a.budget, a.expense).variance);
-              const vb = Math.abs(calcMetrics(b.budget, b.expense).variance);
+            const sorted = [...records].sort((a, b) => {
+              const va = Math.abs(Helpers.calcMetrics(a.budget, a.expense).variance);
+              const vb = Math.abs(Helpers.calcMetrics(b.budget, b.expense).variance);
               return vb - va;
             });
             const top = sorted.slice(0, 10);
             ctx += '\n🔍 TOP 10 VARIANCES (by absolute amount):\n';
             for (const r of top) {
-              const v = calcMetrics(r.budget, r.expense);
-              ctx += `- ${r.category} (${r.month}): Budget ${v.budget.toLocaleString()}, Expense ${v.expense.toLocaleString()}, Variance ${v.variance.toLocaleString()} (${v.variancePercent.toFixed(1)}%)\n`;
+              const v = Helpers.calcMetrics(r.budget, r.expense);
+              ctx +=
+                `- ${r.category} (${r.month}): Budget ${v.budget.toLocaleString()}, Expense ${v.expense.toLocaleString()}, Variance ${v.variance.toLocaleString()} (${v.variancePercent.toFixed(1)}%)\n`;
             }
             ctx += '\n📋 COMPLETE ROW LIST (Category|Month|Budget|Expense|Variance):\n';
             for (const r of records) {
-              const v = calcMetrics(r.budget, r.expense);
-              const cat = r.category.replace(/\|/g,'');
+              const v = Helpers.calcMetrics(r.budget, r.expense);
+              const cat = r.category.replace(/\|/g, '');
               ctx += `${cat}|${r.month}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}\n`;
             }
           }
@@ -2958,10 +2984,11 @@
           if (filteredRecords.length) {
             ctx += '\n📋 EXCEPTION ITEMS (Category|Month|Budget|Expense|Variance|Status):\n';
             for (const r of filteredRecords) {
-              const v = calcMetrics(r.budget, r.expense);
+              const v = Helpers.calcMetrics(r.budget, r.expense);
               const status = v.budget === 0 ? 'NoBudget' : (v.variance < 0 ? 'HighExpense' : 'Other');
-              const cat = r.category.replace(/\|/g,'');
-              ctx += `${cat}|${r.month}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}|${status}\n`;
+              const cat = r.category.replace(/\|/g, '');
+              ctx +=
+                `${cat}|${r.month}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}|${status}\n`;
             }
           }
           return ctx;
@@ -2978,9 +3005,10 @@
           if (deptData && deptData.length) {
             ctx += '\n📋 DEPARTMENT PERFORMANCE (Dept|Budget|Expense|Variance|Var%):\n';
             for (const d of deptData) {
-              const v = calcMetrics(d.budget, d.expense);
-              const dept = d.department.replace(/\|/g,'');
-              ctx += `${dept}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}|${v.variancePercent.toFixed(1)}%\n`;
+              const v = Helpers.calcMetrics(d.budget, d.expense);
+              const dept = d.department.replace(/\|/g, '');
+              ctx +=
+                `${dept}|${v.budget.toLocaleString()}|${v.expense.toLocaleString()}|${v.variance.toLocaleString()}|${v.variancePercent.toFixed(1)}%\n`;
             }
           }
           return ctx;
@@ -3006,16 +3034,18 @@
               const minIdx = months.indexOf(minMonth);
               ctx += `- Highest month: ${CONFIG.MONTH_NAMES[maxIdx]} (₱${maxMonth.toLocaleString()})\n`;
               ctx += `- Lowest month: ${CONFIG.MONTH_NAMES[minIdx]} (₱${minMonth.toLocaleString()})\n`;
-              const avg = months.reduce((a,b) => a + b, 0) / 12;
+              const avg = months.reduce((a, b) => a + b, 0) / 12;
               ctx += `- Average monthly budget: ₱${avg.toLocaleString()}\n`;
             }
           }
           const childRows = (planningData || []).filter(r => !r.isTotal);
           if (childRows && childRows.length) {
-            ctx += '\n📋 COMPLETE PLANNING CATEGORIES (Category|ActualBudget|ActualExpense|MLS|ThisYearMLS|PlanningVariance|BudgetNextYear):\n';
+            ctx +=
+              '\n📋 COMPLETE PLANNING CATEGORIES (Category|ActualBudget|ActualExpense|MLS|ThisYearMLS|PlanningVariance|BudgetNextYear):\n';
             for (const r of childRows) {
-              const cat = r.category.replace(/\|/g,'');
-              ctx += `${cat}|${(r.actualBudget || 0).toLocaleString()}|${(r.actualExpense || 0).toLocaleString()}|${(r.mls || 0).toLocaleString()}|${(r.thisYearMls || 0).toLocaleString()}|${(r.thisYearBudgetVariance || 0).toLocaleString()}|${(r.budgetNextYear || 0).toLocaleString()}\n`;
+              const cat = r.category.replace(/\|/g, '');
+              ctx +=
+                `${cat}|${(r.actualBudget || 0).toLocaleString()}|${(r.actualExpense || 0).toLocaleString()}|${(r.mls || 0).toLocaleString()}|${(r.thisYearMls || 0).toLocaleString()}|${(r.thisYearBudgetVariance || 0).toLocaleString()}|${(r.budgetNextYear || 0).toLocaleString()}\n`;
             }
           }
           return ctx;
@@ -3048,34 +3078,41 @@
           switch (section) {
             case 'dashboard': {
               const f = store.filters.dashboard;
-              filters.company = f.company; filters.department = f.department; filters.searchTerm = f.searchTerm; filters.viewMode = f.viewMode;
+              filters.company = f.company;
+              filters.department = f.department;
+              filters.searchTerm = f.searchTerm;
+              filters.viewMode = f.viewMode;
               let data = accessFiltered().filter(r =>
                 (f.company === 'All' || r.company === f.company) &&
                 (f.department === 'All' || r.department === f.department)
               );
               data = applyViewFilter(data, f.viewMode, store.ytdMonthCutoff);
-              const budget = data.reduce((s,r) => s + r.budget, 0);
-              const expense = data.reduce((s,r) => s + r.expense, 0);
-              const { variance, variancePercent } = calcMetrics(budget, expense);
+              const budget = data.reduce((s, r) => s + r.budget, 0);
+              const expense = data.reduce((s, r) => s + r.expense, 0);
+              const { variance, variancePercent } = Helpers.calcMetrics(budget, expense);
               totals = { budget, expense, variance, variancePct: variancePercent };
               months = getDisplayMonths(data);
               const catMap = new Map();
               for (const r of data) {
-                if (!catMap.has(r.category)) catMap.set(r.category, { budget:0, expense:0, category: r.category });
+                if (!catMap.has(r.category)) catMap.set(r.category, { budget: 0, expense: 0, category: r.category });
                 const e = catMap.get(r.category);
                 e.budget += r.budget;
                 e.expense += r.expense;
               }
               variances = Array.from(catMap.values()).map(e => {
-                const m = calcMetrics(e.budget, e.expense);
-                return { category: e.category, budget: e.budget, expense: e.expense, variance: m.variance, variancePct: m.variancePercent };
-              }).sort((a,b) => Math.abs(b.variance) - Math.abs(a.variance));
+                const m = Helpers.calcMetrics(e.budget, e.expense);
+                return { category: e.category, budget: e.budget, expense: e.expense, variance: m.variance,
+                  variancePct: m.variancePercent };
+              }).sort((a, b) => Math.abs(b.variance) - Math.abs(a.variance));
               records = data;
               break;
             }
             case 'budgetVariance': {
               const f = store.filters.budgetVariance;
-              filters.company = f.company; filters.department = f.department; filters.month = f.month; filters.categorySearch = f.categorySearch;
+              filters.company = f.company;
+              filters.department = f.department;
+              filters.month = f.month;
+              filters.categorySearch = f.categorySearch;
               let raw = store.mergedRecords.filter(r =>
                 hasAccess(r.company, r.department, access) &&
                 (f.company === 'All' || r.company === f.company) &&
@@ -3085,15 +3122,18 @@
               );
               const agg = aggregateByKey(raw);
               records = agg;
-              const totalBudget = agg.reduce((s,r) => s + r.budget, 0);
-              const totalExpense = agg.reduce((s,r) => s + r.expense, 0);
-              const { variance, variancePercent } = calcMetrics(totalBudget, totalExpense);
+              const totalBudget = agg.reduce((s, r) => s + r.budget, 0);
+              const totalExpense = agg.reduce((s, r) => s + r.expense, 0);
+              const { variance, variancePercent } = Helpers.calcMetrics(totalBudget, totalExpense);
               totals = { budget: totalBudget, expense: totalExpense, variance, variancePct: variancePercent };
               break;
             }
             case 'exceptions': {
               const f = store.filters.exceptions;
-              filters.company = f.company; filters.department = f.department; filters.month = f.month; filters.categorySearch = f.categorySearch;
+              filters.company = f.company;
+              filters.department = f.department;
+              filters.month = f.month;
+              filters.categorySearch = f.categorySearch;
               let raw = store.mergedRecords.filter(r =>
                 hasAccess(r.company, r.department, access) &&
                 (f.company === 'All' || r.company === f.company) &&
@@ -3103,7 +3143,7 @@
               );
               const exRecords = [];
               for (const r of raw) {
-                const { variance, variancePercent } = calcMetrics(r.budget, r.expense);
+                const { variance, variancePercent } = Helpers.calcMetrics(r.budget, r.expense);
                 const sb = statusBadge(variance, variancePercent, r.budget);
                 const exem = store.exemMap[r.category] || false;
                 if (exem) continue;
@@ -3111,15 +3151,17 @@
                 if (isException(sb)) exRecords.push(r);
               }
               records = exRecords;
-              const totalBudget = records.reduce((s,r) => s + r.budget, 0);
-              const totalExpense = records.reduce((s,r) => s + r.expense, 0);
-              const { variance, variancePercent } = calcMetrics(totalBudget, totalExpense);
+              const totalBudget = records.reduce((s, r) => s + r.budget, 0);
+              const totalExpense = records.reduce((s, r) => s + r.expense, 0);
+              const { variance, variancePercent } = Helpers.calcMetrics(totalBudget, totalExpense);
               totals = { budget: totalBudget, expense: totalExpense, variance, variancePct: variancePercent };
               break;
             }
             case 'deptSummary': {
               const f = store.filters.deptSummary;
-              filters.company = f.company; filters.department = f.department; filters.viewMode = f.viewMode;
+              filters.company = f.company;
+              filters.department = f.department;
+              filters.viewMode = f.viewMode;
               let data = store.mergedRecords.filter(r =>
                 hasAccess(r.company, r.department, access) &&
                 (f.company === 'All' || r.company === f.company) &&
@@ -3128,22 +3170,24 @@
               data = applyViewFilter(data, f.viewMode, store.ytdMonthCutoff);
               const map = new Map();
               for (const r of data) {
-                const e = map.get(r.department) || { department: r.department, budget:0, expense:0 };
+                const e = map.get(r.department) || { department: r.department, budget: 0, expense: 0 };
                 e.budget += r.budget;
                 e.expense += r.expense;
                 map.set(r.department, e);
               }
               deptData = [...map.values()];
               records = deptData;
-              const totalBudget = deptData.reduce((s,d) => s + d.budget, 0);
-              const totalExpense = deptData.reduce((s,d) => s + d.expense, 0);
-              const { variance, variancePercent } = calcMetrics(totalBudget, totalExpense);
+              const totalBudget = deptData.reduce((s, d) => s + d.budget, 0);
+              const totalExpense = deptData.reduce((s, d) => s + d.expense, 0);
+              const { variance, variancePercent } = Helpers.calcMetrics(totalBudget, totalExpense);
               totals = { budget: totalBudget, expense: totalExpense, variance, variancePct: variancePercent };
               break;
             }
             case 'planning': {
               const f = store.filters.planning;
-              filters.company = f.company; filters.department = f.department; filters.searchTerm = f.searchTerm;
+              filters.company = f.company;
+              filters.department = f.department;
+              filters.searchTerm = f.searchTerm;
               if (store.planningTableExists) {
                 try {
                   const rows = buildPlanningRows();
@@ -3162,22 +3206,24 @@
                     total.thisYearBudgetVariance += row.thisYearBudgetVariance || 0;
                     total.budgetNextYear += row.budgetNextYear || 0;
                     if (row.months) {
-                      for (let i=0; i<12; i++) {
+                      for (let i = 0; i < 12; i++) {
                         total.months[i] += (row.months[i] || 0);
                       }
                     }
                   }
                   planningTotals = total;
                   records = planningData;
-                } catch (_) { planningData = []; planningTotals = null; records = []; }
+                } catch (_) { planningData = [];
+                  planningTotals = null;
+                  records = []; }
               }
               break;
             }
             default: {
               records = accessFiltered();
-              const budget = records.reduce((s,r) => s + r.budget, 0);
-              const expense = records.reduce((s,r) => s + r.expense, 0);
-              const { variance, variancePercent } = calcMetrics(budget, expense);
+              const budget = records.reduce((s, r) => s + r.budget, 0);
+              const expense = records.reduce((s, r) => s + r.expense, 0);
+              const { variance, variancePercent } = Helpers.calcMetrics(budget, expense);
               totals = { budget, expense, variance, variancePct: variancePercent };
             }
           }
@@ -3223,7 +3269,7 @@
           updated_by: store.authUser.username,
           updated_at: new Date().toISOString()
         };
-        await DataService.upsert('planning_permissions', body, ['company','cor_dept'], false);
+        await DataService.upsert('planning_permissions', body, ['company', 'cor_dept'], false);
         store.planningPermissions[key] = newEnabled;
         renderPlanning();
         updatePermissionToggleUI(company, department);
@@ -3284,7 +3330,9 @@
         }
         render() {
           if (!this.el || !this.totalRows) { if (this.el) this.el.innerHTML = ''; return; }
-          const tp = this.totalPages, cp = this.page, ps = this.pageSize;
+          const tp = this.totalPages,
+            cp = this.page,
+            ps = this.pageSize;
           const start = ps === 'All' ? 1 : (cp - 1) * ps + 1;
           const end = ps === 'All' ? this.totalRows : Math.min(cp * ps, this.totalRows);
           const opts = CONFIG.PAGE_SIZE_OPTIONS.map(o =>
@@ -3294,14 +3342,15 @@
           const ell = `<span class="page-ellipsis">…</span>`;
           let pageBtns = '';
           if (tp <= 7) {
-            for (let i=1; i<=tp; i++) pageBtns += btn(i, i, i===cp);
+            for (let i = 1; i <= tp; i++) pageBtns += btn(i, i, i === cp);
           } else {
-            pageBtns += btn(1, 1, cp===1);
+            pageBtns += btn(1, 1, cp === 1);
             if (cp > 3) pageBtns += ell;
-            const lo = Math.max(2, cp - 1), hi = Math.min(tp - 1, cp + 1);
-            for (let i=lo; i<=hi; i++) pageBtns += btn(i, i, i===cp);
+            const lo = Math.max(2, cp - 1),
+              hi = Math.min(tp - 1, cp + 1);
+            for (let i = lo; i <= hi; i++) pageBtns += btn(i, i, i === cp);
             if (cp < tp - 2) pageBtns += ell;
-            pageBtns += btn(tp, tp, cp===tp);
+            pageBtns += btn(tp, tp, cp === tp);
           }
           this.el.innerHTML =
             `<div class="pagination-bar"><span class="rows-info">Showing <strong>${start}–${end}</strong> of <strong>${this.totalRows}</strong> rows</span><div class="rows-select"><span>Rows per page:</span><select class="page-size-select">${opts}</select></div><div class="page-controls"><button class="page-btn" data-page="${cp - 1}" ${cp <= 1 ? 'disabled' : ''}>‹</button>${pageBtns}<button class="page-btn" data-page="${cp + 1}" ${cp >= tp ? 'disabled' : ''}>›</button></div></div>`;
@@ -3327,24 +3376,25 @@
       function mergeData(budgets, expenses) {
         const expMap = new Map();
         for (const e of expenses) {
-          const key = `${e.COMPANY}|${e.COR_DEPT}|${e.CODE_DESC}|${monthFromDate(e.DATE)}`;
+          const key = `${e.COMPANY}|${e.COR_DEPT}|${e.CODE_DESC}|${Helpers.monthFromDate(e.DATE)}`;
           const entry = expMap.get(key) || { expense: 0, remarks: [] };
-          entry.expense += toNum(e.TOTAL);
+          entry.expense += Helpers.toNum(e.TOTAL);
           if (e.REMARKS && !entry.remarks.includes(e.REMARKS)) entry.remarks.push(e.REMARKS);
           expMap.set(key, entry);
         }
         const merged = [];
         for (const b of budgets) {
-          const month = monthFromDate(b.DATE);
+          const month = Helpers.monthFromDate(b.DATE);
           const key = `${b.COMPANY}|${b.COR_DEPT}|${b.CODE_DESC}|${month}`;
           const exp = expMap.get(key) || { expense: 0, remarks: [] };
           merged.push({ company: b.COMPANY, department: b.COR_DEPT, category: b.CODE_DESC, month,
-            budget: toNum(b.TOTAL), expense: exp.expense, remarks: exp.remarks.join(' | ') });
+            budget: Helpers.toNum(b.TOTAL), expense: exp.expense, remarks: exp.remarks.join(' | ') });
           expMap.delete(key);
         }
         for (const [key, v] of expMap) {
           const [company, department, category, month] = key.split('|');
-          merged.push({ company, department, category, month, budget: 0, expense: v.expense, remarks: v.remarks.join(' | ') });
+          merged.push({ company, department, category, month, budget: 0, expense: v.expense, remarks: v.remarks.join(
+              ' | ') });
         }
         return merged;
       }
@@ -3353,12 +3403,13 @@
         const map = new Map();
         for (const r of records) {
           const k = `${r.company}|${r.department}|${r.month}|${r.category}`;
-          if (!map.has(k)) map.set(k, { company: r.company, department: r.department, month: r.month, category: r.category, budget: 0, expense: 0 });
+          if (!map.has(k)) map.set(k, { company: r.company, department: r.department, month: r.month, category: r.category,
+            budget: 0, expense: 0 });
           const e = map.get(k);
           e.budget += r.budget;
           e.expense += r.expense;
         }
-        return [...map.values()].sort((a,b) =>
+        return [...map.values()].sort((a, b) =>
           a.company.localeCompare(b.company) || a.department.localeCompare(b.department) ||
           a.month.localeCompare(b.month) || a.category.localeCompare(b.category)
         );
@@ -3366,12 +3417,13 @@
 
       function resolveAccess(user) {
         const all = store.mergedRecords;
-        const coList = splitPipe(user.company);
-        const deptList = splitPipe(user.department);
-        const viewAllCo = coList.some(isAllToken);
-        const viewAllDept = deptList.some(isAllToken);
-        const companies = viewAllCo ? [...new Set(all.map(r => r.company))] : coList.filter(c => !isAllToken(c));
-        const departments = viewAllDept ? [...new Set(all.map(r => r.department))] : deptList.filter(d => !isAllToken(d));
+        const coList = Helpers.splitPipe(user.company);
+        const deptList = Helpers.splitPipe(user.department);
+        const viewAllCo = coList.some(Helpers.isAllToken);
+        const viewAllDept = deptList.some(Helpers.isAllToken);
+        const companies = viewAllCo ? [...new Set(all.map(r => r.company))] : coList.filter(c => !Helpers.isAllToken(c));
+        const departments = viewAllDept ? [...new Set(all.map(r => r.department))] : deptList.filter(d => !Helpers.isAllToken(
+        d));
         const coSet = Object.fromEntries(companies.map(c => [c.toUpperCase(), true]));
         const deptSet = Object.fromEntries(departments.map(d => [d.toUpperCase(), true]));
         return { companies, departments, viewAllCo, viewAllDept, coSet, deptSet };
@@ -3379,7 +3431,7 @@
 
       function hasAccess(company, department, access) {
         return !!((access.viewAllCo || access.coSet[String(company || '').toUpperCase()]) &&
-                  (access.viewAllDept || access.deptSet[String(department || '').toUpperCase()]));
+          (access.viewAllDept || access.deptSet[String(department || '').toUpperCase()]));
       }
 
       function accessFiltered() {
@@ -3400,7 +3452,7 @@
         const f = store.filters.budgetVariance;
         if (budget === 0) return '<span class="badge bg-secondary">No Budget</span>';
         const excess = (Math.abs(variance) > f.allowableAmount) &&
-                       (Math.abs(variancePct) > f.allowablePercent);
+          (Math.abs(variancePct) > f.allowablePercent);
         if (variance < 0) return excess ? '<span class="badge bg-danger">High Expense</span>' :
           '<span class="badge bg-success">Tolerable</span>';
         if (variance > 0) return excess ? '<span class="badge bg-primary">High Budget</span>' :
@@ -3411,13 +3463,16 @@
       const isException = html => html.includes('No Budget') || html.includes('High Expense');
 
       function getNote(co, dept, cat, month) {
-        return store.notesMap[noteKey(co, dept, cat, month)] || '';
+        return store.notesMap[Helpers.noteKey(co, dept, cat, month)] || '';
       }
 
       function notesCell(co, dept, cat, month) {
         const note = getNote(co, dept, cat, month);
-        const encCo = attrEncode(co), encDept = attrEncode(dept), encCat = attrEncode(cat), encMonth = attrEncode(month || '');
-        return `<div class="notes-cell"><textarea class="form-control form-control-sm variance-note-input" rows="2" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}" placeholder="Notes...">${fmt.html(note)}</textarea><button type="button" class="btn btn-sm btn-outline-success mt-1 save-note-btn" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">Save note</button><span class="note-save-status text-muted ms-1"></span></div>`;
+        const encCo = Helpers.attrEncode(co),
+          encDept = Helpers.attrEncode(dept),
+          encCat = Helpers.attrEncode(cat),
+          encMonth = Helpers.attrEncode(month || '');
+        return `<div class="notes-cell"><textarea class="form-control form-control-sm variance-note-input" rows="2" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}" placeholder="Notes...">${Helpers.fmt.html(note)}</textarea><button type="button" class="btn btn-sm btn-outline-success mt-1 save-note-btn" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">Save note</button><span class="note-save-status text-muted ms-1"></span></div>`;
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -3431,28 +3486,29 @@
         return [...rows].sort((a, b) => {
           let aVal, bVal;
           if (isMatrix) {
-            if (column === 0) { aVal = a.category; bVal = b.category; } else {
+            if (column === 0) { aVal = a.category;
+              bVal = b.category; } else {
               const keys = ['totalExp', 'totalBud', 'totalVar', 'totalVarPct'];
-              aVal = a.totals[keys[column-1]];
-              bVal = b.totals[keys[column-1]];
+              aVal = a.totals[keys[column - 1]];
+              bVal = b.totals[keys[column - 1]];
             }
           } else {
             const rawA = a[column] || '';
             const rawB = b[column] || '';
             if (isMonthColumn) {
-              const idxA = getMonthOrderIndex(rawA);
-              const idxB = getMonthOrderIndex(rawB);
+              const idxA = Helpers.getMonthOrderIndex(rawA);
+              const idxB = Helpers.getMonthOrderIndex(rawB);
               if (idxA !== -1 && idxB !== -1) {
                 return (idxA - idxB) * dir;
               }
             }
-            const numA = extractSortValue(rawA);
-            const numB = extractSortValue(rawB);
+            const numA = Helpers.extractSortValue(rawA);
+            const numB = Helpers.extractSortValue(rawB);
             if (!isNaN(numA) && !isNaN(numB)) {
               return (numA - numB) * dir;
             }
-            aVal = extractPlainText(rawA);
-            bVal = extractPlainText(rawB);
+            aVal = Helpers.extractPlainText(rawA);
+            bVal = Helpers.extractPlainText(rawB);
           }
           if (typeof aVal === 'number' && typeof bVal === 'number') {
             return (aVal - bVal) * dir;
@@ -3466,7 +3522,7 @@
       function computeRowDerived(actualBudget, actualExpense, mls, months) {
         const thisYearMls = actualExpense + mls;
         const thisYearBudgetVariance = actualBudget - thisYearMls;
-        const budgetNextYear = months.reduce((a,b) => a + toNum(b), 0);
+        const budgetNextYear = months.reduce((a, b) => a + Helpers.toNum(b), 0);
         return { thisYearMls, thisYearBudgetVariance, budgetNextYear };
       }
 
@@ -3475,7 +3531,7 @@
         if (!body) return;
         body.innerHTML = rows && rows.length ?
           rows.map(cells => `<tr>${cells.map(c => `<td>${c}</td>`).join('')}</tr>`).join('') :
-          `<tr><td colspan="11" class="text-center p-4 text-muted">${fmt.html(emptyMsg)}</td></tr>`;
+          `<tr><td colspan="11" class="text-center p-4 text-muted">${Helpers.fmt.html(emptyMsg)}</td></tr>`;
       }
 
       function updateSortIndicators(tableKey) {
@@ -3511,7 +3567,8 @@
         const metric = document.getElementById('metricSelect').value;
         const isAll = metric === 'all';
         const btns = document.querySelectorAll('#layoutToggle .toggle-option');
-        btns.forEach(b => { b.disabled = !isAll; b.classList.toggle('disabled', !isAll); });
+        btns.forEach(b => { b.disabled = !isAll;
+          b.classList.toggle('disabled', !isAll); });
         if (!isAll) {
           store.filters.dashboard.layout = 'month';
           btns.forEach(b => b.classList.toggle('active', b.dataset.layout === 'month'));
@@ -3519,7 +3576,9 @@
         refreshDashboard();
       }
 
-      function refreshDashboard() { renderKPIs(); renderMatrixTable(); renderDeptSummary(); }
+      function refreshDashboard() { renderKPIs();
+        renderMatrixTable();
+        renderDeptSummary(); }
 
       function updateNavUserInfo() {
         const session = Auth.getSession();
@@ -3548,14 +3607,15 @@
       }
 
       function showEmptyState() {
-        ['totalBudget','totalExpense','totalVariance'].forEach(id => {
+        ['totalBudget', 'totalExpense', 'totalVariance'].forEach(id => {
           const el = document.getElementById(id);
           if (el) el.textContent = '₱0';
         });
         const vl = document.getElementById('variancePercentLabel');
         if (vl) vl.textContent = '0% Variance';
         document.getElementById('dynamicTableHead').innerHTML = '';
-        document.getElementById('dynamicTableBody').innerHTML = `<tr><td colspan="20" class="text-center p-4 text-danger">Data unavailable</td></tr>`;
+        document.getElementById('dynamicTableBody').innerHTML =
+          `<tr><td colspan="20" class="text-center p-4 text-danger">Data unavailable</td></tr>`;
         document.getElementById('monthlyTotalsHead').innerHTML = '';
         document.getElementById('monthlyTotalsBody').innerHTML = '';
         mountTableBody('bvDetailBody', [], 'Data unavailable');
@@ -3568,12 +3628,12 @@
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       function renderKPIs() {
         const filtered = getDashboardFiltered();
-        const budget = filtered.reduce((s,r) => s + r.budget, 0);
-        const expense = filtered.reduce((s,r) => s + r.expense, 0);
-        const { variance, variancePercent } = calcMetrics(budget, expense);
-        document.getElementById('totalBudget').textContent = fmt.currency(budget);
-        document.getElementById('totalExpense').textContent = fmt.currency(expense);
-        document.getElementById('totalVariance').textContent = fmt.currency(variance);
+        const budget = filtered.reduce((s, r) => s + r.budget, 0);
+        const expense = filtered.reduce((s, r) => s + r.expense, 0);
+        const { variance, variancePercent } = Helpers.calcMetrics(budget, expense);
+        document.getElementById('totalBudget').textContent = Helpers.fmt.currency(budget);
+        document.getElementById('totalExpense').textContent = Helpers.fmt.currency(expense);
+        document.getElementById('totalVariance').textContent = Helpers.fmt.currency(variance);
         document.getElementById('variancePercentLabel').textContent = `${variancePercent.toFixed(1)}% Variance`;
       }
 
@@ -3614,9 +3674,9 @@
           const mData = {};
           for (const m of CONFIG.MONTHS) {
             const recs = filtered.filter(d => d.category === cat && d.month === m);
-            const expense = recs.reduce((s,r) => s + r.expense, 0);
-            const budget = recs.reduce((s,r) => s + r.budget, 0);
-            mData[m] = calcMetrics(budget, expense);
+            const expense = recs.reduce((s, r) => s + r.expense, 0);
+            const budget = recs.reduce((s, r) => s + r.budget, 0);
+            mData[m] = Helpers.calcMetrics(budget, expense);
           }
           catMap.set(cat, mData);
         }
@@ -3624,18 +3684,19 @@
       }
 
       function computeTotalsForData(mData, months) {
-        let totalExp = 0, totalBud = 0;
+        let totalExp = 0,
+          totalBud = 0;
         for (const m of months) {
           const d = mData[m] || { expense: 0, budget: 0 };
           totalExp += d.expense;
           totalBud += d.budget;
         }
-        const { variance: totalVar, variancePercent: totalVarPct } = calcMetrics(totalBud, totalExp);
+        const { variance: totalVar, variancePercent: totalVarPct } = Helpers.calcMetrics(totalBud, totalExp);
         return { totalExp, totalBud, totalVar, totalVarPct };
       }
 
       function finalizeMonthMetrics(bucket) {
-        const m = calcMetrics(bucket.budget, bucket.expense);
+        const m = Helpers.calcMetrics(bucket.budget, bucket.expense);
         bucket.variance = m.variance;
         bucket.variancePercent = m.variancePercent;
         bucket.utilizationPct = m.utilizationPct;
@@ -3648,7 +3709,7 @@
         const filtered = getDashboardFiltered();
         let months = getDisplayMonths(filtered);
         if (!months.length) months = ['No Data'];
-        const thr = toNum(store.filters.dashboard.threshold);
+        const thr = Helpers.toNum(store.filters.dashboard.threshold);
         const searchTerm = store.filters.dashboard.searchTerm || '';
 
         const catMap = buildCategoryMonthData(filtered, months);
@@ -3675,7 +3736,7 @@
         }
 
         const hierarchical = [];
-        const sortedDivs = Array.from(groups.keys()).sort(compareDivisions);
+        const sortedDivs = Array.from(groups.keys()).sort(Helpers.compareDivisions);
         for (const div of sortedDivs) {
           const children = groups.get(div);
           if (!children || children.length === 0) continue;
@@ -3695,7 +3756,7 @@
             }
           }
           for (const m of months) finalizeMonthMetrics(divMData[m]);
-          const divVar = calcMetrics(divTotals.totalBud, divTotals.totalExp);
+          const divVar = Helpers.calcMetrics(divTotals.totalBud, divTotals.totalExp);
           divTotals.totalVar = divVar.variance;
           divTotals.totalVarPct = divVar.variancePercent;
           hierarchical.push({
@@ -3734,13 +3795,14 @@
         const catMap = buildCategoryMonthData(filtered, months);
         const monthTotals = {};
         for (const m of months) {
-          let budget = 0, expense = 0;
+          let budget = 0,
+            expense = 0;
           for (const mData of catMap.values()) {
             const d = mData[m] || { expense: 0, budget: 0 };
             budget += d.budget;
             expense += d.expense;
           }
-          const metrics = calcMetrics(budget, expense);
+          const metrics = Helpers.calcMetrics(budget, expense);
           monthTotals[m] = {
             expense: metrics.expense,
             budget: metrics.budget,
@@ -3756,27 +3818,31 @@
         th += `</tr>`;
         if (head) head.innerHTML = th;
         let tb = '';
-        let grandBud = 0, grandExp = 0, grandVar = 0;
+        let grandBud = 0,
+          grandExp = 0,
+          grandVar = 0;
         for (const m of months) {
           const mt = monthTotals[m];
           grandBud += mt.budget;
           grandExp += mt.expense;
           grandVar += mt.variance;
           let row = `<tr><td><strong>${m}</strong></td>`;
-          if (sB) row += `<td class="text-end">${fmt.currency(mt.budget)}</td>`;
-          if (sE) row += `<td class="text-end">${fmt.currency(mt.expense)}</td>`;
+          if (sB) row += `<td class="text-end">${Helpers.fmt.currency(mt.budget)}</td>`;
+          if (sE) row += `<td class="text-end">${Helpers.fmt.currency(mt.expense)}</td>`;
           if (sV) {
-            const vc = varClass(mt.variance);
-            row += `<td class="text-end ${vc} fw-semibold">${fmt.currency(mt.variance)}</td><td class="text-end ${vc} fw-semibold">${fmt.percent(mt.variancePct)}</td>`;
+            const vc = Helpers.varClass(mt.variance);
+            row +=
+              `<td class="text-end ${vc} fw-semibold">${Helpers.fmt.currency(mt.variance)}</td><td class="text-end ${vc} fw-semibold">${Helpers.fmt.percent(mt.variancePct)}</td>`;
           }
           tb += row + '</tr>';
         }
         const gVarPct = grandBud ? (grandVar / grandBud) * 100 : 0;
-        const gvc = varClass(grandVar);
+        const gvc = Helpers.varClass(grandVar);
         let gRow = `<tr class="total-row"><td><strong>TOTAL</strong></td>`;
-        if (sB) gRow += `<td class="text-end fw-bold">${fmt.currency(grandBud)}</td>`;
-        if (sE) gRow += `<td class="text-end fw-bold">${fmt.currency(grandExp)}</td>`;
-        if (sV) gRow += `<td class="text-end fw-bold ${gvc}">${fmt.currency(grandVar)}</td><td class="text-end fw-bold ${gvc}">${fmt.percent(gVarPct)}</td>`;
+        if (sB) gRow += `<td class="text-end fw-bold">${Helpers.fmt.currency(grandBud)}</td>`;
+        if (sE) gRow += `<td class="text-end fw-bold">${Helpers.fmt.currency(grandExp)}</td>`;
+        if (sV) gRow +=
+          `<td class="text-end fw-bold ${gvc}">${Helpers.fmt.currency(grandVar)}</td><td class="text-end fw-bold ${gvc}">${Helpers.fmt.percent(gVarPct)}</td>`;
         gRow += '</tr>';
         if (body) body.innerHTML = tb + gRow;
       }
@@ -3806,10 +3872,14 @@
             if (sB) thead += `<th>Budget (₱)</th>`;
             if (sV) thead += `<th>Variance (₱)</th><th>Var %</th>`;
           }
-          thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="1">Total Exp <span class="sort-indicator">${indicator(1)}</span></th>`;
-          thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="2">Total Bud <span class="sort-indicator">${indicator(2)}</span></th>`;
-          thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="3">Total Var <span class="sort-indicator">${indicator(3)}</span></th>`;
-          thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="4">Total Var % <span class="sort-indicator">${indicator(4)}</span></th></tr>`;
+          thead +=
+            `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="1">Total Exp <span class="sort-indicator">${indicator(1)}</span></th>`;
+          thead +=
+            `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="2">Total Bud <span class="sort-indicator">${indicator(2)}</span></th>`;
+          thead +=
+            `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="3">Total Var <span class="sort-indicator">${indicator(3)}</span></th>`;
+          thead +=
+            `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="4">Total Var % <span class="sort-indicator">${indicator(4)}</span></th></tr>`;
         } else {
           const groups = [];
           if (sE) groups.push({ name: 'EXPENSE (₱)', type: 'expense' });
@@ -3831,10 +3901,14 @@
               for (const m of months) thead += `<th>${m}</th>`;
             }
           }
-          thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="1">Total Exp <span class="sort-indicator">${indicator(1)}</span></th>`;
-          thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="2">Total Bud <span class="sort-indicator">${indicator(2)}</span></th>`;
-          thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="3">Total Var <span class="sort-indicator">${indicator(3)}</span></th>`;
-          thead += `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="4">Total Var % <span class="sort-indicator">${indicator(4)}</span></th></tr>`;
+          thead +=
+            `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="1">Total Exp <span class="sort-indicator">${indicator(1)}</span></th>`;
+          thead +=
+            `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="2">Total Bud <span class="sort-indicator">${indicator(2)}</span></th>`;
+          thead +=
+            `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="3">Total Var <span class="sort-indicator">${indicator(3)}</span></th>`;
+          thead +=
+            `<th class="bg-light clickable-header" data-sort-table="matrix" data-sort-col="4">Total Var % <span class="sort-indicator">${indicator(4)}</span></th></tr>`;
         }
         document.getElementById('dynamicTableHead').innerHTML = thead;
         paginators.matrix._meta = { months, showExp: sE, showBud: sB, showVar: sV };
@@ -3847,7 +3921,8 @@
       }
 
       function renderMatrixPage() {
-        const { months, showExp, showBud, showVar } = paginators.matrix._meta || { months: [], showExp: true, showBud: false, showVar: false };
+        const { months, showExp, showBud, showVar } = paginators.matrix._meta || { months: [], showExp: true, showBud: false,
+          showVar: false };
         const pageRows = paginators.matrix.getSlice(matrixFlatRows);
         const tbody = document.getElementById('dynamicTableBody');
         if (!tbody) return;
@@ -3884,8 +3959,8 @@
           const dept = row.department || store.filters.dashboard.department;
           const catName = cat;
 
-          const catDisplay = isTotal ? `<strong>${fmt.html(cat)}</strong>` :
-            `<span class="matrix-category-link" data-company="${co}" data-department="${dept}" data-category="${catName}" data-viewmode="${viewMode}" data-cutoff="${cutoff}" role="button" tabindex="0" style="cursor:pointer;color:var(--blue-primary);text-decoration:underline;">${fmt.html(cat)}</span>`;
+          const catDisplay = isTotal ? `<strong>${Helpers.fmt.html(cat)}</strong>` :
+            `<span class="matrix-category-link" data-company="${co}" data-department="${dept}" data-category="${catName}" data-viewmode="${viewMode}" data-cutoff="${cutoff}" role="button" tabindex="0" style="cursor:pointer;color:var(--blue-primary);text-decoration:underline;">${Helpers.fmt.html(cat)}</span>`;
 
           let firstCell = `<td class="sticky-col">${toggleHtml} ${catDisplay}</td>`;
 
@@ -3893,13 +3968,14 @@
           if (!isExpBudLayout()) {
             for (const m of months) {
               const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0, utilizationPct: 0 };
-              if (showExp) monthCells += `<td class="text-end">${fmt.currency(d.expense)}</td>`;
-              if (showBud) monthCells += `<td class="text-end">${fmt.currency(d.budget)}</td>`;
+              if (showExp) monthCells += `<td class="text-end">${Helpers.fmt.currency(d.expense)}</td>`;
+              if (showBud) monthCells += `<td class="text-end">${Helpers.fmt.currency(d.budget)}</td>`;
               if (showVar) {
-                const vc = varClass(d.variance);
+                const vc = Helpers.varClass(d.variance);
                 const fl = Math.min(100, d.utilizationPct);
                 const bar = d.utilizationPct > 100 ? '#ef4444' : '#10b981';
-                monthCells += `<td class="text-end ${vc} fw-semibold">${fmt.currency(d.variance)}</td><td class="text-end"><span class="${vc} fw-bold">${fmt.percent(d.variancePercent)}</span><div class="progress-threshold"><div class="progress-fill" style="width:${fl}%;background:${bar}"></div></div></td>`;
+                monthCells +=
+                  `<td class="text-end ${vc} fw-semibold">${Helpers.fmt.currency(d.variance)}</td><td class="text-end"><span class="${vc} fw-bold">${Helpers.fmt.percent(d.variancePercent)}</span><div class="progress-threshold"><div class="progress-fill" style="width:${fl}%;background:${bar}"></div></div></td>`;
               }
             }
           } else {
@@ -3908,7 +3984,10 @@
             if (showBud) groups.push('budget');
             if (showVar) groups.push('variance');
             if (!groups.length) groups.push('expense');
-            const eV = [], bV = [], vV = [], vpV = [];
+            const eV = [],
+              bV = [],
+              vV = [],
+              vpV = [];
             for (const m of months) {
               const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0 };
               eV.push(d.expense);
@@ -3918,19 +3997,22 @@
             }
             for (const g of groups) {
               if (g === 'expense') {
-                for (const v of eV) monthCells += `<td class="text-end">${fmt.currency(v)}</td>`;
+                for (const v of eV) monthCells += `<td class="text-end">${Helpers.fmt.currency(v)}</td>`;
               } else if (g === 'budget') {
-                for (const v of bV) monthCells += `<td class="text-end">${fmt.currency(v)}</td>`;
+                for (const v of bV) monthCells += `<td class="text-end">${Helpers.fmt.currency(v)}</td>`;
               } else if (g === 'variance') {
-                for (const v of vV) monthCells += `<td class="text-end ${varClass(v)} fw-semibold">${fmt.currency(v)}</td>`;
-                for (const p of vpV) monthCells += `<td class="text-end"><span class="${varClass(p)} fw-bold">${fmt.percent(p)}</span></td>`;
+                for (const v of vV) monthCells += `<td class="text-end ${Helpers.varClass(v)} fw-semibold">${Helpers.fmt.currency(v)}</td>`;
+                for (const p of vpV) monthCells +=
+                  `<td class="text-end"><span class="${Helpers.varClass(p)} fw-bold">${Helpers.fmt.percent(p)}</span></td>`;
               }
             }
           }
 
-          const tv = totals.totalVar, tvp = totals.totalVarPct, tvc = varClass(tv);
+          const tv = totals.totalVar,
+            tvp = totals.totalVarPct,
+            tvc = Helpers.varClass(tv);
           const totalCells =
-            `<td class="text-end fw-bold bg-light">${fmt.currency(totals.totalExp)}</td><td class="text-end fw-bold bg-light">${fmt.currency(totals.totalBud)}</td><td class="text-end fw-bold ${tvc} bg-light">${fmt.currency(tv)}</td><td class="text-end fw-bold ${tvc} bg-light">${fmt.percent(tvp)}</td>`;
+            `<td class="text-end fw-bold bg-light">${Helpers.fmt.currency(totals.totalExp)}</td><td class="text-end fw-bold bg-light">${Helpers.fmt.currency(totals.totalBud)}</td><td class="text-end fw-bold ${tvc} bg-light">${Helpers.fmt.currency(tv)}</td><td class="text-end fw-bold ${tvc} bg-light">${Helpers.fmt.percent(tvp)}</td>`;
 
           rowHtml =
             `<tr class="${trClass}" data-division="${divisionKey}" data-is-total="${isTotal}" ${displayStyle}>
@@ -3995,20 +4077,23 @@
         );
         const agg = aggregateByKey(records);
         let rows = agg.map(item => {
-          const { variance: v, variancePercent: vp } = calcMetrics(item.budget, item.expense);
-          const vpDisp = (item.budget === 0 && item.expense > 0) ? 'N/A' : fmt.percent(vp);
-          const vc = varClass(v), pc = varClass(vp);
+          const { variance: v, variancePercent: vp } = Helpers.calcMetrics(item.budget, item.expense);
+          const vpDisp = (item.budget === 0 && item.expense > 0) ? 'N/A' : Helpers.fmt.percent(vp);
+          const vc = Helpers.varClass(v),
+            pc = Helpers.varClass(vp);
           const sb = statusBadge(v, vp, item.budget);
-          const encCo = attrEncode(item.company), encDept = attrEncode(item.department),
-                encCat = attrEncode(item.category), encMonth = attrEncode(item.month);
+          const encCo = Helpers.attrEncode(item.company),
+            encDept = Helpers.attrEncode(item.department),
+            encCat = Helpers.attrEncode(item.category),
+            encMonth = Helpers.attrEncode(item.month);
           return [
-            fmt.html(item.company),
-            fmt.html(item.department),
-            fmt.html(item.category),
-            fmt.html(item.month),
-            fmt.currency(item.budget),
-            fmt.currency(item.expense),
-            `<span class="${vc} fw-semibold">${fmt.currency(v)}</span>`,
+            Helpers.fmt.html(item.company),
+            Helpers.fmt.html(item.department),
+            Helpers.fmt.html(item.category),
+            Helpers.fmt.html(item.month),
+            Helpers.fmt.currency(item.budget),
+            Helpers.fmt.currency(item.expense),
+            `<span class="${vc} fw-semibold">${Helpers.fmt.currency(v)}</span>`,
             vpDisp !== 'N/A' ? `<span class="${pc} fw-semibold">${vpDisp}</span>` : vpDisp,
             sb,
             `<button class="btn btn-sm btn-outline-info view-details-btn" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">View Details</button>`,
@@ -4048,24 +4133,27 @@
         );
         const exRows = [];
         for (const r of records) {
-          const { variance, variancePercent: variancePct } = calcMetrics(r.budget, r.expense);
+          const { variance, variancePercent: variancePct } = Helpers.calcMetrics(r.budget, r.expense);
           const sb = statusBadge(variance, variancePct, r.budget);
           const exem = store.exemMap[r.category] || false;
           if (exem) continue;
           if (r.budget === 0 && Math.abs(r.expense) < 5000) continue;
           if (isException(sb)) {
-            const vpDisp = (r.budget === 0 && r.expense > 0) ? 'N/A' : fmt.percent(variancePct);
-            const vc = varClass(variance), pc = varClass(variancePct);
-            const encCo = attrEncode(r.company), encDept = attrEncode(r.department),
-                  encCat = attrEncode(r.category), encMonth = attrEncode(r.month);
+            const vpDisp = (r.budget === 0 && r.expense > 0) ? 'N/A' : Helpers.fmt.percent(variancePct);
+            const vc = Helpers.varClass(variance),
+              pc = Helpers.varClass(variancePct);
+            const encCo = Helpers.attrEncode(r.company),
+              encDept = Helpers.attrEncode(r.department),
+              encCat = Helpers.attrEncode(r.category),
+              encMonth = Helpers.attrEncode(r.month);
             exRows.push([
-              fmt.html(r.company),
-              fmt.html(r.department),
-              fmt.html(r.category),
-              fmt.html(r.month),
-              fmt.currency(r.budget),
-              fmt.currency(r.expense),
-              `<span class="${vc} fw-semibold">${fmt.currency(variance)}</span>`,
+              Helpers.fmt.html(r.company),
+              Helpers.fmt.html(r.department),
+              Helpers.fmt.html(r.category),
+              Helpers.fmt.html(r.month),
+              Helpers.fmt.currency(r.budget),
+              Helpers.fmt.currency(r.expense),
+              `<span class="${vc} fw-semibold">${Helpers.fmt.currency(variance)}</span>`,
               vpDisp !== 'N/A' ? `<span class="${pc} fw-semibold">${vpDisp}</span>` : vpDisp,
               sb,
               `<button class="btn btn-sm btn-outline-info view-exception-details" data-company="${encCo}" data-dept="${encDept}" data-cat="${encCat}" data-month="${encMonth}">View Details</button>`,
@@ -4110,12 +4198,14 @@
           map.set(r.department, e);
         }
         let rows = [...map.entries()].map(([dept, v]) => {
-          const { variance, variancePercent: vp } = calcMetrics(v.budget, v.expense);
-          const vc = varClass(variance);
-          const badge = vp >= 0 ? '<span class="badge bg-success">Within Budget</span>' : '<span class="badge bg-danger">Over Budget</span>';
-          return [fmt.html(dept), fmt.currency(v.budget), fmt.currency(v.expense),
-                  `<span class="${vc} fw-semibold">${fmt.currency(variance)}</span>`,
-                  fmt.percent(vp), badge];
+          const { variance, variancePercent: vp } = Helpers.calcMetrics(v.budget, v.expense);
+          const vc = Helpers.varClass(variance);
+          const badge = vp >= 0 ? '<span class="badge bg-success">Within Budget</span>' :
+            '<span class="badge bg-danger">Over Budget</span>';
+          return [Helpers.fmt.html(dept), Helpers.fmt.currency(v.budget), Helpers.fmt.currency(v.expense),
+            `<span class="${vc} fw-semibold">${Helpers.fmt.currency(variance)}</span>`,
+            Helpers.fmt.percent(vp), badge
+          ];
         });
         const sort = store.sort.dept;
         rows = sortRows(rows, sort.column, sort.direction);
@@ -4140,13 +4230,13 @@
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      // 15. Planning — with modal auto‑save
+      // 15. Planning — with id=1 for Actual Expense
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       function getAdditionsSumForMonth(plan, month) {
         if (!plan || !plan.additions) return 0;
         return plan.additions
           .filter(add => add.month === month)
-          .reduce((sum, add) => sum + toNum(add.amount), 0);
+          .reduce((sum, add) => sum + Helpers.toNum(add.amount), 0);
       }
 
       function isFormulaCategory(category) {
@@ -4199,10 +4289,10 @@
 
         let filteredCategories = allCategories.filter(cat => {
           const trimmed = cat.trim();
-          if (isCapex(trimmed)) return true;
+          if (Helpers.isCapex(trimmed)) return true;
           return !store.excludedCategories.has(cat);
         });
-        filteredCategories = ensureCapexIncluded(filteredCategories);
+        filteredCategories = Helpers.ensureCapexIncluded(filteredCategories);
 
         if (searchTerm) {
           filteredCategories = filteredCategories.filter(cat => cat.toLowerCase().includes(searchTerm));
@@ -4216,20 +4306,21 @@
         for (const r of records) {
           const cat = r.category;
           const trimmed = cat.trim();
-          if (store.excludedCategories.has(cat) && !isCapex(trimmed)) continue;
+          if (store.excludedCategories.has(cat) && !Helpers.isCapex(trimmed)) continue;
           if (!categoryData[cat]) categoryData[cat] = { actualBudget: 0, actualExpense: 0 };
           categoryData[cat].actualBudget += r.budget;
         }
         for (const cat of filteredCategories) {
           const recsForCat = records.filter(r => r.category === cat);
           let ytdExpense = 0;
-          if (store.ytdMonthCutoff !== null && store.ytdMonthCutoff >= 0) {
-            const cutoff = store.ytdMonthCutoff;
+          // ═══ KEY CHANGE: use store.planningYtdMonthCutoff (id=1) for Planning Actual Expense ═══
+          if (store.planningYtdMonthCutoff !== null && store.planningYtdMonthCutoff >= 0) {
+            const cutoff = store.planningYtdMonthCutoff;
             ytdExpense = recsForCat
               .filter(r => CONFIG.MONTHS.indexOf(r.month) <= cutoff)
-              .reduce((s,r) => s + r.expense, 0);
+              .reduce((s, r) => s + r.expense, 0);
           } else {
-            ytdExpense = recsForCat.reduce((s,r) => s + r.expense, 0);
+            ytdExpense = recsForCat.reduce((s, r) => s + r.expense, 0);
           }
           if (!categoryData[cat]) categoryData[cat] = { actualBudget: 0, actualExpense: 0 };
           categoryData[cat].actualExpense = ytdExpense;
@@ -4254,7 +4345,7 @@
               if (plan.additions) {
                 for (const add of plan.additions) {
                   const idx = CONFIG.MONTHS.indexOf(add.month);
-                  if (idx !== -1) sumMonths[idx] += toNum(add.amount);
+                  if (idx !== -1) sumMonths[idx] += Helpers.toNum(add.amount);
                 }
               }
             }
@@ -4262,7 +4353,7 @@
           if (!categoryData[cat]) categoryData[cat] = { actualBudget: 0, actualExpense: 0 };
           categoryData[cat].mls = sumMls;
           categoryData[cat].months = sumMonths;
-          categoryData[cat].budgetNextYear = sumMonths.reduce((a,b) => a + b, 0);
+          categoryData[cat].budgetNextYear = sumMonths.reduce((a, b) => a + b, 0);
         }
 
         let lyData = store.lyExpenses || [];
@@ -4271,12 +4362,13 @@
         const lyMap = new Map();
         for (const row of lyData) {
           const cat = row.code_desc;
-          const total = toNum(row.total);
+          const total = Helpers.toNum(row.total);
           lyMap.set(cat, (lyMap.get(cat) || 0) + total);
         }
 
         const sourceValues = {};
-        for (const srcName of Object.keys(CONFIG.FORMULA_CATEGORIES).flatMap(k => CONFIG.FORMULA_CATEGORIES[k].sourceNames)) {
+        for (const srcName of Object.keys(CONFIG.FORMULA_CATEGORIES).flatMap(k => CONFIG.FORMULA_CATEGORIES[k]
+            .sourceNames)) {
           const data = categoryData[srcName];
           if (data) {
             sourceValues[srcName] = {
@@ -4291,7 +4383,8 @@
         const rows = [];
         for (const cat of filteredCategories) {
           const isFormula = isFormulaCategory(cat);
-          let data = categoryData[cat] || { actualBudget: 0, actualExpense: 0, mls: 0, months: Array(12).fill(0), budgetNextYear: 0 };
+          let data = categoryData[cat] || { actualBudget: 0, actualExpense: 0, mls: 0, months: Array(12).fill(0),
+            budgetNextYear: 0 };
 
           if (isFormula) {
             const computedMls = computeFormula(cat, 'mls', sourceValues, multipliers);
@@ -4300,7 +4393,7 @@
             );
             data.mls = computedMls;
             data.months = computedMonths;
-            data.budgetNextYear = computedMonths.reduce((a,b) => a + b, 0);
+            data.budgetNextYear = computedMonths.reduce((a, b) => a + b, 0);
           }
 
           const fullBudget = data.actualBudget || 0;
@@ -4309,11 +4402,9 @@
           const thisYearMls = ytdExpense + mls;
           const thisYearBudgetVariance = fullBudget - thisYearMls;
           const months = data.months || Array(12).fill(0);
-          const budgetNextYear = months.reduce((a,b) => a + b, 0);
+          const budgetNextYear = months.reduce((a, b) => a + b, 0);
           const division = store.divisionMap[cat] || 'Uncategorized';
-
-          // Compute insight (still displayed, but not filterable)
-          const insight = computeInsight(thisYearMls, budgetNextYear);
+          const insight = Helpers.computeInsight(thisYearMls, budgetNextYear);
 
           rows.push({
             company: companyFilter !== 'All' ? companyFilter : 'All',
@@ -4334,17 +4425,16 @@
           });
         }
 
-        // No insight filter – show all rows
         const groups = {};
         for (const row of rows) {
           const div = row.division;
           const trimmedCat = row.category.trim().toLowerCase();
-          if (excludedDivs.has(div) && !isCapex(trimmedCat)) continue;
+          if (excludedDivs.has(div) && !Helpers.isCapex(trimmedCat)) continue;
           (groups[div] = groups[div] || []).push(row);
         }
 
         const visibleDivs = new Set(Object.keys(groups));
-        const sortedDivisions = Array.from(visibleDivs).sort(compareDivisions);
+        const sortedDivisions = Array.from(visibleDivs).sort(Helpers.compareDivisions);
 
         const hierarchical = [];
         for (const div of sortedDivisions) {
@@ -4352,7 +4442,13 @@
           if (!children || children.length === 0) continue;
           children.sort((a, b) => a.category.localeCompare(b.category));
 
-          let divBud = 0, divExp = 0, divMls = 0, divThisYearMls = 0, divVar = 0, divNext = 0, divLast = 0;
+          let divBud = 0,
+            divExp = 0,
+            divMls = 0,
+            divThisYearMls = 0,
+            divVar = 0,
+            divNext = 0,
+            divLast = 0;
           const divMonths = Array(12).fill(0);
           for (const child of children) {
             divBud += child.actualBudget;
@@ -4362,7 +4458,7 @@
             divVar += child.thisYearBudgetVariance;
             divNext += child.budgetNextYear;
             divLast += child.lastYearExpense;
-            for (let i=0; i<12; i++) divMonths[i] += child.months[i];
+            for (let i = 0; i < 12; i++) divMonths[i] += child.months[i];
           }
           hierarchical.push({
             company: children[0].company,
@@ -4385,16 +4481,21 @@
           for (const child of children) hierarchical.push({ ...child, isTotal: false });
         }
 
-        // Ensure Capex is included
         const capexPresent = hierarchical.some(row =>
-          row.category && isCapex(row.category)
+          row.category && Helpers.isCapex(row.category)
         );
 
         if (!capexPresent && companyFilter !== 'All' && deptFilter !== 'All') {
-          const capexRows = rows.filter(r => isCapex(r.category));
+          const capexRows = rows.filter(r => Helpers.isCapex(r.category));
           if (capexRows.length > 0) {
             const div = 'Capex';
-            let divBud = 0, divExp = 0, divMls = 0, divThisYearMls = 0, divVar = 0, divNext = 0, divLast = 0;
+            let divBud = 0,
+              divExp = 0,
+              divMls = 0,
+              divThisYearMls = 0,
+              divVar = 0,
+              divNext = 0,
+              divLast = 0;
             const divMonths = Array(12).fill(0);
             for (const child of capexRows) {
               divBud += child.actualBudget;
@@ -4404,7 +4505,7 @@
               divVar += child.thisYearBudgetVariance;
               divNext += child.budgetNextYear;
               divLast += child.lastYearExpense;
-              for (let i=0; i<12; i++) divMonths[i] += child.months[i];
+              for (let i = 0; i < 12; i++) divMonths[i] += child.months[i];
             }
             const newDiv = {
               company: capexRows[0].company,
@@ -4425,8 +4526,8 @@
               insight: ''
             };
             let pos = hierarchical.length;
-            for (let i=0; i<hierarchical.length; i++) {
-              if (hierarchical[i].isTotal && compareDivisions(hierarchical[i].division, div) > 0) {
+            for (let i = 0; i < hierarchical.length; i++) {
+              if (hierarchical[i].isTotal && Helpers.compareDivisions(hierarchical[i].division, div) > 0) {
                 pos = i;
                 break;
               }
@@ -4448,7 +4549,7 @@
 
       function computeGrandTotals() {
         const allRows = buildPlanningRows();
-        const childRows = allRows.filter(r => !r.isTotal && !isCapex(r.category));
+        const childRows = allRows.filter(r => !r.isTotal && !Helpers.isCapex(r.category));
         const totals = {
           lastYearExpense: 0,
           actualBudget: 0,
@@ -4467,7 +4568,7 @@
           totals.thisYearMls += row.thisYearMls || 0;
           totals.thisYearBudgetVariance += row.thisYearBudgetVariance || 0;
           totals.budgetNextYear += row.budgetNextYear || 0;
-          for (let i=0; i<12; i++) {
+          for (let i = 0; i < 12; i++) {
             totals.months[i] += (row.months && row.months[i]) || 0;
           }
         }
@@ -4497,7 +4598,7 @@
             updated_by: store.authUser?.username || 'user',
             updated_at: new Date().toISOString()
           };
-          await DataService.upsert('planning_remarks', body, ['company','cor_dept','code_desc','year'], false);
+          await DataService.upsert('planning_remarks', body, ['company', 'cor_dept', 'code_desc', 'year'], false);
           return true;
         } catch (err) {
           console.warn('Failed to save planning remark to DB, kept in memory:', err);
@@ -4505,8 +4606,8 @@
         }
       }
 
-      // ── Auto‑save function (debounced) ──
-      const autoSavePlanning = debounce(async function() {
+      // ── Auto‑save (debounced) ──
+      const autoSavePlanning = Helpers.debounce(async function() {
         const statusEl = document.getElementById('planningAutoSaveStatus');
         if (!statusEl) return;
         const company = store.filters.planning.company;
@@ -4524,7 +4625,7 @@
         statusEl.textContent = '⏳ Saving…';
         statusEl.className = 'badge bg-info w-100 saving';
         try {
-          await savePlanning(); // reuses the existing save logic
+          await savePlanning();
           statusEl.textContent = '✅ Saved';
           statusEl.className = 'badge bg-success w-100 saved';
           setTimeout(() => {
@@ -4540,9 +4641,9 @@
         }
       }, 500);
 
-      // ── Save Planning (reused by auto‑save) ──
+      // ── Save Planning ──
       async function savePlanning() {
-        if (!store.planningTableExists) { throw new Error('Planning table not available.'); }
+        if (!store.planningTableExists) throw new Error('Planning table not available.');
         const company = store.filters.planning.company;
         const department = store.filters.planning.department;
         if (company === 'All' || department === 'All') {
@@ -4565,7 +4666,7 @@
           for (const srcName of formulaDef.sourceNames) {
             if (!sourceValues[srcName]) {
               const srcKey = `${company}|${department}|${srcName}`;
-              const srcPlan = store.planning.data[srcKey] || defaultPlan();
+              const srcPlan = store.planning.data[srcKey] || Helpers.defaultPlan();
               sourceValues[srcName] = {
                 mls: srcPlan.base.mls || 0,
                 months: CONFIG.MONTH_KEYS.map(k => srcPlan.base[k] || 0)
@@ -4580,7 +4681,7 @@
           const computedMonths = CONFIG.MONTH_KEYS.map((_, idx) =>
             computeFormula(cat, CONFIG.MONTHS[idx], sourceValues, multipliers)
           );
-          if (!store.planning.data[key]) store.planning.data[key] = defaultPlan();
+          if (!store.planning.data[key]) store.planning.data[key] = Helpers.defaultPlan();
           store.planning.data[key].base.mls = computedMls;
           CONFIG.MONTH_KEYS.forEach((k, idx) => {
             store.planning.data[key].base[k] = computedMonths[idx];
@@ -4607,7 +4708,7 @@
               code_desc: category,
               year,
               month: 'MLS',
-              amount: toNum(plan.base.mls),
+              amount: Helpers.toNum(plan.base.mls),
               remarks: 'BASE'
             });
           }
@@ -4620,21 +4721,21 @@
                 code_desc: category,
                 year,
                 month: CONFIG.MONTHS[idx],
-                amount: toNum(val),
+                amount: Helpers.toNum(val),
                 remarks: 'BASE'
               });
             }
           });
           if (!isFormulaCategory(category) && plan.additions && plan.additions.length) {
             for (const add of plan.additions) {
-              if (toNum(add.amount) !== 0 || (add.remarks && add.remarks.trim())) {
+              if (Helpers.toNum(add.amount) !== 0 || (add.remarks && add.remarks.trim())) {
                 entriesToInsert.push({
                   company,
                   cor_dept: department,
                   code_desc: category,
                   year,
                   month: add.month,
-                  amount: toNum(add.amount),
+                  amount: Helpers.toNum(add.amount),
                   remarks: add.remarks || ''
                 });
               }
@@ -4644,8 +4745,8 @@
 
         if (entriesToInsert.length) {
           const BATCH_SIZE = 100;
-          for (let i=0; i<entriesToInsert.length; i += BATCH_SIZE) {
-            await DataService.insert('planning_additions', entriesToInsert.slice(i, i+BATCH_SIZE), false);
+          for (let i = 0; i < entriesToInsert.length; i += BATCH_SIZE) {
+            await DataService.insert('planning_additions', entriesToInsert.slice(i, i + BATCH_SIZE), false);
           }
         }
       }
@@ -4655,7 +4756,7 @@
         const foot = document.getElementById('planningFoot');
         if (!foot) return;
         const totals = computeGrandTotals();
-        const fmtCur = v => fmt.currency(v);
+        const fmtCur = v => Helpers.fmt.currency(v);
         let rowHtml = `<tr>
           <td class="grand-total-label">GRAND TOTAL (excl. Capex)</td>
           <td>${fmtCur(totals.lastYearExpense)}</td>
@@ -4663,9 +4764,9 @@
           <td>${fmtCur(totals.actualExpense)}</td>
           <td>${fmtCur(totals.mls)}</td>
           <td>${fmtCur(totals.thisYearMls)}</td>
-          <td class="${varClass(totals.thisYearBudgetVariance)}">${fmtCur(totals.thisYearBudgetVariance)}</td>
+          <td class="${Helpers.varClass(totals.thisYearBudgetVariance)}">${fmtCur(totals.thisYearBudgetVariance)}</td>
           <td>${fmtCur(totals.budgetNextYear)}</td>`;
-        for (let i=0; i<12; i++) {
+        for (let i = 0; i < 12; i++) {
           rowHtml += `<td class="month-col">${fmtCur(totals.months[i])}</td>`;
         }
         rowHtml += `<td></td><td></td>`;
@@ -4721,7 +4822,6 @@
           toggleLabel.textContent = store.planning.hideMonths ? 'Show Months' : 'Hide Months';
         }
 
-        // Header with Insight and Remarks at the end
         let headerHtml =
           `<tr><th class="planning-sticky-col" style="min-width:200px;">
             <span style="cursor:pointer;" id="globalCollapseToggle" title="Collapse/Expand all sections">
@@ -4729,7 +4829,7 @@
             </span>
             CATEGORY
           </th><th style="min-width:110px;">LAST YEAR</th><th style="min-width:110px;">ACTUAL BUDGET</th><th style="min-width:110px;">ACTUAL EXPENSE</th><th style="min-width:100px;">MLS</th><th style="min-width:110px;">THIS YEAR MLS</th><th style="min-width:130px;">THIS YEAR BUDGET VAR</th><th style="min-width:130px;">BUDGET NEXT YEAR</th>`;
-        for (let i=0; i<12; i++) {
+        for (let i = 0; i < 12; i++) {
           const monthName = CONFIG.MONTH_NAMES[i];
           headerHtml += `<th class="month-col" style="min-width:90px;">${monthName}</th>`;
         }
@@ -4799,7 +4899,7 @@
         const company = store.filters.planning.company;
         const department = store.filters.planning.department;
         const isEditable = isPlanningEditable(company, department) &&
-                           company !== 'All' && department !== 'All';
+          company !== 'All' && department !== 'All';
 
         const pageRows = paginators.planning.getSlice(planningFlatRows);
 
@@ -4812,9 +4912,9 @@
         for (const row of pageRows) {
           const isTotal = row.isTotal || false;
           const trClass = isTotal ? 'planning-total-row' : 'planning-child-row';
-          const catDisplay = isTotal ? `<strong>${fmt.html(row.category)}</strong>` :
-            `<span class="planning-category-name" data-key="${row.company}|${row.department}|${row.category}" role="button" tabindex="0">${fmt.html(row.category)}</span>${!row.isFormula && isEditable ? `<i class="fas fa-pencil-alt planning-edit-btn" data-key="${row.company}|${row.department}|${row.category}" style="font-size:0.7rem; margin-left:6px;"></i>` : ''}`;
-          const varClassStr = varClass(row.thisYearBudgetVariance);
+          const catDisplay = isTotal ? `<strong>${Helpers.fmt.html(row.category)}</strong>` :
+            `<span class="planning-category-name" data-key="${row.company}|${row.department}|${row.category}" role="button" tabindex="0">${Helpers.fmt.html(row.category)}</span>${!row.isFormula && isEditable ? `<i class="fas fa-pencil-alt planning-edit-btn" data-key="${row.company}|${row.department}|${row.category}" style="font-size:0.7rem; margin-left:6px;"></i>` : ''}`;
+          const varClassStr = Helpers.varClass(row.thisYearBudgetVariance);
           const divisionKey = `${row.company}|${row.department}|${row.division}`;
 
           let displayStyle = '';
@@ -4829,8 +4929,8 @@
             const remarkKey = getPlanningRemarkKey(row.company, row.department, row.category, store.planning.year);
             const remarkVal = store.planningRemarks[remarkKey] || '';
             remarkHtml = `<div style="display:flex; align-items:center; gap:4px;">
-              <input type="text" class="form-control form-control-sm planning-remark-input" value="${fmt.html(remarkVal)}" data-company="${attrEncode(row.company)}" data-dept="${attrEncode(row.department)}" data-category="${attrEncode(row.category)}" placeholder="Remarks..." style="flex:1; min-width:120px;" />
-              <span class="remark-status" id="remark-status-${attrEncode(row.company)}-${attrEncode(row.department)}-${attrEncode(row.category)}"></span>
+              <input type="text" class="form-control form-control-sm planning-remark-input" value="${Helpers.fmt.html(remarkVal)}" data-company="${Helpers.attrEncode(row.company)}" data-dept="${Helpers.attrEncode(row.department)}" data-category="${Helpers.attrEncode(row.category)}" placeholder="Remarks..." style="flex:1; min-width:120px;" />
+              <span class="remark-status" id="remark-status-${Helpers.attrEncode(row.company)}-${Helpers.attrEncode(row.department)}-${Helpers.attrEncode(row.category)}"></span>
             </div>`;
           }
 
@@ -4838,8 +4938,8 @@
             const isCollapsed = store.planning.collapsedSections[divisionKey] || false;
             const iconClass = isCollapsed ? 'fa-chevron-right' : 'fa-chevron-down';
             let monthCells = '';
-            for (let i=0; i<12; i++) {
-              monthCells += `<td class="div-month-total month-col" data-month-idx="${i}">${fmt.currency(row.months[i])}</td>`;
+            for (let i = 0; i < 12; i++) {
+              monthCells += `<td class="div-month-total month-col" data-month-idx="${i}">${Helpers.fmt.currency(row.months[i])}</td>`;
             }
             html += `<tr class="${trClass}" data-total="true" data-key="${divisionKey}" data-division="${row.division}">
               <td class="planning-sticky-col">
@@ -4848,13 +4948,13 @@
                 </button>
                 ${catDisplay}
               </td>
-              <td>${fmt.currency(row.lastYearExpense)}</td>
-              <td>${fmt.currency(row.actualBudget)}</td>
-              <td>${fmt.currency(row.actualExpense)}</td>
-              <td class="div-mls-total">${fmt.currency(row.mls)}</td>
-              <td class="ty-mls">${fmt.currency(row.thisYearMls)}</td>
-              <td class="ty-var fw-semibold ${varClassStr}">${fmt.currency(row.thisYearBudgetVariance)}</td>
-              <td class="ty-next">${fmt.currency(row.budgetNextYear)}</td>
+              <td>${Helpers.fmt.currency(row.lastYearExpense)}</td>
+              <td>${Helpers.fmt.currency(row.actualBudget)}</td>
+              <td>${Helpers.fmt.currency(row.actualExpense)}</td>
+              <td class="div-mls-total">${Helpers.fmt.currency(row.mls)}</td>
+              <td class="ty-mls">${Helpers.fmt.currency(row.thisYearMls)}</td>
+              <td class="ty-var fw-semibold ${varClassStr}">${Helpers.fmt.currency(row.thisYearBudgetVariance)}</td>
+              <td class="ty-next">${Helpers.fmt.currency(row.budgetNextYear)}</td>
               ${monthCells}
               <td></td><td></td>
             </tr>`;
@@ -4862,37 +4962,46 @@
             const rowEditable = isEditable && !row.isAggregated;
             const mlsVal = row.mls || 0;
             const monthVals = row.months || Array(12).fill(0);
-            let mlsHtml, monthHtmls = [];
+            let mlsHtml,
+              monthHtmls = [];
             if (rowEditable) {
-              mlsHtml = `<input type="text" class="planning-input planning-mls editable" value="${fmt.number(mlsVal)}" data-editable="true" />`;
-              for (let i=0; i<12; i++) {
+              mlsHtml = `<input type="text" class="planning-input planning-mls editable" value="${Helpers.fmt.number(mlsVal)}" data-editable="true" />`;
+              for (let i = 0; i < 12; i++) {
                 if (row.isFormula) {
-                  monthHtmls.push(`<td class="month-col"><span class="planning-input formula" style="background:#f0f4fa; border-color:#d0d8e0; color:#0d4a7a; font-weight:600; cursor:not-allowed; pointer-events:none;">${fmt.currency(monthVals[i])}</span></td>`);
+                  monthHtmls.push(
+                    `<td class="month-col"><span class="planning-input formula" style="background:#f0f4fa; border-color:#d0d8e0; color:#0d4a7a; font-weight:600; cursor:not-allowed; pointer-events:none;">${Helpers.fmt.currency(monthVals[i])}</span></td>`
+                    );
                 } else {
-                  monthHtmls.push(`<td class="month-col"><input type="text" class="planning-input planning-month editable" data-month="${i}" value="${fmt.number(monthVals[i])}" data-editable="true" /></td>`);
+                  monthHtmls.push(
+                    `<td class="month-col"><input type="text" class="planning-input planning-month editable" data-month="${i}" value="${Helpers.fmt.number(monthVals[i])}" data-editable="true" /></td>`
+                    );
                 }
               }
             } else {
               const disabledClass = (!isEditable && !row.isFormula) ? ' disabled' : '';
-              mlsHtml = `<span class="planning-input aggregated${disabledClass}">${fmt.currency(mlsVal)}</span>`;
-              for (let i=0; i<12; i++) {
+              mlsHtml = `<span class="planning-input aggregated${disabledClass}">${Helpers.fmt.currency(mlsVal)}</span>`;
+              for (let i = 0; i < 12; i++) {
                 if (row.isFormula) {
-                  monthHtmls.push(`<td class="month-col"><span class="planning-input formula">${fmt.currency(monthVals[i])}</span></td>`);
+                  monthHtmls.push(
+                    `<td class="month-col"><span class="planning-input formula">${Helpers.fmt.currency(monthVals[i])}</span></td>`
+                    );
                 } else {
-                  monthHtmls.push(`<td class="month-col"><span class="planning-input aggregated${disabledClass}">${fmt.currency(monthVals[i])}</span></td>`);
+                  monthHtmls.push(
+                    `<td class="month-col"><span class="planning-input aggregated${disabledClass}">${Helpers.fmt.currency(monthVals[i])}</span></td>`
+                    );
                 }
               }
             }
             const rowClass = row.isFormula ? 'planning-child-row formula-row' : 'planning-child-row';
-            html += `<tr class="${trClass} ${rowClass}" data-key="${row.company}|${row.department}|${row.category}" data-cat="${attrEncode(row.category)}" data-actual-budget="${row.actualBudget}" data-actual-expense="${row.actualExpense}" data-company="${row.company}" data-department="${row.department}" data-division="${row.division}" data-editable="${rowEditable}" data-formula="${row.isFormula}" tabindex="0" ${displayStyle}>
+            html += `<tr class="${trClass} ${rowClass}" data-key="${row.company}|${row.department}|${row.category}" data-cat="${Helpers.attrEncode(row.category)}" data-actual-budget="${row.actualBudget}" data-actual-expense="${row.actualExpense}" data-company="${row.company}" data-department="${row.department}" data-division="${row.division}" data-editable="${rowEditable}" data-formula="${row.isFormula}" tabindex="0" ${displayStyle}>
               <td class="planning-sticky-col">${catDisplay}</td>
-              <td>${fmt.currency(row.lastYearExpense)}</td>
-              <td>${fmt.currency(row.actualBudget)}</td>
-              <td>${fmt.currency(row.actualExpense)}</td>
+              <td>${Helpers.fmt.currency(row.lastYearExpense)}</td>
+              <td>${Helpers.fmt.currency(row.actualBudget)}</td>
+              <td>${Helpers.fmt.currency(row.actualExpense)}</td>
               <td>${mlsHtml}</td>
-              <td class="ty-mls">${fmt.currency(row.thisYearMls)}</td>
-              <td class="ty-var fw-semibold ${varClassStr}">${fmt.currency(row.thisYearBudgetVariance)}</td>
-              <td class="ty-next">${fmt.currency(row.budgetNextYear)}</td>
+              <td class="ty-mls">${Helpers.fmt.currency(row.thisYearMls)}</td>
+              <td class="ty-var fw-semibold ${varClassStr}">${Helpers.fmt.currency(row.thisYearBudgetVariance)}</td>
+              <td class="ty-next">${Helpers.fmt.currency(row.budgetNextYear)}</td>
               ${monthHtmls.join('')}
               <td>${insightText}</td>
               <td>${remarkHtml}</td>
@@ -4901,7 +5010,6 @@
         }
         tbody.innerHTML = html;
 
-        // Click to open modal
         tbody.querySelectorAll('.planning-category-name, .planning-edit-btn').forEach(el => {
           el.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -4919,7 +5027,6 @@
           });
         });
 
-        // Toggle sections
         tbody.querySelectorAll('.planning-toggle').forEach(btn => {
           btn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -4928,7 +5035,6 @@
           });
         });
 
-        // Editable input handlers
         if (isEditable) {
           const inputs = tbody.querySelectorAll('input.planning-input.editable');
           inputs.forEach(input => {
@@ -4942,22 +5048,22 @@
             .forEach(row => {
               row.addEventListener('click', function(e) {
                 if (e.target.closest('input') || e.target.closest('.planning-toggle') ||
-                    e.target.closest('.planning-category-name') || e.target.closest('.planning-edit-btn'))
+                  e.target.closest('.planning-category-name') || e.target.closest('.planning-edit-btn'))
                   return;
                 const firstInput = this.querySelector('input.planning-input.editable');
-                if (firstInput) { firstInput.focus(); firstInput.select(); }
+                if (firstInput) { firstInput.focus();
+                  firstInput.select(); }
               });
             });
         }
 
-        // ── Remarks input with status ──
         tbody.querySelectorAll('.planning-remark-input').forEach(inp => {
           const statusSpan = inp.closest('div').querySelector('.remark-status');
           inp.addEventListener('blur', async function() {
             const val = this.value.trim();
-            const company = attrDecode(this.dataset.company);
-            const dept = attrDecode(this.dataset.dept);
-            const cat = attrDecode(this.dataset.category);
+            const company = Helpers.attrDecode(this.dataset.company);
+            const dept = Helpers.attrDecode(this.dataset.dept);
+            const cat = Helpers.attrDecode(this.dataset.category);
             statusSpan.textContent = '⏳';
             statusSpan.className = 'remark-status';
             const ok = await savePlanningRemark(company, dept, cat, val);
@@ -4981,20 +5087,20 @@
         updateGlobalToggleIcon();
       }
 
-      // ── Planning input handlers (trigger auto‑save) ──
+      // ── Planning input handlers ──
       function planningInputKeydown(e) {
         const input = e.target;
         if (!input.matches('input.planning-input.editable')) return;
         if (e.key === 'Enter') {
           e.preventDefault();
-          const val = parseFormattedNumber(input.value);
-          input.value = fmt.number(val);
+          const val = Helpers.parseFormattedNumber(input.value);
+          input.value = Helpers.fmt.number(val);
           handlePlanningInputChange(input);
           const allInputs = Array.from(document.querySelectorAll('#planningBody input.planning-input.editable'));
           const idx = allInputs.indexOf(input);
           if (idx !== -1 && idx < allInputs.length - 1) {
-            allInputs[idx+1].focus();
-            allInputs[idx+1].select();
+            allInputs[idx + 1].focus();
+            allInputs[idx + 1].select();
           }
         }
       }
@@ -5002,8 +5108,8 @@
       function planningInputBlur(e) {
         const input = e.target;
         if (!input.matches('input.planning-input.editable')) return;
-        const val = parseFormattedNumber(input.value);
-        input.value = fmt.number(val);
+        const val = Helpers.parseFormattedNumber(input.value);
+        input.value = Helpers.fmt.number(val);
         handlePlanningInputChange(input);
       }
 
@@ -5014,17 +5120,17 @@
         const key = tr.dataset.key;
         if (!key) return;
         const [company, department, category] = key.split('|');
-        const actualBudget = toNum(tr.dataset.actualBudget);
-        const actualExpense = toNum(tr.dataset.actualExpense);
+        const actualBudget = Helpers.toNum(tr.dataset.actualBudget);
+        const actualExpense = Helpers.toNum(tr.dataset.actualExpense);
         const mlsInput = tr.querySelector('.planning-mls');
         const monthInputEls = tr.querySelectorAll('.planning-month');
 
         if (input.classList.contains('planning-mls')) {
-          const mls = parseFormattedNumber(input.value);
-          const plan = store.planning.data[key] || defaultPlan();
+          const mls = Helpers.parseFormattedNumber(input.value);
+          const plan = store.planning.data[key] || Helpers.defaultPlan();
           plan.base.mls = mls;
           store.planning.data[key] = plan;
-          const months = Array.from(monthInputEls).map(i => parseFormattedNumber(i.value));
+          const months = Array.from(monthInputEls).map(i => Helpers.parseFormattedNumber(i.value));
           const derived = computeRowDerived(actualBudget, actualExpense, mls, months);
           updateRowDerived(tr, derived);
           const division = tr.dataset.division;
@@ -5033,7 +5139,6 @@
             recomputeDivisionTotal(divisionKey);
           }
           renderPlanningFooter();
-          // ═══ AUTO‑SAVE ═══
           autoSavePlanning();
           return;
         }
@@ -5043,17 +5148,18 @@
         if (isNaN(monthIdx) || monthIdx < 0 || monthIdx >= 12) return;
         const month = CONFIG.MONTHS[monthIdx];
 
-        const plan = store.planning.data[key] || defaultPlan();
+        const plan = store.planning.data[key] || Helpers.defaultPlan();
         const additionsSum = getAdditionsSumForMonth(plan, month);
-        const newTotal = parseFormattedNumber(input.value);
+        const newTotal = Helpers.parseFormattedNumber(input.value);
 
         let newBase = 0;
         if (newTotal < additionsSum) {
-          const confirmMsg = `The new total (${fmt.currency(newTotal)}) is less than the existing additional entries for ${month} (${fmt.currency(additionsSum)}). Continuing will DELETE all additional entries for ${month} and set the base to ${fmt.currency(newTotal)}. Proceed?`;
+          const confirmMsg =
+            `The new total (${Helpers.fmt.currency(newTotal)}) is less than the existing additional entries for ${month} (${Helpers.fmt.currency(additionsSum)}). Continuing will DELETE all additional entries for ${month} and set the base to ${Helpers.fmt.currency(newTotal)}. Proceed?`;
           if (!confirm(confirmMsg)) {
             const currentBase = plan.base[CONFIG.MONTH_KEYS[monthIdx]] || 0;
             const currentTotal = currentBase + additionsSum;
-            input.value = fmt.number(currentTotal);
+            input.value = Helpers.fmt.number(currentTotal);
             return;
           }
           plan.additions = plan.additions.filter(add => add.month !== month);
@@ -5064,10 +5170,10 @@
 
         plan.base[CONFIG.MONTH_KEYS[monthIdx]] = newBase;
         store.planning.data[key] = plan;
-        input.value = fmt.number(newTotal);
+        input.value = Helpers.fmt.number(newTotal);
 
-        const mls = parseFormattedNumber(mlsInput ? mlsInput.value : '0');
-        const months = Array.from(monthInputEls).map(i => parseFormattedNumber(i.value));
+        const mls = Helpers.parseFormattedNumber(mlsInput ? mlsInput.value : '0');
+        const months = Array.from(monthInputEls).map(i => Helpers.parseFormattedNumber(i.value));
         const derived = computeRowDerived(actualBudget, actualExpense, mls, months);
         updateRowDerived(tr, derived);
 
@@ -5077,24 +5183,22 @@
           recomputeDivisionTotal(divisionKey);
         }
         renderPlanningFooter();
-        // ═══ AUTO‑SAVE ═══
         autoSavePlanning();
       }
 
       function updateRowDerived(tr, derived) {
         const tyMls = tr.querySelector('.ty-mls');
-        if (tyMls) tyMls.textContent = fmt.currency(derived.thisYearMls);
+        if (tyMls) tyMls.textContent = Helpers.fmt.currency(derived.thisYearMls);
         const varEl = tr.querySelector('.ty-var');
         if (varEl) {
-          varEl.textContent = fmt.currency(derived.thisYearBudgetVariance);
-          varEl.className = 'ty-var fw-semibold ' + varClass(derived.thisYearBudgetVariance);
+          varEl.textContent = Helpers.fmt.currency(derived.thisYearBudgetVariance);
+          varEl.className = 'ty-var fw-semibold ' + Helpers.varClass(derived.thisYearBudgetVariance);
         }
         const nextEl = tr.querySelector('.ty-next');
-        if (nextEl) nextEl.textContent = fmt.currency(derived.budgetNextYear);
-        // Update insight cell
+        if (nextEl) nextEl.textContent = Helpers.fmt.currency(derived.budgetNextYear);
         const insightCell = tr.querySelector('td:nth-last-child(2)');
         if (insightCell) {
-          const insight = computeInsight(derived.thisYearMls, derived.budgetNextYear);
+          const insight = Helpers.computeInsight(derived.thisYearMls, derived.budgetNextYear);
           insightCell.textContent = insight;
         }
       }
@@ -5107,30 +5211,36 @@
           `tr.planning-child-row[data-company="${company}"][data-department="${department}"][data-division="${division}"][data-editable="true"]`
         );
         if (childRows.length === 0) {
-          totalTr.querySelector('.div-mls-total').textContent = fmt.currency(0);
-          totalTr.querySelector('.ty-mls').textContent = fmt.currency(0);
+          totalTr.querySelector('.div-mls-total').textContent = Helpers.fmt.currency(0);
+          totalTr.querySelector('.ty-mls').textContent = Helpers.fmt.currency(0);
           const varEl = totalTr.querySelector('.ty-var');
-          varEl.textContent = fmt.currency(0);
+          varEl.textContent = Helpers.fmt.currency(0);
           varEl.className = 'ty-var fw-semibold text-positive';
-          totalTr.querySelector('.ty-next').textContent = fmt.currency(0);
-          totalTr.querySelectorAll('.div-month-total').forEach(el => el.textContent = fmt.currency(0));
+          totalTr.querySelector('.ty-next').textContent = Helpers.fmt.currency(0);
+          totalTr.querySelectorAll('.div-month-total').forEach(el => el.textContent = Helpers.fmt.currency(0));
           const cells = totalTr.querySelectorAll('td');
-          if (cells.length >= 4) { cells[2].textContent = fmt.currency(0); cells[3].textContent = fmt.currency(0); }
+          if (cells.length >= 4) { cells[2].textContent = Helpers.fmt.currency(0);
+            cells[3].textContent = Helpers.fmt.currency(0); }
           return;
         }
 
-        let sumMls = 0, sumTyMls = 0, sumTyVar = 0, sumNext = 0, sumActualBudget = 0, sumActualExpense = 0;
+        let sumMls = 0,
+          sumTyMls = 0,
+          sumTyVar = 0,
+          sumNext = 0,
+          sumActualBudget = 0,
+          sumActualExpense = 0;
         const sumMonths = Array(12).fill(0);
 
         childRows.forEach(tr => {
-          const actualBudget = toNum(tr.dataset.actualBudget);
-          const actualExpense = toNum(tr.dataset.actualExpense);
+          const actualBudget = Helpers.toNum(tr.dataset.actualBudget);
+          const actualExpense = Helpers.toNum(tr.dataset.actualExpense);
           sumActualBudget += actualBudget;
           sumActualExpense += actualExpense;
           const mlsInput = tr.querySelector('.planning-mls');
           const monthInputs = tr.querySelectorAll('.planning-month');
-          const mls = parseFormattedNumber(mlsInput ? mlsInput.value : '0');
-          const months = Array.from(monthInputs).map(i => parseFormattedNumber(i.value));
+          const mls = Helpers.parseFormattedNumber(mlsInput ? mlsInput.value : '0');
+          const months = Array.from(monthInputs).map(i => Helpers.parseFormattedNumber(i.value));
           const d = computeRowDerived(actualBudget, actualExpense, mls, months);
           sumMls += mls;
           sumTyMls += d.thisYearMls;
@@ -5139,18 +5249,19 @@
           months.forEach((v, i) => sumMonths[i] += v);
         });
 
-        totalTr.querySelector('.div-mls-total').textContent = fmt.currency(sumMls);
-        totalTr.querySelector('.ty-mls').textContent = fmt.currency(sumTyMls);
+        totalTr.querySelector('.div-mls-total').textContent = Helpers.fmt.currency(sumMls);
+        totalTr.querySelector('.ty-mls').textContent = Helpers.fmt.currency(sumTyMls);
         const varEl = totalTr.querySelector('.ty-var');
-        varEl.textContent = fmt.currency(sumTyVar);
-        varEl.className = 'ty-var fw-semibold ' + varClass(sumTyVar);
-        totalTr.querySelector('.ty-next').textContent = fmt.currency(sumNext);
+        varEl.textContent = Helpers.fmt.currency(sumTyVar);
+        varEl.className = 'ty-var fw-semibold ' + Helpers.varClass(sumTyVar);
+        totalTr.querySelector('.ty-next').textContent = Helpers.fmt.currency(sumNext);
         totalTr.querySelectorAll('.div-month-total').forEach(el => {
           const idx = parseInt(el.dataset.monthIdx, 10);
-          if (!isNaN(idx) && idx >= 0 && idx < 12) el.textContent = fmt.currency(sumMonths[idx]);
+          if (!isNaN(idx) && idx >= 0 && idx < 12) el.textContent = Helpers.fmt.currency(sumMonths[idx]);
         });
         const cells = totalTr.querySelectorAll('td');
-        if (cells.length >= 4) { cells[2].textContent = fmt.currency(sumActualBudget); cells[3].textContent = fmt.currency(sumActualExpense); }
+        if (cells.length >= 4) { cells[2].textContent = Helpers.fmt.currency(sumActualBudget);
+          cells[3].textContent = Helpers.fmt.currency(sumActualExpense); }
         renderPlanningFooter();
       }
 
@@ -5178,7 +5289,7 @@
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      // 16. Planning Modal (with auto‑save on Ok)
+      // 16. Planning Modal
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       let planningModalInstance = null;
       let currentModalKey = null;
@@ -5197,7 +5308,7 @@
           return;
         }
         let html = '';
-        for (let i=0; i<12; i++) {
+        for (let i = 0; i < 12; i++) {
           const monthName = CONFIG.MONTH_NAMES[i];
           html += `<div class="row g-2 mb-2 month-base-row" style="display:${hide ? 'none' : ''};">
             <div class="col-md-3"><label class="form-label fw-bold" style="font-size:0.9rem;">${monthName}</label></div>
@@ -5222,14 +5333,14 @@
       function updateModalTotals() {
         const monthInputs = document.querySelectorAll('#monthlyBaseContainer .modal-month-base');
         let totalBase = 0;
-        monthInputs.forEach(inp => { totalBase += parseFormattedNumber(inp.value); });
-        document.getElementById('modalTotalBase').value = fmt.currency(totalBase);
+        monthInputs.forEach(inp => { totalBase += Helpers.parseFormattedNumber(inp.value); });
+        document.getElementById('modalTotalBase').value = Helpers.fmt.currency(totalBase);
         const additionAmounts = document.querySelectorAll('#additionsContainer .addition-amount');
         let totalAdditional = 0;
-        additionAmounts.forEach(inp => { totalAdditional += parseFormattedNumber(inp.value); });
-        document.getElementById('modalTotalAdditional').value = fmt.currency(totalAdditional);
+        additionAmounts.forEach(inp => { totalAdditional += Helpers.parseFormattedNumber(inp.value); });
+        document.getElementById('modalTotalAdditional').value = Helpers.fmt.currency(totalAdditional);
         const grandTotal = totalBase + totalAdditional;
-        document.getElementById('modalGrandTotal').value = fmt.currency(grandTotal);
+        document.getElementById('modalGrandTotal').value = Helpers.fmt.currency(grandTotal);
       }
 
       function attachCopyToAllMonths() {
@@ -5247,7 +5358,7 @@
       function handleCopyToAll() {
         const copyInput = document.getElementById('copyAmountInput');
         if (!copyInput) return;
-        const val = parseFormattedNumber(copyInput.value);
+        const val = Helpers.parseFormattedNumber(copyInput.value);
         if (isNaN(val)) {
           alert('Please enter a valid number.');
           return;
@@ -5263,7 +5374,7 @@
           return;
         }
         monthInputs.forEach(inp => {
-          inp.value = fmt.number(val);
+          inp.value = Helpers.fmt.number(val);
           inp.dispatchEvent(new Event('input', { bubbles: true }));
         });
         updateModalTotals();
@@ -5277,7 +5388,6 @@
         }
       }
 
-      // Group by Remarks toggle (unchanged)
       function toggleGroupRemarks() {
         store.modal.groupByRemarks = !store.modal.groupByRemarks;
         const btn = document.getElementById('groupRemarksToggle');
@@ -5288,7 +5398,7 @@
             '<i class="fas fa-object-group me-1"></i> Group by Remarks';
         }
         if (currentModalKey) {
-          const plan = store.planning.data[currentModalKey] || defaultPlan();
+          const plan = store.planning.data[currentModalKey] || Helpers.defaultPlan();
           renderAdditions(plan.additions || []);
           attachAdditionListeners();
         }
@@ -5317,17 +5427,17 @@
             }
             const g = groups.get(key);
             g.items.push(add);
-            g.total += toNum(add.amount);
+            g.total += Helpers.toNum(add.amount);
           }
 
-          const sortedGroups = Array.from(groups.entries()).sort((a,b) => a[0].localeCompare(b[0]));
+          const sortedGroups = Array.from(groups.entries()).sort((a, b) => a[0].localeCompare(b[0]));
 
           for (const [_, group] of sortedGroups) {
             const row = document.createElement('div');
             row.className = 'row g-2 addition-group-row align-items-center';
             row.innerHTML = `
-              <div class="col-md-4"><span class="group-remarks"><i class="fas fa-tag me-1"></i> ${fmt.html(group.remarks || '(No remarks)')}</span></div>
-              <div class="col-md-4"><span class="group-total-amount">${fmt.currency(group.total)}</span></div>
+              <div class="col-md-4"><span class="group-remarks"><i class="fas fa-tag me-1"></i> ${Helpers.fmt.html(group.remarks || '(No remarks)')}</span></div>
+              <div class="col-md-4"><span class="group-total-amount">${Helpers.fmt.currency(group.total)}</span></div>
               <div class="col-md-4 text-muted small group-count">${group.items.length} month(s)</div>
             `;
             container.appendChild(row);
@@ -5343,8 +5453,8 @@
             row.className = 'row g-2 addition-row align-items-center';
             row.innerHTML = `
               <div class="col-md-3"><select class="form-select form-select-sm addition-month">${CONFIG.MONTHS.map(m => `<option value="${m}" ${m === add.month ? 'selected' : ''}>${m}</option>`).join('')}</select></div>
-              <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="${fmt.number(add.amount || 0)}" placeholder="Amount" /></div>
-              <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" value="${fmt.html(add.remarks || '')}" placeholder="Remarks" /></div>
+              <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="${Helpers.fmt.number(add.amount || 0)}" placeholder="Amount" /></div>
+              <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" value="${Helpers.fmt.html(add.remarks || '')}" placeholder="Remarks" /></div>
               <div class="col-md-2"><div class="addition-actions">
                 <button type="button" class="duplicate-addition-btn" title="Duplicate this entry"><i class="fas fa-copy"></i></button>
                 <button type="button" class="remove-addition-btn" title="Remove this entry"><i class="fas fa-trash"></i></button>
@@ -5357,7 +5467,8 @@
               const r = this.closest('.addition-row');
               if (r) {
                 r.remove();
-                if (container.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg').style.display = 'block';
+                if (container.querySelectorAll('.addition-row').length === 0) document.getElementById(
+                  'noAdditionsMsg').style.display = 'block';
                 updateModalTotals();
               }
             });
@@ -5367,7 +5478,7 @@
           });
           container.querySelectorAll('.addition-amount').forEach(inp => {
             inp.addEventListener('blur', function() {
-              this.value = fmt.number(parseFormattedNumber(this.value));
+              this.value = Helpers.fmt.number(Helpers.parseFormattedNumber(this.value));
               updateModalTotals();
             });
             inp.addEventListener('input', updateModalTotals);
@@ -5390,11 +5501,11 @@
           inp.removeEventListener('input', updateModalTotals);
           inp.addEventListener('input', updateModalTotals);
           inp.removeEventListener('blur', function() {
-            this.value = fmt.number(parseFormattedNumber(this.value));
+            this.value = Helpers.fmt.number(Helpers.parseFormattedNumber(this.value));
             updateModalTotals();
           });
           inp.addEventListener('blur', function() {
-            this.value = fmt.number(parseFormattedNumber(this.value));
+            this.value = Helpers.fmt.number(Helpers.parseFormattedNumber(this.value));
             updateModalTotals();
           });
         });
@@ -5427,7 +5538,7 @@
         newRow.innerHTML = `
           <div class="col-md-3"><select class="form-select form-select-sm addition-month">${CONFIG.MONTHS.map(m => `<option value="${m}" ${m === month ? 'selected' : ''}>${m}</option>`).join('')}</select></div>
           <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="${amount}" placeholder="Amount" /></div>
-          <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" value="${fmt.html(remarks)}" placeholder="Remarks" /></div>
+          <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" value="${Helpers.fmt.html(remarks)}" placeholder="Remarks" /></div>
           <div class="col-md-2"><div class="addition-actions">
             <button type="button" class="duplicate-addition-btn" title="Duplicate this entry"><i class="fas fa-copy"></i></button>
             <button type="button" class="remove-addition-btn" title="Remove this entry"><i class="fas fa-trash"></i></button>
@@ -5438,14 +5549,15 @@
           const r = this.closest('.addition-row');
           if (r) {
             r.remove();
-            if (container.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg').style.display = 'block';
+            if (container.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg')
+              .style.display = 'block';
             updateModalTotals();
           }
         });
         newRow.querySelector('.duplicate-addition-btn').addEventListener('click', handleDuplicateAddition);
         const amtInput = newRow.querySelector('.addition-amount');
         amtInput.addEventListener('blur', function() {
-          this.value = fmt.number(parseFormattedNumber(this.value));
+          this.value = Helpers.fmt.number(Helpers.parseFormattedNumber(this.value));
           updateModalTotals();
         });
         amtInput.addEventListener('input', updateModalTotals);
@@ -5459,7 +5571,7 @@
         }
         const amountEl = document.getElementById('bulkAmount');
         const remarksEl = document.getElementById('bulkRemarks');
-        const amount = parseFormattedNumber(amountEl.value);
+        const amount = Helpers.parseFormattedNumber(amountEl.value);
         const remarks = remarksEl.value.trim();
 
         if (isNaN(amount) || amount === 0) {
@@ -5480,8 +5592,8 @@
           row.className = 'row g-2 addition-row align-items-center';
           row.innerHTML = `
             <div class="col-md-3"><select class="form-select form-select-sm addition-month">${CONFIG.MONTHS.map(m => `<option value="${m}" ${m === month ? 'selected' : ''}>${m}</option>`).join('')}</select></div>
-            <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="${fmt.number(amount)}" placeholder="Amount" /></div>
-            <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" value="${fmt.html(remarks)}" placeholder="Remarks" /></div>
+            <div class="col-md-3"><input type="text" class="form-control form-control-sm planning-modal-input addition-amount" value="${Helpers.fmt.number(amount)}" placeholder="Amount" /></div>
+            <div class="col-md-4"><input type="text" class="form-control form-control-sm addition-remarks" value="${Helpers.fmt.html(remarks)}" placeholder="Remarks" /></div>
             <div class="col-md-2"><div class="addition-actions">
               <button type="button" class="duplicate-addition-btn" title="Duplicate this entry"><i class="fas fa-copy"></i></button>
               <button type="button" class="remove-addition-btn" title="Remove this entry"><i class="fas fa-trash"></i></button>
@@ -5495,7 +5607,8 @@
             const r = this.closest('.addition-row');
             if (r) {
               r.remove();
-              if (container.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg').style.display = 'block';
+              if (container.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg')
+                .style.display = 'block';
               updateModalTotals();
             }
           });
@@ -5505,7 +5618,7 @@
         });
         container.querySelectorAll('.addition-amount').forEach(inp => {
           inp.addEventListener('blur', function() {
-            this.value = fmt.number(parseFormattedNumber(this.value));
+            this.value = Helpers.fmt.number(Helpers.parseFormattedNumber(this.value));
             updateModalTotals();
           });
           inp.addEventListener('input', updateModalTotals);
@@ -5560,7 +5673,7 @@
         const additions = [];
         rows.forEach(row => {
           const month = row.querySelector('.addition-month').value;
-          const amount = parseFormattedNumber(row.querySelector('.addition-amount').value);
+          const amount = Helpers.parseFormattedNumber(row.querySelector('.addition-amount').value);
           const remarks = row.querySelector('.addition-remarks').value.trim();
           if (amount !== 0 || remarks) additions.push({ month, amount, remarks });
         });
@@ -5589,13 +5702,14 @@
         container.appendChild(row);
         row.querySelector('.remove-addition-btn').addEventListener('click', function() {
           row.remove();
-          if (container.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg').style.display = 'block';
+          if (container.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg')
+            .style.display = 'block';
           updateModalTotals();
         });
         row.querySelector('.duplicate-addition-btn').addEventListener('click', handleDuplicateAddition);
         const amountInput = row.querySelector('.addition-amount');
         amountInput.addEventListener('blur', function() {
-          this.value = fmt.number(parseFormattedNumber(this.value));
+          this.value = Helpers.fmt.number(Helpers.parseFormattedNumber(this.value));
           updateModalTotals();
         });
         amountInput.addEventListener('input', updateModalTotals);
@@ -5615,10 +5729,10 @@
           if (planningModalInstance) planningModalInstance.hide();
           return;
         }
-        const base = { mls: parseFormattedNumber(document.getElementById('modalMls').value) };
+        const base = { mls: Helpers.parseFormattedNumber(document.getElementById('modalMls').value) };
         document.querySelectorAll('#monthlyBaseContainer .modal-month-base').forEach(el => {
           const idx = parseInt(el.dataset.month);
-          base[CONFIG.MONTH_KEYS[idx]] = parseFormattedNumber(el.value);
+          base[CONFIG.MONTH_KEYS[idx]] = Helpers.parseFormattedNumber(el.value);
         });
         const additions = getAdditionsFromUI();
         store.planning.data[key] = { base, additions };
@@ -5629,15 +5743,15 @@
           const months = CONFIG.MONTH_KEYS.map(k => base[k] || 0);
           for (const add of additions) {
             const idx = CONFIG.MONTHS.indexOf(add.month);
-            if (idx !== -1) months[idx] += toNum(add.amount);
+            if (idx !== -1) months[idx] += Helpers.toNum(add.amount);
           }
-          const actualBudget = toNum(row.dataset.actualBudget);
-          const actualExpense = toNum(row.dataset.actualExpense);
+          const actualBudget = Helpers.toNum(row.dataset.actualBudget);
+          const actualExpense = Helpers.toNum(row.dataset.actualExpense);
           const derived = computeRowDerived(actualBudget, actualExpense, mls, months);
           const mlsInput = row.querySelector('.planning-mls');
-          if (mlsInput) mlsInput.value = fmt.number(mls);
+          if (mlsInput) mlsInput.value = Helpers.fmt.number(mls);
           const monthInputs = row.querySelectorAll('.planning-month');
-          monthInputs.forEach((inp, idx) => inp.value = fmt.number(months[idx]));
+          monthInputs.forEach((inp, idx) => inp.value = Helpers.fmt.number(months[idx]));
           updateRowDerived(row, derived);
           const division = row.dataset.division;
           if (division) {
@@ -5646,8 +5760,6 @@
           }
         }
         if (planningModalInstance) planningModalInstance.hide();
-
-        // ═══ AUTO‑SAVE AFTER MODAL SAVE ═══
         autoSavePlanning();
       }
 
@@ -5667,7 +5779,7 @@
           return;
         }
         currentModalKey = key;
-        const plan = store.planning.data[key] || defaultPlan();
+        const plan = store.planning.data[key] || Helpers.defaultPlan();
         document.getElementById('modalCategoryName').textContent = category;
         document.getElementById('planningModalContext').textContent = `${company} | ${department} | Year ${store.planning.year}`;
 
@@ -5686,7 +5798,7 @@
           const formulaDef = CONFIG.FORMULA_CATEGORIES[category];
           for (const srcName of formulaDef.sourceNames) {
             const srcKey = `${companyFilter}|${deptFilter}|${srcName}`;
-            const srcPlan = store.planning.data[srcKey] || defaultPlan();
+            const srcPlan = store.planning.data[srcKey] || Helpers.defaultPlan();
             sourceValues[srcName] = {
               mls: srcPlan.base.mls || 0,
               months: CONFIG.MONTH_KEYS.map(k => srcPlan.base[k] || 0)
@@ -5700,7 +5812,7 @@
         }
 
         const editable = isPlanningEditable(company, department);
-        document.getElementById('modalMls').value = fmt.number(computedMls);
+        document.getElementById('modalMls').value = Helpers.fmt.number(computedMls);
         if (isFormula || !editable) {
           document.getElementById('modalMls').readOnly = true;
           document.getElementById('modalMls').classList.add('formula');
@@ -5714,7 +5826,7 @@
         renderMonthlyBaseRows();
         const monthInputs = document.querySelectorAll('#monthlyBaseContainer .modal-month-base');
         monthInputs.forEach((el, idx) => {
-          el.value = fmt.number(computedMonths[idx] || 0);
+          el.value = Helpers.fmt.number(computedMonths[idx] || 0);
           if (isFormula || !editable) {
             el.readOnly = true;
             el.classList.add('formula');
@@ -5755,7 +5867,8 @@
 
         if (isFormula || !editable) {
           document.getElementById('additionsContainer').innerHTML =
-            '<div class="text-muted small">' + (isFormula ? 'Formula categories cannot have additional entries.' : 'Editing is disabled for this company/department.') + '</div>';
+            '<div class="text-muted small">' + (isFormula ? 'Formula categories cannot have additional entries.' :
+              'Editing is disabled for this company/department.') + '</div>';
           document.getElementById('noAdditionsMsg').style.display = 'none';
           document.getElementById('bulkAddPanel').classList.remove('open');
         } else {
@@ -5795,10 +5908,10 @@
           grouped[key].push(add);
         }
         for (const [key, entries] of Object.entries(grouped)) {
-          const plan = defaultPlan();
+          const plan = Helpers.defaultPlan();
           for (const entry of entries) {
             const month = entry.month || '';
-            const amount = toNum(entry.amount);
+            const amount = Helpers.toNum(entry.amount);
             const remarks = (entry.remarks || '').trim();
             if (remarks === 'BASE') {
               if (month === 'MLS') {
@@ -5822,7 +5935,7 @@
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      // 18. Export: Text File (unchanged) — exclude Insight and Remarks
+      // 18. Export: Text File (unchanged)
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       function exportPlanningText() {
         if (!store.planningTableExists) { alert('Planning table not available.'); return; }
@@ -5862,7 +5975,8 @@
           const tyv = plain(row.thisYearBudgetVariance).padStart(18);
           const bn = plain(row.budgetNextYear).padStart(18);
           const monthVals = (row.months || Array(12).fill(0)).map(v => plain(v).padStart(12)).join(' | ');
-          body += `${catName} | ${ly} | ${ab} | ${ae} | ${mls} | ${tym} | ${tyv} | ${bn} | ${monthVals}\n`;
+          body +=
+            `${catName} | ${ly} | ${ab} | ${ae} | ${mls} | ${tym} | ${tyv} | ${bn} | ${monthVals}\n`;
         }
 
         const totals = computeGrandTotals();
@@ -5897,7 +6011,7 @@
         }
 
         let multSection = '\n\n--- MULTIPLIERS ---\n';
-        const multEntries = Object.entries(store.multipliers || {}).sort((a,b) => a[0].localeCompare(b[0]));
+        const multEntries = Object.entries(store.multipliers || {}).sort((a, b) => a[0].localeCompare(b[0]));
         if (multEntries.length) {
           for (const [name, val] of multEntries) {
             multSection += `${name}: ${val}\n`;
@@ -5931,7 +6045,7 @@
           if (filters.department !== 'All' && department !== filters.department) continue;
           const base = plan.base || {};
           const addEntry = (month, amount, remarks) => {
-            if (toNum(amount) !== 0 || String(remarks || '').trim()) {
+            if (Helpers.toNum(amount) !== 0 || String(remarks || '').trim()) {
               entries.push({
                 company,
                 department,
@@ -5939,7 +6053,7 @@
                 year: store.planning.year,
                 month,
                 entryType: String(remarks || '').trim() === 'BASE' ? 'BASE' : 'ADDITION',
-                amount: toNum(amount),
+                amount: Helpers.toNum(amount),
                 remarks: remarks || ''
               });
             }
@@ -5960,12 +6074,13 @@
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      // 19. Excel Export (unchanged) — exclude Insight and Remarks
+      // 19. Excel Export (unchanged)
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       function exportPlanningExcel() {
         if (!store.planningTableExists) { alert('Planning table not available.'); return; }
         if (typeof XLSX === 'undefined') {
-          alert('The Excel export library could not be loaded. Please check your internet connection and try again.');
+          alert(
+            'The Excel export library could not be loaded. Please check your internet connection and try again.');
           return;
         }
         const rows = buildPlanningRows();
@@ -5976,10 +6091,10 @@
         const additions = getPlanningAdditionExportRows(rows);
         const multipliers = Object.entries(store.multipliers || {}).sort(([left], [right]) => left.localeCompare(right));
         const planningData = [headers, ...rows.map(row => [
-          row.company, row.department, row.category,
-          row.lastYearExpense, row.actualBudget, row.actualExpense,
-          row.mls, row.thisYearMls, row.thisYearBudgetVariance, row.budgetNextYear, ...row.months
-        ])];
+            row.company, row.department, row.category,
+            row.lastYearExpense, row.actualBudget, row.actualExpense,
+            row.mls, row.thisYearMls, row.thisYearBudgetVariance, row.budgetNextYear, ...row.months
+          ])];
         const planningSheet = XLSX.utils.aoa_to_sheet(planningData);
         const additionsSheet = XLSX.utils.aoa_to_sheet([
           ['Company', 'Department', 'Category', 'Year', 'Month', 'Entry Type', 'Amount', 'Remarks'],
@@ -6044,7 +6159,9 @@
         });
         const grandTotals = computeGrandTotals();
         const grandTotalRow = rows.length + 2;
-        XLSX.utils.sheet_add_aoa(planningSheet, [['', '', 'GRAND TOTAL']], { origin: `A${grandTotalRow}` });
+        XLSX.utils.sheet_add_aoa(planningSheet, [
+          ['', '', 'GRAND TOTAL']
+        ], { origin: `A${grandTotalRow}` });
         const grandValues = [
           grandTotals.lastYearExpense, grandTotals.actualBudget, grandTotals.actualExpense, grandTotals.mls,
           grandTotals.thisYearMls, grandTotals.thisYearBudgetVariance, grandTotals.budgetNextYear,
@@ -6059,8 +6176,10 @@
         for (let rowNumber = 2; rowNumber <= grandTotalRow; rowNumber++) {
           for (let column = 3; column <= 21; column++) setExcelNumberFormat(planningSheet, column, rowNumber);
         }
-        for (let rowNumber = 2; rowNumber <= lastAdditionRow; rowNumber++) setExcelNumberFormat(additionsSheet, 6, rowNumber);
-        for (let rowNumber = 2; rowNumber <= lastMultiplierRow; rowNumber++) setExcelNumberFormat(multiplierSheet, 1, rowNumber);
+        for (let rowNumber = 2; rowNumber <= lastAdditionRow; rowNumber++) setExcelNumberFormat(additionsSheet, 6,
+        rowNumber);
+        for (let rowNumber = 2; rowNumber <= lastMultiplierRow; rowNumber++) setExcelNumberFormat(multiplierSheet, 1,
+          rowNumber);
         planningSheet['!cols'] = [
           { wch: 18 }, { wch: 18 }, { wch: 34 }, ...Array.from({ length: 19 }, () => ({ wch: 18 }))
         ];
@@ -6094,7 +6213,7 @@
 
       function setExcelFormula(sheet, columnIndex, rowNumber, formula, calculatedValue) {
         const address = excelCellAddress(columnIndex, rowNumber);
-        sheet[address] = { t: 'n', f: formula, v: toNum(calculatedValue) };
+        sheet[address] = { t: 'n', f: formula, v: Helpers.toNum(calculatedValue) };
       }
 
       function setExcelNumberFormat(sheet, columnIndex, rowNumber) {
@@ -6139,7 +6258,8 @@
       async function saveNote(co, dept, cat, month, notes, statusEl) {
         const session = Auth.getSession();
         if (!session?.user) throw new Error('Please sign in to save notes.');
-        await saveNotesBatch([{ company: co, cor_dept: dept, code_desc: cat, month, notes, updated_by: session.user.username }]);
+        await saveNotesBatch([{ company: co, cor_dept: dept, code_desc: cat, month, notes, updated_by: session.user
+            .username }]);
         if (statusEl) {
           statusEl.textContent = 'Saved';
           statusEl.className = 'note-save-status text-success ms-1';
@@ -6171,7 +6291,7 @@
           body: JSON.stringify(body)
         });
         if (!res.ok) { const errText = await res.text(); throw new Error(`Supabase UPSERT notes: ${res.status} ${errText}`); }
-        for (const n of body) store.notesMap[noteKey(n.company, n.cor_dept, n.code_desc, n.month)] = n.notes;
+        for (const n of body) store.notesMap[Helpers.noteKey(n.company, n.cor_dept, n.code_desc, n.month)] = n.notes;
         return true;
       }
 
@@ -6185,20 +6305,25 @@
         const allStatuses = container.querySelectorAll('.note-save-status');
         const allBtns = container.querySelectorAll('.save-note-btn');
         allBtns.forEach(b => b.disabled = true);
-        allStatuses.forEach(el => { el.textContent = 'Saving...'; el.className = 'note-save-status text-muted ms-1'; });
+        allStatuses.forEach(el => { el.textContent = 'Saving...';
+          el.className = 'note-save-status text-muted ms-1'; });
         try {
           const notesArray = [];
           cells.forEach(cell => {
             const ta = cell.querySelector('.variance-note-input');
             if (!ta) return;
-            notesArray.push({ company: attrDecode(ta.dataset.company), cor_dept: attrDecode(ta.dataset.dept),
-              code_desc: attrDecode(ta.dataset.cat), month: attrDecode(ta.dataset.month || ''),
+            notesArray.push({ company: Helpers.attrDecode(ta.dataset.company), cor_dept: Helpers.attrDecode(ta.dataset
+                .dept),
+              code_desc: Helpers.attrDecode(ta.dataset.cat), month: Helpers.attrDecode(ta.dataset.month || ''),
               notes: ta.value, updated_by: session.user.username });
           });
           await saveNotesBatch(notesArray);
-          allStatuses.forEach(el => { el.textContent = 'Saved all'; el.className = 'note-save-status text-success ms-1'; setTimeout(() => el.textContent = '', 3000); });
+          allStatuses.forEach(el => { el.textContent = 'Saved all';
+            el.className = 'note-save-status text-success ms-1';
+            setTimeout(() => el.textContent = '', 3000); });
         } catch (err) {
-          allStatuses.forEach(el => { el.textContent = err.message || 'Failed'; el.className = 'note-save-status text-danger ms-1'; });
+          allStatuses.forEach(el => { el.textContent = err.message || 'Failed';
+            el.className = 'note-save-status text-danger ms-1'; });
         } finally { allBtns.forEach(b => b.disabled = false); }
       }
 
@@ -6207,17 +6332,17 @@
         if (lines.length < 2) throw new Error('CSV must have a header row and at least one data row.');
         const parseRow = row => {
           const r = [];
-          let cur = '', inQ = false;
-          for (let i=0; i<row.length; i++) {
+          let cur = '',
+            inQ = false;
+          for (let i = 0; i < row.length; i++) {
             const ch = row[i];
             if (inQ) {
-              if (ch === '"' && i+1 < row.length && row[i+1] === '"') { cur += '"'; i++; }
-              else if (ch === '"') { inQ = false; }
-              else cur += ch;
+              if (ch === '"' && i + 1 < row.length && row[i + 1] === '"') { cur += '"';
+                i++; } else if (ch === '"') { inQ = false; } else cur += ch;
             } else {
               if (ch === '"') inQ = true;
-              else if (ch === ',') { r.push(cur); cur = ''; }
-              else cur += ch;
+              else if (ch === ',') { r.push(cur);
+                cur = ''; } else cur += ch;
             }
           }
           r.push(cur);
@@ -6243,7 +6368,11 @@
           const row = parseRow(line);
           const obj = {};
           headers.forEach((h, i) => obj[h] = (row[i] || '').trim());
-          const co = obj[companyCol], dept = obj[deptCol], cat = obj[catCol], notes = obj[notesCol], month = monthCol ? obj[monthCol] : '';
+          const co = obj[companyCol],
+            dept = obj[deptCol],
+            cat = obj[catCol],
+            notes = obj[notesCol],
+            month = monthCol ? obj[monthCol] : '';
           if (!co || !dept || !cat) return null;
           return { company: co, department: dept, category: cat, month, notes };
         }).filter(Boolean);
@@ -6286,7 +6415,8 @@
       // 21. CSV Export (unchanged)
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       function downloadCSV(headers, rows, filename) {
-        const csv = [headers.map(h => `"${h}"`).join(','), ...rows.map(r => r.map(c => `"${csvEscape(c)}"`).join(','))].join('\n');
+        const csv = [headers.map(h => `"${h}"`).join(','), ...rows.map(r => r.map(c => `"${csvEscape(c)}"`).join(','))].join(
+          '\n');
         const a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' }));
         a.download = filename;
@@ -6294,7 +6424,8 @@
         URL.revokeObjectURL(a.href);
       }
 
-      const csvEscape = t => String(t).replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/[🔴🟢⚠️✅❌]/g,'').trim();
+      const csvEscape = t => String(t).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(
+        /[🔴🟢⚠️✅❌]/g, '').trim();
 
       function exportMatrixCSV() {
         const filtered = getDashboardFiltered();
@@ -6307,7 +6438,8 @@
           for (const m of months) {
             if (sE) headers.push(`${m} Expense`);
             if (sB) headers.push(`${m} Budget`);
-            if (sV) { headers.push(`${m} Variance`); headers.push(`${m} Var %`); }
+            if (sV) { headers.push(`${m} Variance`);
+              headers.push(`${m} Var %`); }
           }
           headers.push('Total Exp', 'Total Bud', 'Total Var', 'Total Var %');
         } else {
@@ -6330,11 +6462,16 @@
               const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0 };
               if (sE) rowData.push(d.expense.toFixed(2));
               if (sB) rowData.push(d.budget.toFixed(2));
-              if (sV) { rowData.push(d.variance.toFixed(2)); rowData.push(d.variancePercent.toFixed(2)); }
+              if (sV) { rowData.push(d.variance.toFixed(2));
+                rowData.push(d.variancePercent.toFixed(2)); }
             }
-            rowData.push(totals.totalExp.toFixed(2), totals.totalBud.toFixed(2), totals.totalVar.toFixed(2), totals.totalVarPct.toFixed(2));
+            rowData.push(totals.totalExp.toFixed(2), totals.totalBud.toFixed(2), totals.totalVar.toFixed(2), totals
+              .totalVarPct.toFixed(2));
           } else {
-            const eV = [], bV = [], vV = [], vpV = [];
+            const eV = [],
+              bV = [],
+              vV = [],
+              vpV = [];
             for (const m of months) {
               const d = mData[m] || { expense: 0, budget: 0, variance: 0, variancePercent: 0 };
               eV.push(d.expense);
@@ -6348,7 +6485,8 @@
               for (const v of vV) rowData.push(v.toFixed(2));
               for (const p of vpV) rowData.push(p.toFixed(2));
             }
-            rowData.push(totals.totalExp.toFixed(2), totals.totalBud.toFixed(2), totals.totalVar.toFixed(2), totals.totalVarPct.toFixed(2));
+            rowData.push(totals.totalExp.toFixed(2), totals.totalBud.toFixed(2), totals.totalVar.toFixed(2), totals
+              .totalVarPct.toFixed(2));
           }
           rows.push(rowData);
         }
@@ -6369,7 +6507,7 @@
             (!f.categorySearch || r.category.toLowerCase().includes(f.categorySearch.toLowerCase()))
           );
           for (const r of filtered) {
-            const { variance, variancePercent: variancePct } = calcMetrics(r.budget, r.expense);
+            const { variance, variancePercent: variancePct } = Helpers.calcMetrics(r.budget, r.expense);
             const sb = statusBadge(variance, variancePct, r.budget);
             const exem = store.exemMap[r.category] || false;
             if (exem) continue;
@@ -6388,17 +6526,21 @@
           );
           const agg = aggregateByKey(filtered);
           records = agg.map(item => {
-            const { variance: v, variancePercent: vp } = calcMetrics(item.budget, item.expense);
+            const { variance: v, variancePercent: vp } = Helpers.calcMetrics(item.budget, item.expense);
             return { company: item.company, department: item.department, category: item.category, month: item.month,
-              budget: item.budget, expense: item.expense, variance: v, variancePct: vp, status: statusBadge(v, vp, item.budget) };
+              budget: item.budget, expense: item.expense, variance: v, variancePct: vp, status: statusBadge(v,
+                vp, item.budget) };
           });
         }
         if (!records.length) { alert('No data to export'); return; }
-        const headers = ['Company', 'Department', 'Category', 'Month', 'Budget', 'Expense', 'Variance', 'Variance %', 'Status', 'Notes'];
+        const headers = ['Company', 'Department', 'Category', 'Month', 'Budget', 'Expense', 'Variance', 'Variance %',
+          'Status', 'Notes'
+        ];
         const rows = records.map(r => {
           const note = getNote(r.company, r.department, r.category, r.month);
           return [r.company, r.department, r.category, r.month, r.budget.toFixed(2), r.expense.toFixed(2),
-            r.variance.toFixed(2), r.variancePct.toFixed(2), extractPlainText(r.status).trim(), note];
+            r.variance.toFixed(2), r.variancePct.toFixed(2), Helpers.extractPlainText(r.status).trim(), note
+          ];
         });
         downloadCSV(headers, rows, filename);
       }
@@ -6426,35 +6568,35 @@
             return idx !== -1 && idx <= cutoff;
           });
         }
-        const budgetTotal = budgetRecords.reduce((s,r) => s + r.budget, 0);
+        const budgetTotal = budgetRecords.reduce((s, r) => s + r.budget, 0);
 
         let expenseRecords = store.expenses.filter(e =>
           e.COMPANY === co && e.COR_DEPT === dept && e.CODE_DESC === cat
         );
         if (monthFilter && monthFilter !== 'All') {
-          expenseRecords = expenseRecords.filter(e => monthFromDate(e.DATE) === monthFilter);
+          expenseRecords = expenseRecords.filter(e => Helpers.monthFromDate(e.DATE) === monthFilter);
         }
         if (viewMode === 'active' && cutoff !== null && cutoff >= 0) {
           expenseRecords = expenseRecords.filter(e => {
-            const month = monthFromDate(e.DATE);
+            const month = Helpers.monthFromDate(e.DATE);
             const idx = CONFIG.MONTHS.indexOf(month);
             return idx !== -1 && idx <= cutoff;
           });
         }
-        const expTotal = expenseRecords.reduce((s,e) => s + toNum(e.TOTAL), 0);
+        const expTotal = expenseRecords.reduce((s, e) => s + Helpers.toNum(e.TOTAL), 0);
 
         const variance = budgetTotal - expTotal;
         const vp = budgetTotal ? (variance / budgetTotal) * 100 : 0;
-        const vc = varClass(variance);
+        const vc = Helpers.varClass(variance);
 
         let periodText = (viewMode === 'active') ? `YTD (up to ${CONFIG.MONTHS[cutoff] || 'current'})` : 'Full Year';
         if (monthFilter && monthFilter !== 'All') {
           periodText = `Month: ${monthFilter}`;
         }
         let html =
-          `<p><strong>Budget Total:</strong> ${fmt.currency(budgetTotal)}</p><p><strong>Expense Total:</strong> ${fmt.currency(expTotal)}</p><p><strong>Variance:</strong> <span class="${vc} fw-semibold">${fmt.currency(variance)} (${fmt.percent(vp)})</span></p><p><em>Showing data for ${periodText}</em></p>`;
+          `<p><strong>Budget Total:</strong> ${Helpers.fmt.currency(budgetTotal)}</p><p><strong>Expense Total:</strong> ${Helpers.fmt.currency(expTotal)}</p><p><strong>Variance:</strong> <span class="${vc} fw-semibold">${Helpers.fmt.currency(variance)} (${Helpers.fmt.percent(vp)})</span></p><p><em>Showing data for ${periodText}</em></p>`;
         html += expenseRecords.length ?
-          `<hr><ul class="list-unstyled">${expenseRecords.map(e => `<li class="mb-2"><strong>${e.DATE || 'Unknown'}</strong> - ${fmt.currency(toNum(e.TOTAL))}<br><small class="text-muted">Remarks: ${fmt.html(e.REMARKS || 'No remarks')}</small></li>`).join('')}</ul>` :
+          `<hr><ul class="list-unstyled">${expenseRecords.map(e => `<li class="mb-2"><strong>${e.DATE || 'Unknown'}</strong> - ${Helpers.fmt.currency(Helpers.toNum(e.TOTAL))}<br><small class="text-muted">Remarks: ${Helpers.fmt.html(e.REMARKS || 'No remarks')}</small></li>`).join('')}</ul>` :
           `<hr><p>No expense transactions found for this period.</p>`;
 
         document.getElementById('expenseModalBody').innerHTML = html +
@@ -6482,12 +6624,13 @@
           transactionCount: expenseRecords.length,
           transactions: expenseRecords.map(e => ({
             date: e.DATE || 'Unknown',
-            amount: toNum(e.TOTAL),
+            amount: Helpers.toNum(e.TOTAL),
             remarks: e.REMARKS || 'No remarks'
           }))
         };
 
-        const title = `Expenses: ${co} | ${dept} | ${cat}` + (monthFilter !== 'All' ? ` (${monthFilter})` : ` (${periodText})`);
+        const title = `Expenses: ${co} | ${dept} | ${cat}` + (monthFilter !== 'All' ? ` (${monthFilter})` :
+          ` (${periodText})`);
         document.getElementById('expenseModalTitle').textContent = title;
         document.getElementById('expenseAiBtn').disabled = false;
         const aiContainer = document.getElementById('expenseAiResponseContainer');
@@ -6524,7 +6667,8 @@
             `Expense Total: ₱${expTotal.toFixed(2)}\n` +
             `Variance: ₱${variance.toFixed(2)} (${variancePct.toFixed(1)}%)\n\n` +
             `There are ${transactions.length} transaction(s):\n` +
-            transactions.map((t,i) => `${i+1}. ${t.date} — ₱${t.amount.toFixed(2)} (Remarks: ${t.remarks || 'None'})`).join('\n') +
+            transactions.map((t, i) =>
+              `${i+1}. ${t.date} — ₱${t.amount.toFixed(2)} (Remarks: ${t.remarks || 'None'})`).join('\n') +
             `\n\nProvide a concise, actionable analysis. Include:\n` +
             `- Overall assessment of spending vs budget.\n` +
             `- Any notable patterns or outliers in the transactions.\n` +
@@ -6662,7 +6806,7 @@
         let html = '';
         for (const msg of msgs) {
           const cls = msg.role === 'user' ? 'user' : 'assistant';
-          html += `<div class="ai-message ${cls}"><div class="bubble">${fmt.html(msg.content)}</div></div>`;
+          html += `<div class="ai-message ${cls}"><div class="bubble">${Helpers.fmt.html(msg.content)}</div></div>`;
         }
         messagesEl.innerHTML = html;
         messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -6683,7 +6827,7 @@
         let html = '';
         for (const msg of msgs) {
           const cls = msg.role === 'user' ? 'user' : 'assistant';
-          html += `<div class="floating-message ${cls}"><div class="bubble">${fmt.html(msg.content)}</div></div>`;
+          html += `<div class="floating-message ${cls}"><div class="bubble">${Helpers.fmt.html(msg.content)}</div></div>`;
         }
         container.innerHTML = html;
         container.scrollTop = container.scrollHeight;
@@ -6724,7 +6868,8 @@
           }
         } finally {
           store.ai.isProcessing = false;
-          if (inputEl) { inputEl.disabled = false; inputEl.value = ''; }
+          if (inputEl) { inputEl.disabled = false;
+            inputEl.value = ''; }
           if (sendBtn) sendBtn.disabled = false;
           renderAllAIMessages();
           if (inputEl) inputEl.focus();
@@ -6760,20 +6905,23 @@
         switch (section) {
           case 'dashboard':
             const filtered = getDashboardFiltered();
-            const totalBudget = filtered.reduce((s,r) => s + r.budget, 0);
-            const totalExpense = filtered.reduce((s,r) => s + r.expense, 0);
-            const { variance: totalVar, variancePercent: totalVarPct } = calcMetrics(totalBudget, totalExpense);
-            question = `Analyze the current dashboard view. Overall totals: Budget ₱${totalBudget.toLocaleString()}, Expense ₱${totalExpense.toLocaleString()}, Variance ₱${totalVar.toLocaleString()} (${totalVarPct.toFixed(1)}%). What are the key takeaways and what should management focus on?`;
+            const totalBudget = filtered.reduce((s, r) => s + r.budget, 0);
+            const totalExpense = filtered.reduce((s, r) => s + r.expense, 0);
+            const { variance: totalVar, variancePercent: totalVarPct } = Helpers.calcMetrics(totalBudget, totalExpense);
+            question =
+              `Analyze the current dashboard view. Overall totals: Budget ₱${totalBudget.toLocaleString()}, Expense ₱${totalExpense.toLocaleString()}, Variance ₱${totalVar.toLocaleString()} (${totalVarPct.toFixed(1)}%). What are the key takeaways and what should management focus on?`;
             break;
           case 'budgetVariance':
             const bvRows = store.tableData.bv;
             const bvCount = bvRows.length;
-            question = `I'm looking at the detailed budget variance table with ${bvCount} rows (after applying filters). Give me a high-level summary of the most significant variances. Which categories and months stand out as needing attention?`;
+            question =
+              `I'm looking at the detailed budget variance table with ${bvCount} rows (after applying filters). Give me a high-level summary of the most significant variances. Which categories and months stand out as needing attention?`;
             break;
           case 'exceptions':
             const exRows = store.tableData.exceptions;
             const exCount = exRows.length;
-            question = `The exceptions list shows ${exCount} items with High Expense or No Budget. Provide a concise summary of the main issues. What is the common theme, and what actions would you recommend to address these?`;
+            question =
+              `The exceptions list shows ${exCount} items with High Expense or No Budget. Provide a concise summary of the main issues. What is the common theme, and what actions would you recommend to address these?`;
             break;
           default:
             question = `Analyze the current data and give me a brief overview of the main insights.`;
@@ -6807,12 +6955,12 @@
           const contextText = document.getElementById('planningModalContext').textContent;
           const [company, department] = contextText.split(' | ');
 
-          const mlsVal = parseFormattedNumber(document.getElementById('modalMls').value);
+          const mlsVal = Helpers.parseFormattedNumber(document.getElementById('modalMls').value);
           const monthInputs = document.querySelectorAll('#monthlyBaseContainer .modal-month-base');
           const monthlyBases = [];
           const monthNames = CONFIG.MONTH_NAMES;
           monthInputs.forEach((inp, idx) => {
-            monthlyBases.push(`${monthNames[idx]}: ₱${parseFormattedNumber(inp.value).toFixed(2)}`);
+            monthlyBases.push(`${monthNames[idx]}: ₱${Helpers.parseFormattedNumber(inp.value).toFixed(2)}`);
           });
 
           const additionRows = document.querySelectorAll('#additionsContainer .addition-row');
@@ -6821,7 +6969,7 @@
             const addList = [];
             additionRows.forEach(row => {
               const month = row.querySelector('.addition-month')?.value || '?';
-              const amount = parseFormattedNumber(row.querySelector('.addition-amount')?.value || '0');
+              const amount = Helpers.parseFormattedNumber(row.querySelector('.addition-amount')?.value || '0');
               const remarks = row.querySelector('.addition-remarks')?.value || '';
               if (amount !== 0 || remarks) {
                 addList.push(`- ${month}: ₱${amount.toFixed(2)} (${remarks || 'No remarks'})`);
@@ -6831,7 +6979,8 @@
           }
 
           const key = currentModalKey;
-          let actualBudget = 0, actualExpense = 0;
+          let actualBudget = 0,
+            actualExpense = 0;
           if (key) {
             const row = document.querySelector(`tr.planning-child-row[data-key="${key}"]`);
             if (row) {
@@ -6891,7 +7040,7 @@ Keep the response concise, professional, and use bullet points where appropriate
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      // 26. Fetch Data (loads planning_remarks)
+      // 26. Fetch Data — KEY CHANGE: close table handling
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       async function fetchData({ silent = false, forceRefresh = false } = {}) {
         const reloadBtn = document.getElementById('reloadSheetsBtn');
@@ -6915,7 +7064,7 @@ Keep the response concise, professional, and use bullet points where appropriate
           if (loadSub) loadSub.textContent = 'Fetching budget, expense, division, planning, and multiplier data...';
 
           let budgetRows, expenseRows, notesRows, closeRows, divisionRows, additionRows, lyRows, multiplierRows,
-              permissionRows, planningRemarkRows;
+            permissionRows, planningRemarkRows;
           try {
             [budgetRows, expenseRows, notesRows, closeRows, divisionRows, additionRows, lyRows,
               multiplierRows, permissionRows, planningRemarkRows
@@ -6923,7 +7072,7 @@ Keep the response concise, professional, and use bullet points where appropriate
               DataService.getAll('budget'),
               DataService.getAll('expenses'),
               DataService.getAll('notes'),
-              DataService.getAll('close', 'limit=1&order=id.desc'),
+              DataService.getAll('close'), // ── get ALL close records (no limit)
               DataService.getAll('division'),
               DataService.getAll('planning_additions'),
               DataService.getAll('lyexpenses'),
@@ -6944,7 +7093,7 @@ Keep the response concise, professional, and use bullet points where appropriate
                 DataService.getAll('budget'),
                 DataService.getAll('expenses'),
                 DataService.getAll('notes'),
-                DataService.getAll('close', 'limit=1&order=id.desc'),
+                DataService.getAll('close'), // still get ALL close records
                 DataService.getAll('division'),
                 DataService.getAll('lyexpenses'),
                 DataService.getAll('multiplier'),
@@ -6960,7 +7109,7 @@ Keep the response concise, professional, and use bullet points where appropriate
           store.multipliers = {};
           for (const m of multiplierRows) {
             if (m.code_desc && m.multi !== undefined) {
-              store.multipliers[m.code_desc] = toNum(m.multi);
+              store.multipliers[m.code_desc] = Helpers.toNum(m.multi);
             }
           }
 
@@ -6972,31 +7121,64 @@ Keep the response concise, professional, and use bullet points where appropriate
             }
           }
 
+          // ── KEY CHANGE: parse close records ──
+          // Use the LATEST record for general YTD (Dashboard, Variance, Exceptions, Dept Summary)
+          // Use the EARLIEST record (id=1) for Planning Actual Expense
           store.ytdMonthCutoff = null;
-          if (closeRows.length && closeRows[0].date) {
-            const d = new Date(closeRows[0].date);
-            if (!isNaN(d.getTime())) {
-              const m = d.getMonth();
-              store.ytdMonthCutoff = m - 1;
-              if (store.ytdMonthCutoff < 0) store.ytdMonthCutoff = -1;
+          store.planningYtdMonthCutoff = null;
+
+          if (closeRows && closeRows.length) {
+            // Sort by id ascending so we can pick the first and last
+            const sorted = [...closeRows].sort((a, b) => (a.id || 0) - (b.id || 0));
+            const earliest = sorted[0];
+            const latest = sorted[sorted.length - 1];
+
+            // General cutoff: latest close record
+            if (latest && latest.date) {
+              const d = new Date(latest.date);
+              if (!isNaN(d.getTime())) {
+                const m = d.getMonth();
+                store.ytdMonthCutoff = m - 1;
+                if (store.ytdMonthCutoff < 0) store.ytdMonthCutoff = -1;
+              }
             }
+
+            // Planning cutoff: earliest close record (id=1)
+            if (earliest && earliest.date) {
+              const d = new Date(earliest.date);
+              if (!isNaN(d.getTime())) {
+                const m = d.getMonth();
+                store.planningYtdMonthCutoff = m - 1;
+                if (store.planningYtdMonthCutoff < 0) store.planningYtdMonthCutoff = -1;
+              }
+            }
+
+            // If only one record exists, both use the same cutoff
+            if (sorted.length === 1) {
+              store.planningYtdMonthCutoff = store.ytdMonthCutoff;
+            }
+
+            console.log(
+              `📅 Close records: latest=${latest?.date || 'none'} → general YTD cutoff ${store.ytdMonthCutoff}, earliest=${earliest?.date || 'none'} → planning YTD cutoff ${store.planningYtdMonthCutoff}`
+              );
           }
 
           store.budgets = budgetRows.map(r => ({ COMPANY: String(r.company || ''), COR_DEPT: String(r.cor_dept || ''),
-            DATE: String(r.date || ''), CODE_DESC: String(r.code_desc || ''), TOTAL: toNum(r.total) }));
+            DATE: String(r.date || ''), CODE_DESC: String(r.code_desc || ''), TOTAL: Helpers.toNum(r.total) }));
           store.expenses = expenseRows.map(r => ({ COMPANY: String(r.company || ''), COR_DEPT: String(r.cor_dept || ''),
-            DATE: String(r.date || ''), CODE_DESC: String(r.code_desc || ''), TOTAL: toNum(r.total), REMARKS: String(r.remarks || '') }));
+            DATE: String(r.date || ''), CODE_DESC: String(r.code_desc || ''), TOTAL: Helpers.toNum(r.total), REMARKS: String(
+              r.remarks || '') }));
           store.lyExpenses = lyRows.map(r => ({
             company: String(r.company || ''),
             cor_dept: String(r.cor_dept || ''),
             code_desc: String(r.code_desc || ''),
-            total: toNum(r.total)
+            total: Helpers.toNum(r.total)
           }));
 
           store.notesMap = {};
           for (const n of notesRows) {
             if (!n.company || !n.cor_dept || !n.code_desc) continue;
-            store.notesMap[noteKey(n.company, n.cor_dept, n.code_desc, n.month || '')] = String(n.notes || '');
+            store.notesMap[Helpers.noteKey(n.company, n.cor_dept, n.code_desc, n.month || '')] = String(n.notes || '');
           }
 
           store.divisionMap = {};
@@ -7023,7 +7205,6 @@ Keep the response concise, professional, and use bullet points where appropriate
           const filteredAdditions = (additionRows || []).filter(add => String(add.year) === String(currentYear));
           store.planning.data = loadPlanningData(filteredAdditions);
 
-          // Load planning remarks
           store.planningRemarks = {};
           for (const r of planningRemarkRows || []) {
             const key = getPlanningRemarkKey(r.company, r.cor_dept, r.code_desc, r.year);
@@ -7049,7 +7230,7 @@ Keep the response concise, professional, and use bullet points where appropriate
             setTimeout(() => {
               overlay.style.display = 'flex';
               overlay.innerHTML =
-                `<div class="text-center px-3"><i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i><h5 class="text-danger">Connection Failed</h5><p class="text-muted">${fmt.html(err.message)}</p><p class="small text-muted">Check your SUPABASE_URL and SUPABASE_ANON_KEY, then make sure RLS policies are set.</p><button class="btn btn-primary-blue" onclick="location.reload()">Retry</button></div>`;
+                `<div class="text-center px-3"><i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i><h5 class="text-danger">Connection Failed</h5><p class="text-muted">${Helpers.fmt.html(err.message)}</p><p class="small text-muted">Check your SUPABASE_URL and SUPABASE_ANON_KEY, then make sure RLS policies are set.</p><button class="btn btn-primary-blue" onclick="location.reload()">Retry</button></div>`;
               overlay.style.opacity = '1';
             }, 300);
           }
@@ -7138,7 +7319,7 @@ Keep the response concise, professional, and use bullet points where appropriate
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      // 30. Event Binding (insight filter removed)
+      // 30. Event Binding
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       function bindEvents() {
         // Login
@@ -7191,7 +7372,6 @@ Keep the response concise, professional, and use bullet points where appropriate
           document.getElementById('currentDateTime').textContent = new Date().toLocaleString();
         }, 1000);
 
-        // Sorting
         document.addEventListener('click', function(e) {
           const th = e.target.closest('.clickable-header');
           if (th) {
@@ -7201,7 +7381,6 @@ Keep the response concise, professional, and use bullet points where appropriate
           }
         });
 
-        // Dashboard filters
         const applyDashFilters = () => {
           const f = store.filters.dashboard;
           f.company = document.getElementById('companyFilter').value;
@@ -7212,8 +7391,9 @@ Keep the response concise, professional, and use bullet points where appropriate
         document.getElementById('applyFiltersBtn').addEventListener('click', applyDashFilters);
         document.getElementById('companyFilter').addEventListener('change', applyDashFilters);
         document.getElementById('deptFilter').addEventListener('change', applyDashFilters);
-        document.getElementById('globalSearch').addEventListener('input', debounce(applyDashFilters, 350));
-        document.getElementById('reloadSheetsBtn').addEventListener('click', () => fetchData({ silent: true, forceRefresh: true }));
+        document.getElementById('globalSearch').addEventListener('input', Helpers.debounce(applyDashFilters, 350));
+        document.getElementById('reloadSheetsBtn').addEventListener('click', () => fetchData({ silent: true,
+          forceRefresh: true }));
 
         document.getElementById('resetFilters').addEventListener('click', () => {
           const f = store.filters.dashboard;
@@ -7236,8 +7416,10 @@ Keep the response concise, professional, and use bullet points where appropriate
           f.metric = 'all';
           f.viewMode = 'active';
           document.getElementById('metricSelect').value = 'all';
-          document.querySelectorAll('#layoutToggle .toggle-option').forEach(el => el.classList.toggle('active', el.dataset.layout === 'month'));
-          document.querySelectorAll('#viewToggle .toggle-option').forEach(el => el.classList.toggle('active', el.dataset.view === 'active'));
+          document.querySelectorAll('#layoutToggle .toggle-option').forEach(el => el.classList.toggle('active', el.dataset
+            .layout === 'month'));
+          document.querySelectorAll('#viewToggle .toggle-option').forEach(el => el.classList.toggle('active', el.dataset
+            .view === 'active'));
           applyDashFilters();
         });
 
@@ -7258,7 +7440,6 @@ Keep the response concise, professional, and use bullet points where appropriate
           updateLayoutToggleState();
         });
 
-        // Budget Variance filters
         const applyBvFilters = () => {
           const f = store.filters.budgetVariance;
           f.company = document.getElementById('bvCompanyFilter').value;
@@ -7290,13 +7471,12 @@ Keep the response concise, professional, and use bullet points where appropriate
         });
         document.getElementById('applyThresholdsBtn').addEventListener('click', () => {
           const f = store.filters.budgetVariance;
-          f.allowableAmount = toNum(document.getElementById('allowableAmount').value);
-          f.allowablePercent = toNum(document.getElementById('allowablePercent').value);
+          f.allowableAmount = Helpers.toNum(document.getElementById('allowableAmount').value);
+          f.allowablePercent = Helpers.toNum(document.getElementById('allowablePercent').value);
           renderBudgetVariance();
           renderExceptions();
         });
 
-        // Exceptions filters
         const applyExFilters = () => {
           const f = store.filters.exceptions;
           f.company = document.getElementById('exCompanyFilter').value;
@@ -7327,7 +7507,6 @@ Keep the response concise, professional, and use bullet points where appropriate
           renderExceptions();
         });
 
-        // Dept Summary filters
         const applyDeptFilters = () => {
           const f = store.filters.deptSummary;
           f.company = document.getElementById('deptCompanyFilter').value;
@@ -7350,7 +7529,8 @@ Keep the response concise, professional, and use bullet points where appropriate
           f.company = defaultCompany;
           f.department = defaultDept;
           f.viewMode = 'active';
-          document.querySelectorAll('#deptViewToggle .toggle-option').forEach(el => el.classList.toggle('active', el.dataset.view === 'active'));
+          document.querySelectorAll('#deptViewToggle .toggle-option').forEach(el => el.classList.toggle('active', el.dataset
+            .view === 'active'));
           renderDeptSummary();
         });
         document.querySelectorAll('#deptViewToggle .toggle-option').forEach(btn => {
@@ -7362,7 +7542,6 @@ Keep the response concise, professional, and use bullet points where appropriate
           });
         });
 
-        // Planning filters (insight filter removed)
         const applyPlanningFilters = () => {
           const f = store.filters.planning;
           f.company = document.getElementById('planCompanyFilter').value;
@@ -7375,7 +7554,7 @@ Keep the response concise, professional, and use bullet points where appropriate
 
         const searchInput = document.getElementById('planSearchInput');
         if (searchInput) {
-          searchInput.addEventListener('input', debounce(function() {
+          searchInput.addEventListener('input', Helpers.debounce(function() {
             store.filters.planning.searchTerm = this.value || '';
             renderPlanning();
           }, 300));
@@ -7411,20 +7590,20 @@ Keep the response concise, professional, and use bullet points where appropriate
           fetchData({ silent: true });
         });
 
-        // Reset button only (Save All removed)
         document.getElementById('resetPlanningBtn').addEventListener('click', function() {
-          if (confirm('Reset all planning inputs (base only) to zero for the current company/department? This will not delete additions from the database.')) {
+          if (confirm(
+              'Reset all planning inputs (base only) to zero for the current company/department? This will not delete additions from the database.'
+              )) {
             const f = store.filters.planning;
             const keys = Object.keys(store.planning.data);
             for (const key of keys) {
               const [company, department] = key.split('|');
               if ((f.company === 'All' || company === f.company) &&
-                  (f.department === 'All' || department === f.department)) {
-                store.planning.data[key] = defaultPlan();
+                (f.department === 'All' || department === f.department)) {
+                store.planning.data[key] = Helpers.defaultPlan();
               }
             }
             renderPlanning();
-            // Auto‑save after reset
             autoSavePlanning();
           }
         });
@@ -7444,17 +7623,18 @@ Keep the response concise, professional, and use bullet points where appropriate
         document.getElementById('modalSaveBtn').addEventListener('click', savePlanningModal);
         document.getElementById('addAdditionBtn').addEventListener('click', addAdditionRow);
 
-        // Bulk Add panel events
         document.getElementById('bulkAddToggleBtn').addEventListener('click', toggleBulkAddPanel);
         document.getElementById('bulkAddCancelBtn').addEventListener('click', function() {
           document.getElementById('bulkAddPanel').classList.remove('open');
         });
         document.getElementById('bulkAddExecuteBtn').addEventListener('click', executeBulkAdd);
         document.getElementById('bulkAmount').addEventListener('keydown', function(e) {
-          if (e.key === 'Enter') { e.preventDefault(); executeBulkAdd(); }
+          if (e.key === 'Enter') { e.preventDefault();
+            executeBulkAdd(); }
         });
         document.getElementById('bulkRemarks').addEventListener('keydown', function(e) {
-          if (e.key === 'Enter') { e.preventDefault(); executeBulkAdd(); }
+          if (e.key === 'Enter') { e.preventDefault();
+            executeBulkAdd(); }
         });
 
         document.getElementById('clearAllAdditionsBtn').addEventListener('click', clearAllAdditions);
@@ -7480,14 +7660,15 @@ Keep the response concise, professional, and use bullet points where appropriate
             const row = e.target.closest('.addition-row');
             if (row) {
               row.remove();
-              if (this.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg').style.display = 'block';
+              if (this.querySelectorAll('.addition-row').length === 0) document.getElementById('noAdditionsMsg')
+                .style.display = 'block';
               updateModalTotals();
             }
           }
         });
         document.getElementById('additionsContainer').addEventListener('blur', function(e) {
           if (e.target.classList.contains('addition-amount')) {
-            e.target.value = fmt.number(parseFormattedNumber(e.target.value));
+            e.target.value = Helpers.fmt.number(Helpers.parseFormattedNumber(e.target.value));
             updateModalTotals();
           }
         }, true);
@@ -7498,8 +7679,10 @@ Keep the response concise, professional, and use bullet points where appropriate
         document.getElementById('exportExTableBtn').addEventListener('click', () =>
           exportDetailTableCSV(store.tableData.exceptions, 'explanation_list.csv'));
 
-        document.getElementById('saveAllBvNotes').addEventListener('click', () => saveAllNotes('#budgetVarianceSection .table-container'));
-        document.getElementById('saveAllExNotes').addEventListener('click', () => saveAllNotes('#exceptionsSection .table-container'));
+        document.getElementById('saveAllBvNotes').addEventListener('click', () => saveAllNotes(
+          '#budgetVarianceSection .table-container'));
+        document.getElementById('saveAllExNotes').addEventListener('click', () => saveAllNotes(
+          '#exceptionsSection .table-container'));
 
         const TITLES = {
           dashboard: 'Budget Variance Dashboard',
@@ -7534,8 +7717,10 @@ Keep the response concise, professional, and use bullet points where appropriate
         document.addEventListener('click', async e => {
           const btn = e.target.closest('.save-note-btn');
           if (!btn) return;
-          const co = attrDecode(btn.dataset.company), dept = attrDecode(btn.dataset.dept),
-                cat = attrDecode(btn.dataset.cat), month = attrDecode(btn.dataset.month || '');
+          const co = Helpers.attrDecode(btn.dataset.company),
+            dept = Helpers.attrDecode(btn.dataset.dept),
+            cat = Helpers.attrDecode(btn.dataset.cat),
+            month = Helpers.attrDecode(btn.dataset.month || '');
           const cell = btn.closest('.notes-cell');
           const notes = cell.querySelector('.variance-note-input').value;
           const statusEl = cell.querySelector('.note-save-status');
@@ -7551,11 +7736,11 @@ Keep the response concise, professional, and use bullet points where appropriate
         document.addEventListener('click', e => {
           const el = e.target.closest('.view-details-btn, .view-exception-details');
           if (!el) return;
-          const month = attrDecode(el.dataset.month || 'All');
+          const month = Helpers.attrDecode(el.dataset.month || 'All');
           showExpenseDetails(
-            attrDecode(el.dataset.company),
-            attrDecode(el.dataset.dept),
-            attrDecode(el.dataset.cat),
+            Helpers.attrDecode(el.dataset.company),
+            Helpers.attrDecode(el.dataset.dept),
+            Helpers.attrDecode(el.dataset.cat),
             month,
             null,
             null
@@ -7633,7 +7818,6 @@ Keep the response concise, professional, and use bullet points where appropriate
           }
         });
 
-        // AI Panel
         document.getElementById('aiSendBtn').addEventListener('click', function() {
           const input = document.getElementById('aiChatInput');
           if (input) sendAIMessage(input.value);
@@ -7660,7 +7844,6 @@ Keep the response concise, professional, and use bullet points where appropriate
           });
         });
 
-        // Floating Chat
         document.getElementById('floatingAiButton').addEventListener('click', toggleFloatingChat);
         document.getElementById('floatingCloseChat').addEventListener('click', toggleFloatingChat);
         document.getElementById('floatingSendBtn').addEventListener('click', function() {
@@ -7675,19 +7858,16 @@ Keep the response concise, professional, and use bullet points where appropriate
         });
         document.getElementById('floatingClearChat').addEventListener('click', clearAIChat);
 
-        // Section AI Quick Buttons
         document.getElementById('matrixAiBtn').addEventListener('click', () => askAIAboutCurrentView('dashboard'));
         document.getElementById('bvAiBtn').addEventListener('click', () => askAIAboutCurrentView('budgetVariance'));
         document.getElementById('exAiBtn').addEventListener('click', () => askAIAboutCurrentView('exceptions'));
 
-        // Modal AI
         document.getElementById('modalAiAnalyzeBtn').addEventListener('click', analyzeModalCategory);
         document.getElementById('modalAiCloseBtn').addEventListener('click', clearModalAI);
         document.getElementById('planningModal').addEventListener('hidden.bs.modal', function() {
           clearModalAI();
         });
 
-        // Expense Detail AI
         document.getElementById('expenseAiBtn').addEventListener('click', analyzeExpenseDetails);
         document.getElementById('expenseAiCloseBtn').addEventListener('click', clearExpenseAI);
         document.getElementById('expenseDetailModal').addEventListener('hidden.bs.modal', function() {
